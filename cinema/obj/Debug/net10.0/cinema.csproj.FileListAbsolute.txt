@@ -1,0 +1,14 @@
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\bin\Debug\net10.0\cinema.exe
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\bin\Debug\net10.0\cinema.deps.json
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\bin\Debug\net10.0\cinema.runtimeconfig.json
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\bin\Debug\net10.0\cinema.dll
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\bin\Debug\net10.0\cinema.pdb
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\cinema.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\cinema.AssemblyInfoInputs.cache
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\cinema.AssemblyInfo.cs
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\cinema.csproj.CoreCompileInputs.cache
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\cinema.dll
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\refint\cinema.dll
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\cinema.pdb
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\cinema.genruntimeconfig.cache
+C:\Users\vinic\OneDrive\Área de Trabalho\projetofinal\cinema\obj\Debug\net10.0\ref\cinema.dll

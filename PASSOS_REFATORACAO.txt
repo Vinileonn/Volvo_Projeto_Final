@@ -1,0 +1,65 @@
+PASSOS PARA CHEGAR AO PROGRAMA DESEJADO
+Projeto atual: versão reiniciada com Program.cs vazio (Hello World), Models/ e Enums/ já existentes, Utils/ presente.
+Objetivo: reconstruir o sistema CineFlow conforme a análise de refatoração, com Services, Controllers e Views e Program.cs apenas orquestrando.
+
+1) Conferir e alinhar Models/ e Enums/
+   - Validar se existem as classes: Usuario (Admin/Cliente), Filme, Sala, Sessao, Assento,
+     ProdutoAlimento, PedidoAlimento, ItemPedidoAlimento, Ingresso (Inteiro/Meia).
+   - Ajustar relacionamentos:
+     • Filme contém lista de Sessoes.
+     • Sessao referencia Filme e Sala.
+     • Sala contém lista de Assentos.
+     • Ingresso referencia Sessao e Cliente e usa Assento válido.
+   - Garantir propriedades essenciais (Id, nomes, datas, preços etc.).
+
+2) Implementar Utils/ (base reutilizável)
+   - Validacoes.cs: email, CPF, senha, nome, duração, capacidade, preço.
+   - GeradorDeLugares.cs: gerar assentos e validar/parsear número do lugar.
+   - FormatadorMoeda.cs: formatação em pt-BR.
+   - FormatadorData.cs: formatação de data e data/hora.
+
+3) Criar Services/ (lógica de negócio)
+   - UsuarioService: registro, login, validações com Validacoes.
+   - FilmeService: CRUD de filmes.
+   - SalaService: CRUD e geração de assentos.
+   - SessaoService: CRUD e validação de conflito.
+   - IngressoService: venda com validação de assento e marcação de reserva.
+   - ProdutoAlimentoService: CRUD e estoque.
+   - PedidoAlimentoService: criar pedido e gerenciar itens.
+   - Analise/RelatorioService: relatórios (pode iniciar simples e expandir).
+
+4) Criar Controllers/ (orquestração)
+   - AuthController: login/registro.
+   - ClienteController: cartaz, sessões, compra ingresso, pedidos de alimento.
+   - AdminController: agrega controllers específicos.
+   - Controllers específicos: Filme, Sala, Sessao, Produto, Pedido, Relatorio.
+
+5) Criar Views/ (interface de console)
+   - ConsoleUI.cs: base para entrada/saída e helpers de console.
+   - MensagensView.cs: Sucesso/Erro/Aviso/Informacao.
+   - MenuPrincipalView.cs: menu principal.
+   - MenuClienteView.cs: menu e telas de cliente.
+   - MenuAdminView.cs: menu e telas de admin (CRUDs e relatórios).
+
+6) Refatorar Program.cs
+   - Instanciar Services, Controllers e Views.
+   - Loop principal apenas orquestrando navegação:
+     Menu principal → login/registro → menu cliente/admin.
+   - Sem regras de negócio dentro de Program.cs.
+
+7) Validar fluxo crítico (MVP)
+   - Registro e login de cliente/admin.
+   - CRUD de filmes e salas.
+   - Criar sessão com validação de conflito.
+   - Venda de ingresso com validação de assento.
+
+8) Expandir funcionalidades restantes
+   - Pedidos de alimento com estoque.
+   - Relatórios e análises.
+   - Melhorias de exibição e mensagens.
+
+9) Teste incremental
+   - Após cada etapa, validar em console.
+   - Corrigir inconsistências de relacionamentos.
+
+Observação: seguir a ordem de prioridade do documento: Utils → Views → Controllers → Program.cs → ajustes de Services/Models.
