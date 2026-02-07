@@ -8,19 +8,19 @@
     "net10.0": []
   },
   "packageFolders": {
-    "C:\\Users\\vinic\\.nuget\\packages\\": {}
+    "C:\\Users\\Jordan Verissimo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vinic\\OneDrive\\Área de Trabalho\\projetofinal\\cinema\\cinema.csproj",
+      "projectUniqueName": "C:\\Users\\Jordan Verissimo\\Volvo_Projeto_Final\\cinema\\cinema.csproj",
       "projectName": "cinema",
-      "projectPath": "C:\\Users\\vinic\\OneDrive\\Área de Trabalho\\projetofinal\\cinema\\cinema.csproj",
-      "packagesPath": "C:\\Users\\vinic\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vinic\\OneDrive\\Área de Trabalho\\projetofinal\\cinema\\obj\\",
+      "projectPath": "C:\\Users\\Jordan Verissimo\\Volvo_Projeto_Final\\cinema\\cinema.csproj",
+      "packagesPath": "C:\\Users\\Jordan Verissimo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Jordan Verissimo\\Volvo_Projeto_Final\\cinema\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\vinic\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Jordan Verissimo\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"

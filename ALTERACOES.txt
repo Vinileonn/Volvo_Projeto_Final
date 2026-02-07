@@ -1,0 +1,103 @@
+RELATORIO GERAL DE ALTERACOES
+
+1) Traducoes e padronizacao para portugues
+- Pastas renomeadas: controllers -> controladores, services -> servicos, models -> modelos,
+    enums -> enumeracoes, utils -> utilitarios, exceptions -> excecoes.
+- Namespaces, classes, arquivos e comentarios ajustados para portugues.
+- Comentarios antigos padronizados como "ANTIGO" e marcadores CRUD traduzidos
+    (CRIAR/LER/ATUALIZAR/EXCLUIR).
+Arquivos: toda a arvore cinema/ (controladores, servicos, modelos, enumeracoes, utilitarios, excecoes).
+
+2) Cinemas (varios cinemas)
+- Criado modelo, servico e controlador para Cinema.
+- Sala e Funcionario passam a se relacionar com Cinema.
+Arquivos: cinema/modelos/Cinema.cs, cinema/servicos/CinemaServico.cs,
+                    cinema/controladores/CinemaControlador.cs
+
+3) Tipo de sala e filme 3D
+- Criado enum TipoSala.
+- Filme ganhou flag Eh3D.
+- Sessao agora usa PrecoBase e PrecoFinal e recalcula preco com adicionais.
+Arquivos: cinema/enumeracoes/TipoSala.cs, cinema/modelos/Filme.cs,
+                    cinema/modelos/Sessao.cs, cinema/servicos/SessaoServico.cs
+
+4) Ajuste de valores de adicionais (XD e 3D)
+- Valores atualizados e antigos comentados.
+Arquivo: cinema/servicos/SessaoServico.cs
+
+5) Assentos especiais (PCD e Casal/2 lugares)
+- Criado enum TipoAssento.
+- Assento ganhou Tipo e QuantidadeLugares.
+- Sala guarda quantidades de PCD e Casal e exibe marcadores na disposicao.
+Arquivos: cinema/enumeracoes/TipoAssento.cs, cinema/modelos/Assento.cs,
+                    cinema/modelos/Sala.cs
+
+6) Geracao de assentos com categorias especiais
+- Gerador cria PCD e Casal respeitando capacidade; metodo antigo comentado.
+Arquivo: cinema/utilitarios/GeradorDeLugares.cs
+
+7) SalaServico e SalaControlador
+- Validacao de quantidades especiais.
+- Atualizacao de sala aceita quantidade de PCD e Casal.
+- Geracao de disposicao com especiais.
+Arquivos: cinema/servicos/SalaServico.cs, cinema/controladores/SalaControlador.cs
+
+8) Preco por tipo de assento
+- Ingresso soma adicional para assento Casal; PCD sem adicional.
+- Valores antigos comentados.
+Arquivo: cinema/servicos/IngressoServico.cs
+
+9) Funcionarios e limpeza
+- Criado enum CargoFuncionario.
+- Criados modelos Funcionario e EscalaLimpeza.
+- Servicos e controladores para funcionarios e limpeza.
+- Validacao de cargo e conflito de horario na limpeza.
+Arquivos: cinema/enumeracoes/CargoFuncionario.cs, cinema/modelos/Funcionario.cs,
+                    cinema/modelos/EscalaLimpeza.cs, cinema/servicos/FuncionarioServico.cs,
+                    cinema/servicos/LimpezaServico.cs, cinema/controladores/FuncionarioControlador.cs,
+                    cinema/controladores/LimpezaControlador.cs
+
+10) Pagamentos e troco
+- Criado enum FormaPagamento.
+- Registro de pagamento em ingresso e pedido de alimento.
+- Calculo de troco detalhado para dinheiro.
+Arquivos: cinema/enumeracoes/FormaPagamento.cs, cinema/utilitarios/CalculadoraTroco.cs,
+                    cinema/servicos/IngressoServico.cs, cinema/servicos/PedidoAlimentoServico.cs,
+                    cinema/controladores/PedidoControlador.cs, cinema/controladores/ClienteControlador.cs
+
+11) Autenticacao e usuarios
+- Admin renomeado para Administrador e credenciais ajustadas.
+- Login renomeado para Autenticar (servico e controlador).
+Arquivos: cinema/modelos/UsuarioModelo/Administrador.cs,
+                    cinema/servicos/AutenticacaoServico.cs, cinema/controladores/AutenticacaoControlador.cs
+
+12) AdministradorControlador
+- Agora expoe controladores de cinema, funcionarios e limpeza.
+- Construtor corrigido para inicializar propriedades corretamente.
+Arquivo: cinema/controladores/AdministradorControlador.cs
+
+13) Relatorios de receita
+- Agora usam PrecoFinal (linhas antigas comentadas).
+Arquivo: cinema/servicos/RelatorioServico.cs
+
+14) Program.cs
+- Substituido Hello World por 2 fluxos de demonstracao.
+- Fluxo 1: cinema + sala XD + filme 3D + ingresso inteiro.
+- Fluxo 2: assento PCD + meia entrada.
+- Uso de VisualizarDisposicao no lugar de VisualizarLayout.
+- Codigo antigo comentado.
+Arquivo: cinema/Program.cs
+
+15) Ideias
+- Sala vip(Com comida, garçom e etc:. CARISSIMA).
+- Funcionários novos: Garçom e Gerente.
+- Pré Estreia = mais cargo.
+- Tipo de comida tematica do filme, tipo balde especial de filme.
+- Alugar sala de cinema(e aniversário).
+- Beneficio aniversário entre outros.
+- Eventos e parceria com outros lugares.
+- Salas 4d.
+- Produtos especiais como Posters/Brindes e cortesias de pré-estreia.
+- Sessão especial todo mês para levar bebes.
+- Sessão especial para Pet .
+- Sessão matine nas férias, ou seja, sessão mais cedo para as crianças.
