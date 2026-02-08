@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de ProdutoController para ProdutoControlador.
     public class ProdutoControlador
     {
         private readonly ProdutoAlimentoServico produtoService;
@@ -13,8 +12,6 @@ namespace cineflow.controladores
         {
             this.produtoService = produtoService;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
         public (bool sucesso, string mensagem) CriarProduto(ProdutoAlimento produto)
         {
             try
@@ -31,8 +28,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao cadastrar produto.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (ProdutoAlimento? produto, string mensagem) ObterProduto(int id)
         {
             try
@@ -49,8 +44,6 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao obter produto.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<ProdutoAlimento> produtos, string mensagem) ListarProdutos()
         {
             try
@@ -67,8 +60,6 @@ namespace cineflow.controladores
                 return (new List<ProdutoAlimento>(), "Erro inesperado ao listar produtos.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<ProdutoAlimento> produtos, string mensagem) BuscarPorNome(string nome)
         {
             try
@@ -90,8 +81,6 @@ namespace cineflow.controladores
                 return (new List<ProdutoAlimento>(), "Erro inesperado ao buscar produtos.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<ProdutoAlimento> produtos, string mensagem) ListarProdutosEstoqueBaixo()
         {
             try
@@ -108,8 +97,6 @@ namespace cineflow.controladores
                 return (new List<ProdutoAlimento>(), "Erro inesperado ao listar produtos com estoque baixo.");
             }
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
         public (bool sucesso, string mensagem) AtualizarProduto(int id, string? nome = null, string? descricao = null,
             float? preco = null, int? estoqueMinimo = null)
         {
@@ -131,8 +118,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao atualizar produto.");
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
         public (bool sucesso, string mensagem) DeletarProduto(int id)
         {
             try

@@ -18,27 +18,6 @@ namespace cineflow.modelos
 
         public List<Assento> Assentos { get; set; }
 
-        // ANTIGO:
-        // public Sala(int id, string nome, int capacidade)
-        // {
-        //     Id = id;
-        //     Nome = nome;
-        //     Capacidade = capacidade;
-        //     Assentos = new List<Assento>();
-        // }
-
-        // ANTIGO:
-        // public Sala(int id, string nome, int capacidade, Cinema? cinema, TipoSala tipo = TipoSala.Normal)
-        // {
-        //     Id = id;
-        //     Nome = nome;
-        //     Capacidade = capacidade;
-        //     Cinema = cinema;
-        //     Tipo = tipo;
-        //     Assentos = new List<Assento>();
-        // }
-
-        // Inclui quantidades de assentos especiais para gerar disposicao mista.
         public Sala(int id, string nome, int capacidade, Cinema? cinema, TipoSala tipo = TipoSala.Normal,
             int quantidadeAssentosCasal = 0, int quantidadeAssentosPCD = 0)
         {
@@ -92,27 +71,6 @@ namespace cineflow.modelos
 
             char filaAtual = 'A';
 
-            // ANTIGO:
-            // foreach (var assento in Assentos)
-            // {
-            //     // Quebra de linha quando muda a fila
-            //     if (assento.Fila != filaAtual)
-            //     {
-            //         sb.AppendLine();
-            //         filaAtual = assento.Fila;
-            //     }
-            //     // Exibe assento disponível ou reservado
-            //     if (assento.Disponivel)
-            //     {
-            //         sb.Append($"[{assento.Fila}{assento.Numero:D2}] ");
-            //     }
-            //     else
-            //     {
-            //         sb.Append($"[ X  ] ");
-            //     }
-            // }
-
-            // Marca P (PCD) e C (Casal) para visualizar os especiais.
             foreach (var assento in Assentos)
             {
                 if (assento.Fila != filaAtual)
@@ -139,10 +97,6 @@ namespace cineflow.modelos
             sb.AppendLine($"Ocupação: {Assentos.Count(a => !a.Disponivel)} / {Assentos.Count}");
 
             return sb.ToString();
-        } 
+        }
     }
 }
-
-
-
-

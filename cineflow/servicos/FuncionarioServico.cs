@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.servicos
 {
-    // Renomeado de FuncionarioService para FuncionarioServico.
     public class FuncionarioServico
     {
         private readonly List<Funcionario> funcionarios;
@@ -13,8 +12,7 @@ namespace cineflow.servicos
         {
             funcionarios = new List<Funcionario>();
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public void CriarFuncionario(Funcionario funcionario)
         {
             if (funcionario == null)
@@ -41,8 +39,7 @@ namespace cineflow.servicos
                 funcionario.Cinema.Funcionarios.Add(funcionario);
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public Funcionario ObterFuncionario(int id)
         {
             var funcionario = funcionarios.FirstOrDefault(f => f.Id == id);
@@ -52,26 +49,22 @@ namespace cineflow.servicos
             }
             return funcionario;
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Funcionario> ListarFuncionarios()
         {
             return new List<Funcionario>(funcionarios);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Funcionario> ListarPorCargo(CargoFuncionario cargo)
         {
             return funcionarios.Where(f => f.Cargo == cargo).ToList();
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Funcionario> ListarPorCinema(int cinemaId)
         {
             return funcionarios.Where(f => f.Cinema != null && f.Cinema.Id == cinemaId).ToList();
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
+
         public void AtualizarFuncionario(int id, string? nome = null, CargoFuncionario? cargo = null, Cinema? cinema = null)
         {
             var funcionario = ObterFuncionario(id);
@@ -100,8 +93,7 @@ namespace cineflow.servicos
                 }
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public void DeletarFuncionario(int id)
         {
             var funcionario = ObterFuncionario(id);

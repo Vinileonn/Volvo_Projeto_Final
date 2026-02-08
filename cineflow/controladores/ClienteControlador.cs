@@ -7,7 +7,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de ClienteController para ClienteControlador.
     public class ClienteControlador
     {
         private readonly FilmeServico FilmeServico;
@@ -90,41 +89,6 @@ namespace cineflow.controladores
         }
 
         // COMPRA - venda de ingresso inteiro
-        // ANTIGO:
-        // public (Ingresso? ingresso, string mensagem) ComprarIngressoInteiro(Sessao sessao, Cliente cliente, char fila, int numero)
-        // {
-        //     try
-        //     {
-        //         if (sessao == null || cliente == null)
-        //         {
-        //             return (null, "Dados inválidos: sessão ou cliente nulo.");
-        //         }
-        //
-        //         var ingresso = IngressoServico.VenderInteira(sessao, cliente, fila, numero);
-        //         return (ingresso, $"Ingresso inteiro comprado com sucesso! Assento: {fila}{numero}");
-        //     }
-        //     catch (DadosInvalidosExcecao ex)
-        //     {
-        //         return (null, $"Dados inválidos: {ex.Message}");
-        //     }
-        //     catch (RecursoNaoEncontradoExcecao ex)
-        //     {
-        //         return (null, $"Recurso não encontrado: {ex.Message}");
-        //     }
-        //     catch (OperacaoNaoPermitidaExcecao ex)
-        //     {
-        //         return (null, $"Operação não permitida: {ex.Message}");
-        //     }
-        //     catch (ErroOperacaoCriticaExcecao ex)
-        //     {
-        //         return (null, $"Erro crítico na operação: {ex.Message}");
-        //     }
-        //     catch (Exception)
-        //     {
-        //         return (null, "Erro inesperado ao comprar ingresso inteiro.");
-        //     }
-        // }
-
         public (Ingresso? ingresso, string mensagem) ComprarIngressoInteiro(Sessao sessao, Cliente cliente, char fila, int numero, FormaPagamento formaPagamento, decimal valorPago = 0m)
         {
             try
@@ -160,41 +124,6 @@ namespace cineflow.controladores
         }
 
         // COMPRA - venda de meia entrada
-        // ANTIGO:
-        // public (Ingresso? ingresso, string mensagem) ComprarIngressoMeia(Sessao sessao, Cliente cliente, char fila, int numero, string motivo)
-        // {
-        //     try
-        //     {
-        //         if (sessao == null || cliente == null)
-        //         {
-        //             return (null, "Dados inválidos: sessão ou cliente nulo.");
-        //         }
-        //
-        //         var ingresso = IngressoServico.VenderMeia(sessao, cliente, fila, numero, motivo);
-        //         return (ingresso, $"Meia entrada comprada com sucesso! Assento: {fila}{numero}. Motivo: {motivo}");
-        //     }
-        //     catch (DadosInvalidosExcecao ex)
-        //     {
-        //         return (null, $"Dados inválidos: {ex.Message}");
-        //     }
-        //     catch (RecursoNaoEncontradoExcecao ex)
-        //     {
-        //         return (null, $"Recurso não encontrado: {ex.Message}");
-        //     }
-        //     catch (OperacaoNaoPermitidaExcecao ex)
-        //     {
-        //         return (null, $"Operação não permitida: {ex.Message}");
-        //     }
-        //     catch (ErroOperacaoCriticaExcecao ex)
-        //     {
-        //         return (null, $"Erro crítico na operação: {ex.Message}");
-        //     }
-        //     catch (Exception)
-        //     {
-        //         return (null, "Erro inesperado ao comprar meia entrada.");
-        //     }
-        // }
-
         public (Ingresso? ingresso, string mensagem) ComprarIngressoMeia(Sessao sessao, Cliente cliente, char fila, int numero, string motivo, FormaPagamento formaPagamento, decimal valorPago = 0m)
         {
             try

@@ -13,17 +13,6 @@ namespace cineflow.modelos
 
         public List<Sessao> Sessoes { get; set; }
 
-        // ANTIGO:
-        // public Filme(int id, string titulo, int duracao, string genero, DateTime anoLancamento)
-        // {
-        //     Id = id;
-        //     Titulo = titulo;
-        //     Duracao = duracao;
-        //     Genero = genero;
-        //     AnoLancamento = anoLancamento;
-        //     Sessoes = new List<Sessao>();
-        // }
-
         public Filme(int id, string titulo, int duracao, string genero, DateTime anoLancamento, bool eh3D = false)
         {
             Id = id;

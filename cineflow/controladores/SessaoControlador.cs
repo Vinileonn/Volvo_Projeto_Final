@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de SessaoController para SessaoControlador.
     public class SessaoControlador
     {
         private readonly SessaoServico SessaoServico;
@@ -13,8 +12,6 @@ namespace cineflow.controladores
         {
             this.SessaoServico = SessaoServico;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
         public (bool sucesso, string mensagem) CriarSessao(Sessao sessao)
         {
             try
@@ -35,8 +32,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao cadastrar sessão.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (Sessao? sessao, string mensagem) ObterSessao(int id)
         {
             try
@@ -53,8 +48,6 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao obter sessão.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<Sessao> sessoes, string mensagem) ListarSessoes()
         {
             try
@@ -71,8 +64,6 @@ namespace cineflow.controladores
                 return (new List<Sessao>(), "Erro inesperado ao listar sessões.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<Sessao> sessoes, string mensagem) ListarSessoesPorFilme(int filmeId)
         {
             try
@@ -89,8 +80,6 @@ namespace cineflow.controladores
                 return (new List<Sessao>(), "Erro inesperado ao listar sessões por filme.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<Sessao> sessoes, string mensagem) ListarSessoesPorSala(int salaId)
         {
             try
@@ -107,33 +96,6 @@ namespace cineflow.controladores
                 return (new List<Sessao>(), "Erro inesperado ao listar sessões por sala.");
             }
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
-        // ANTIGO:
-        // public (bool sucesso, string mensagem) AtualizarSessao(int id, DateTime? dataHorario = null, float? preco = null, Filme? filme = null, Sala? sala = null)
-        // {
-        //     try
-        //     {
-        //         SessaoServico.AtualizarSessao(id, dataHorario, preco, filme, sala);
-        //         return (true, "Sessão atualizada com sucesso.");
-        //     }
-        //     catch (RecursoNaoEncontradoExcecao ex)
-        //     {
-        //         return (false, $"Recurso não encontrado: {ex.Message}");
-        //     }
-        //     catch (DadosInvalidosExcecao ex)
-        //     {
-        //         return (false, $"Dados inválidos: {ex.Message}");
-        //     }
-        //     catch (OperacaoNaoPermitidaExcecao ex)
-        //     {
-        //         return (false, $"Operação não permitida: {ex.Message}");
-        //     }
-        //     catch (Exception)
-        //     {
-        //         return (false, "Erro inesperado ao atualizar sessão.");
-        //     }
-        // }
 
         public (bool sucesso, string mensagem) AtualizarSessao(int id, DateTime? dataHorario = null, float? precoBase = null, Filme? filme = null, Sala? sala = null)
         {
@@ -159,8 +121,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao atualizar sessão.");
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
         public (bool sucesso, string mensagem) DeletarSessao(int id)
         {
             try

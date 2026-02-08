@@ -7,14 +7,9 @@ using cineflow.utilitarios;
 
 namespace cineflow.servicos
 {
-    // Renomeado de IngressoService para IngressoServico.
     public class IngressoServico
     {
         private readonly List<Ingresso> ingressos;
-        // ANTIGO:
-        // private const float AdicionalAssentoCasal = 8f;
-        // private const float AdicionalAssentoPCD = 0f;
-
         // Casal cobra mais por 2 lugares; PCD sem adicional.
         private const float AdicionalAssentoCasal = 10f;
         private const float AdicionalAssentoPCD = 0f;
@@ -23,19 +18,6 @@ namespace cineflow.servicos
         {
             ingressos = new List<Ingresso>();
         }
-
-        // ANTIGO:
-        // public Ingresso VenderInteira(Sessao sessao, Cliente cliente, char fila, int numero)
-        // {
-        //     var assento = ValidarVenda(sessao, cliente, fila, numero);
-        //
-        //     // ANTIGO:
-        //     // var ingresso = new IngressoInteira(sessao.Preco, ProximoId(), fila, numero, sessao, cliente, assento, DateTime.Now);
-        //     var precoFinalCompra = sessao.PrecoFinal + CalcularAdicionalAssento(assento);
-        //     var ingresso = new IngressoInteira(precoFinalCompra, ProximoId(), fila, numero, sessao, cliente, assento, DateTime.Now);
-        //     RegistrarVenda(ingresso, assento, sessao, cliente);
-        //     return ingresso;
-        // }
 
         // VENDA - inteira com pagamento
         public Ingresso VenderInteira(Sessao sessao, Cliente cliente, char fila, int numero, FormaPagamento formaPagamento, decimal valorPago = 0m)
@@ -49,24 +31,6 @@ namespace cineflow.servicos
             RegistrarVenda(ingresso, assento, sessao, cliente);
             return ingresso;
         }
-
-        // ANTIGO:
-        // public Ingresso VenderMeia(Sessao sessao, Cliente cliente, char fila, int numero, string motivo)
-        // {
-        //     if (string.IsNullOrWhiteSpace(motivo))
-        //     {
-        //         throw new DadosInvalidosExcecao("O motivo para meia entrada é obrigatório.");
-        //     }
-        //
-        //     var assento = ValidarVenda(sessao, cliente, fila, numero);
-        //
-        //     // ANTIGO:
-        //     // var ingresso = new IngressoMeia(sessao.Preco, ProximoId(), fila, numero, sessao, cliente, assento, DateTime.Now, motivo);
-        //     var precoFinalCompra = sessao.PrecoFinal + CalcularAdicionalAssento(assento);
-        //     var ingresso = new IngressoMeia(precoFinalCompra, ProximoId(), fila, numero, sessao, cliente, assento, DateTime.Now, motivo);
-        //     RegistrarVenda(ingresso, assento, sessao, cliente);
-        //     return ingresso;
-        // }
 
         // VENDA - meia com pagamento
         public Ingresso VenderMeia(Sessao sessao, Cliente cliente, char fila, int numero, string motivo, FormaPagamento formaPagamento, decimal valorPago = 0m)
@@ -85,8 +49,7 @@ namespace cineflow.servicos
             RegistrarVenda(ingresso, assento, sessao, cliente);
             return ingresso;
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public Ingresso ObterIngresso(int id)
         {
             var ingresso = ingressos.FirstOrDefault(i => i.Id == id);
@@ -96,14 +59,12 @@ namespace cineflow.servicos
             }
             return ingresso;
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Ingresso> ListarIngressos()
         {
             return new List<Ingresso>(ingressos);
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public void CancelarIngresso(int id)
         {
             var ingresso = ObterIngresso(id);
@@ -146,11 +107,6 @@ namespace cineflow.servicos
                 throw new ErroOperacaoCriticaExcecao("Sessão sem sala associada.");
             }
 
-            // ANTIGO:
-            // if (sessao.Preco < 0)
-            // {
-            //     throw new ErroOperacaoCriticaExcecao("Preço inválido.");
-            // }
             if (sessao.PrecoFinal < 0)
             {
                 throw new ErroOperacaoCriticaExcecao("Preco invalido.");

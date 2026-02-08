@@ -3,7 +3,6 @@ using cineflow.servicos;
 
 namespace cineflow.controladores
 {
-    // Renomeado de RelatorioController para RelatorioControlador.
     public class RelatorioControlador
     {
         private readonly RelatorioServico RelatorioServico;

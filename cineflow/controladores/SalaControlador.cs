@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de SalaController para SalaControlador.
     public class SalaControlador
     {
         private readonly SalaServico SalaServico;
@@ -13,8 +12,6 @@ namespace cineflow.controladores
         {
             this.SalaServico = SalaServico;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
         public (bool sucesso, string mensagem) CriarSala(Sala sala)
         {
             try
@@ -35,8 +32,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao cadastrar sala.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (Sala? sala, string mensagem) ObterSala(int id)
         {
             try
@@ -53,8 +48,6 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao obter sala.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<Sala> salas, string mensagem) ListarSalas()
         {
             try
@@ -71,8 +64,6 @@ namespace cineflow.controladores
                 return (new List<Sala>(), "Erro inesperado ao listar salas.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<Sala> salas, string mensagem) ListarSalasPorCinema(int cinemaId)
         {
             try
@@ -89,33 +80,6 @@ namespace cineflow.controladores
                 return (new List<Sala>(), "Erro inesperado ao listar salas por cinema.");
             }
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
-        // ANTIGO:
-        // public (bool sucesso, string mensagem) AtualizarSala(int id, string? nome = null, int? capacidade = null)
-        // {
-        //     try
-        //     {
-        //         SalaServico.AtualizarSala(id, nome, capacidade);
-        //         return (true, "Sala atualizada com sucesso.");
-        //     }
-        //     catch (RecursoNaoEncontradoExcecao ex)
-        //     {
-        //         return (false, $"Recurso não encontrado: {ex.Message}");
-        //     }
-        //     catch (DadosInvalidosExcecao ex)
-        //     {
-        //         return (false, $"Dados inválidos: {ex.Message}");
-        //     }
-        //     catch (OperacaoNaoPermitidaExcecao ex)
-        //     {
-        //         return (false, $"Operação não permitida: {ex.Message}");
-        //     }
-        //     catch (Exception)
-        //     {
-        //         return (false, "Erro inesperado ao atualizar sala.");
-        //     }
-        // }
 
         public (bool sucesso, string mensagem) AtualizarSala(int id, string? nome = null, int? capacidade = null,
             int? quantidadeAssentosCasal = null, int? quantidadeAssentosPCD = null)
@@ -164,8 +128,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao gerar assentos.");
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
         public (bool sucesso, string mensagem) DeletarSala(int id)
         {
             try

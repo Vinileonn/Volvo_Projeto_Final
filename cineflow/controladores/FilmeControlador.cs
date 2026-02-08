@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de FilmeController para FilmeControlador.
     public class FilmeControlador
     {
         private readonly FilmeServico FilmeServico;
@@ -13,8 +12,7 @@ namespace cineflow.controladores
         {
             this.FilmeServico = FilmeServico;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public (bool sucesso, string mensagem) CriarFilme(Filme filme)
         {
             try
@@ -35,8 +33,7 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao cadastrar filme.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (Filme? filme, string mensagem) ObterFilme(int id)
         {
             try
@@ -53,8 +50,7 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao obter filme.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (List<Filme> filmes, string mensagem) ListarFilmes()
         {
             try
@@ -71,8 +67,7 @@ namespace cineflow.controladores
                 return (new List<Filme>(), "Erro inesperado ao listar filmes.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (List<Filme> filmes, string mensagem) BuscarPorTitulo(string titulo)
         {
             try
@@ -94,8 +89,7 @@ namespace cineflow.controladores
                 return (new List<Filme>(), "Erro inesperado ao buscar filmes.");
             }
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
+
         public (bool sucesso, string mensagem) AtualizarFilme(int id, string? titulo = null, int? duracao = null,
                                    string? genero = null, DateTime? anoLancamento = null)
         {
@@ -121,8 +115,7 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao atualizar filme.");
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public (bool sucesso, string mensagem) DeletarFilme(int id)
         {
             try
@@ -141,8 +134,4 @@ namespace cineflow.controladores
         }
     }
 }
-
-
-
-
 

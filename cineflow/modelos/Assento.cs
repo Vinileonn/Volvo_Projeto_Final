@@ -17,17 +17,6 @@ namespace cineflow.modelos
 
         public Ingresso? Ingresso { get; set; }
 
-        // ANTIGO:
-        // public Assento(int id, char fila, int numero, Sala sala, Ingresso? ingresso)
-        // {
-        //     Id = id;
-        //     Fila = fila;
-        //     Numero = numero;
-        //     Disponivel = true;
-        //     Sala = sala;
-        //     Ingresso = ingresso;
-        // }
-
         // Inclui tipo e quantidade para suportar PCD e casal.
         public Assento(int id, char fila, int numero, Sala sala, Ingresso? ingresso, TipoAssento tipo, int quantidadeLugares)
         {

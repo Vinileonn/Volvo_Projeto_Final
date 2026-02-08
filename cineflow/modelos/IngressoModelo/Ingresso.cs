@@ -39,17 +39,6 @@ namespace cineflow.modelos.IngressoModelo
         //métodos
         public abstract float CalcularPreco(float precoBase);
         public abstract string ObterTipo();
-        // ANTIGO:
-        // public override string ToString()
-        // {
-        //     StringBuilder sb = new StringBuilder();
-        //     sb.AppendLine("Detalhes do Ingresso:");
-        //     sb.AppendLine($"ID: {Id}");
-        //     sb.AppendLine($"Sessão ID: {Sessao.Id}");
-        //     sb.AppendLine($"Data da Compra: {FormatadorData.FormatarDataComHora(DataCompra)}");
-        //     sb.AppendLine($"Número do Lugar: {Fila}{Numero}");
-        //     return sb.ToString();
-        // }
 
         public override string ToString()
         {

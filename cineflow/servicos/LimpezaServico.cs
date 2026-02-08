@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.servicos
 {
-    // Renomeado de LimpezaService para LimpezaServico.
     public class LimpezaServico
     {
         private readonly List<EscalaLimpeza> escalas;
@@ -13,8 +12,7 @@ namespace cineflow.servicos
         {
             escalas = new List<EscalaLimpeza>();
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public void CriarEscala(Sala sala, Funcionario funcionario, DateTime inicio, DateTime fim)
         {
             if (sala == null || funcionario == null)
@@ -43,26 +41,22 @@ namespace cineflow.servicos
             var escala = new EscalaLimpeza(ProximoId(), sala, funcionario, inicio, fim);
             escalas.Add(escala);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<EscalaLimpeza> ListarEscalas()
         {
             return new List<EscalaLimpeza>(escalas);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<EscalaLimpeza> ListarPorSala(int salaId)
         {
             return escalas.Where(e => e.Sala.Id == salaId).ToList();
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<EscalaLimpeza> ListarPorFuncionario(int funcionarioId)
         {
             return escalas.Where(e => e.Funcionario.Id == funcionarioId).ToList();
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public void DeletarEscala(int id)
         {
             var escala = escalas.FirstOrDefault(e => e.Id == id);

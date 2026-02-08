@@ -3,7 +3,6 @@ using cineflow.excecoes;
 
 namespace cineflow.servicos
 {
-    // Renomeado de UsuarioServices para UsuarioServico.
     public class UsuarioServico
     {
         private List<Usuario> usuarios;
@@ -23,9 +22,7 @@ namespace cineflow.servicos
                 u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) &&
                 u.Senha == senha);
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
-        // Método para adicionar usuário diretamente (usado para dados de teste)
+
         public void AdicionarUsuario(Usuario usuario)
         {
             if (usuario == null)
@@ -80,7 +77,6 @@ namespace cineflow.servicos
             usuarios.Add(cliente);
         }
 
-        // LER -
         // Método para obter usuário por ID
         public Usuario ObterUsuario(int id)
         {
@@ -121,7 +117,6 @@ namespace cineflow.servicos
             return usuarios.OfType<Cliente>().ToList();
         }
 
-        // ATUALIZAR -
         // Método para atualizar dados do usuário
         public void AtualizarUsuario(int id, string? nome = null, string? email = null, 
                                       string? telefone = null, string? endereco = null)
@@ -154,7 +149,6 @@ namespace cineflow.servicos
             }
         }
 
-        // EXCLUIR -
         // Método para deletar usuário
         public void DeletarUsuario(int id)
         {

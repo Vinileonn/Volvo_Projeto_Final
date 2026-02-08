@@ -6,7 +6,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de PedidoController para PedidoControlador.
     public class PedidoControlador
     {
         private readonly PedidoAlimentoServico pedidoService;
@@ -15,8 +14,6 @@ namespace cineflow.controladores
         {
             this.pedidoService = pedidoService;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
         public (PedidoAlimento? pedido, string mensagem) CriarPedido(Cliente cliente)
         {
             try
@@ -33,8 +30,6 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao criar pedido.");
             }
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
         public (bool sucesso, string mensagem) AdicionarItem(int pedidoId, int produtoId, int quantidade)
         {
             try
@@ -63,8 +58,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao adicionar item.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (PedidoAlimento? pedido, string mensagem) ObterPedido(int id)
         {
             try
@@ -81,8 +74,6 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao obter pedido.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<PedidoAlimento> pedidos, string mensagem) ListarPedidos()
         {
             try
@@ -99,8 +90,6 @@ namespace cineflow.controladores
                 return (new List<PedidoAlimento>(), "Erro inesperado ao listar pedidos.");
             }
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
         public (bool sucesso, string mensagem) RemoverItem(int pedidoId, int itemId)
         {
             try
@@ -117,8 +106,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao remover item.");
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
         public (bool sucesso, string mensagem) CancelarPedido(int id)
         {
             try

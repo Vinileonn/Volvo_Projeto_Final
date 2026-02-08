@@ -6,7 +6,6 @@ using cineflow.utilitarios;
 
 namespace cineflow.servicos
 {
-    // Renomeado de PedidoAlimentoService para PedidoAlimentoServico.
     public class PedidoAlimentoServico
     {
         private readonly List<PedidoAlimento> pedidos;
@@ -17,8 +16,7 @@ namespace cineflow.servicos
             pedidos = new List<PedidoAlimento>();
             this.produtoService = produtoService;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public PedidoAlimento CriarPedido(Cliente cliente)
         {
             if (cliente == null)
@@ -36,8 +34,7 @@ namespace cineflow.servicos
 
             return pedido;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public void AdicionarItem(int pedidoId, int produtoId, int quantidade)
         {
             var pedido = pedidos.FirstOrDefault(p => p.Id == pedidoId);
@@ -64,8 +61,7 @@ namespace cineflow.servicos
             var item = new ItemPedidoAlimento(itemId, produto, quantidade, produto.Preco);
             pedido.AdicionarItem(item);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public PedidoAlimento? ObterPedido(int id)
         {
             var pedido = pedidos.FirstOrDefault(p => p.Id == id);
@@ -75,14 +71,12 @@ namespace cineflow.servicos
             }
             return pedido;
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<PedidoAlimento> ListarPedidos()
         {
             return new List<PedidoAlimento>(pedidos);
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
+
         public void RemoverItem(int pedidoId, int itemId)
         {
             var pedido = ObterPedido(pedidoId);
@@ -102,8 +96,7 @@ namespace cineflow.servicos
             pedido.ValorTotal -= item.Preco * item.Quantidade;
             pedido.Itens.Remove(item);
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public void CancelarPedido(int id)
         {
             var pedido = ObterPedido(id);
@@ -135,16 +128,6 @@ namespace cineflow.servicos
             
             return pedido.ValorTotal;
         }
-        
-        // ANTIGO:
-        // public float CalcularTroco(float valorPago, float valorTotal)
-        // {
-        //     if (valorPago < valorTotal)
-        //     {
-        //         throw new DadosInvalidosExcecao("Valor pago é menor que o total do pedido.");
-        //     }
-        //     return valorPago - valorTotal;
-        // }
 
         // PAGAMENTO - registra forma de pagamento e calcula troco se for dinheiro.
         public void RegistrarPagamento(int pedidoId, FormaPagamento formaPagamento, decimal valorPago = 0m)

@@ -3,7 +3,6 @@ using cineflow.excecoes;
 
 namespace cineflow.servicos
 {
-    // Renomeado de AuthServices para AutenticacaoServico.
     public class AutenticacaoServico
     {
         private readonly UsuarioServico UsuarioServico;

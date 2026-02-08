@@ -3,7 +3,6 @@ using cineflow.excecoes;
 
 namespace cineflow.servicos
 {
-    // Renomeado de CinemaService para CinemaServico.
     public class CinemaServico
     {
         private readonly List<Cinema> cinemas;
@@ -12,8 +11,7 @@ namespace cineflow.servicos
         {
             cinemas = new List<Cinema>();
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public void CriarCinema(Cinema cinema)
         {
             if (cinema == null)
@@ -34,8 +32,7 @@ namespace cineflow.servicos
             cinema.Id = cinemas.Count > 0 ? cinemas.Max(c => c.Id) + 1 : 1;
             cinemas.Add(cinema);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public Cinema ObterCinema(int id)
         {
             var cinema = cinemas.FirstOrDefault(c => c.Id == id);
@@ -45,14 +42,12 @@ namespace cineflow.servicos
             }
             return cinema;
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Cinema> ListarCinemas()
         {
             return new List<Cinema>(cinemas);
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
+
         public void AtualizarCinema(int id, string? nome = null, string? endereco = null)
         {
             var cinema = ObterCinema(id);
@@ -71,8 +66,7 @@ namespace cineflow.servicos
                 cinema.Endereco = endereco;
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public void DeletarCinema(int id)
         {
             var cinema = ObterCinema(id);

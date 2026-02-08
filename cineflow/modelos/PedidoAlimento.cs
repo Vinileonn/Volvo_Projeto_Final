@@ -16,15 +16,6 @@ namespace cineflow.modelos
         public decimal ValorTroco { get; set; }
         public Dictionary<decimal, int> TrocoDetalhado { get; set; }
 
-        // ANTIGO:
-        // public PedidoAlimento(int id, float valorTotal)
-        // {
-        //     Id = id;
-        //     DataPedido = DateTime.Now;
-        //     ValorTotal = valorTotal;
-        //     Itens = new List<ItemPedidoAlimento>();
-        // }
-
         // Guarda pagamento e troco no proprio pedido para consulta rapida.
         public PedidoAlimento(int id, float valorTotal)
         {
@@ -40,21 +31,6 @@ namespace cineflow.modelos
             Itens.Add(item);
             ValorTotal += item.Preco * item.Quantidade;
         }
-
-        // ANTIGO:
-        // public override string ToString()
-        // {
-        //     StringBuilder sb = new StringBuilder();
-        //     sb.AppendLine($"Pedido ID: {Id}");
-        //     sb.AppendLine($"Data do Pedido: {FormatadorData.FormatarDataComHora(DataPedido)}");
-        //     sb.AppendLine($"Valor Total: {FormatadorMoeda.Formatar(ValorTotal)}");
-        //     sb.AppendLine("Itens do Pedido:");
-        //     foreach (var item in Itens)
-        //     {
-        //         sb.AppendLine(item.ToString());
-        //     }
-        //     return sb.ToString();
-        // }
 
         public override string ToString()
         {

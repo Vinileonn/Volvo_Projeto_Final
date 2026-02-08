@@ -2,7 +2,6 @@ using cineflow.modelos;
 using cineflow.excecoes;
 namespace cineflow.servicos
 {
-    // Renomeado de ProdutoAlimentoService para ProdutoAlimentoServico.
     public class ProdutoAlimentoServico
     {
         private readonly List<ProdutoAlimento> produtos;
@@ -11,8 +10,7 @@ namespace cineflow.servicos
         {
             produtos = new List<ProdutoAlimento>();
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public void CriarProduto(ProdutoAlimento produto)
         {
             if (produto == null)
@@ -34,20 +32,17 @@ namespace cineflow.servicos
             produto.Id = produtos.Count > 0 ? produtos.Max(p => p.Id) + 1 : 1;
             produtos.Add(produto);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public ProdutoAlimento? ObterProduto(int id)
         {
             return produtos.FirstOrDefault(p => p.Id == id);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<ProdutoAlimento> ListarProdutos()
         {
             return new List<ProdutoAlimento>(produtos);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<ProdutoAlimento> BuscarPorNome(string nome)
         {
             if (string.IsNullOrWhiteSpace(nome))
@@ -59,14 +54,12 @@ namespace cineflow.servicos
                 .Where(p => p.Nome.Contains(nome, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<ProdutoAlimento> ListarProdutosEstoqueBaixo()
         {
             return produtos.Where(p => p.EstoqueAtual <= p.EstoqueMinimo).ToList();
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
+
         public void AtualizarProduto(int id, string? nome = null, string? descricao = null,
                                      float? preco = null, int? estoqueMinimo = null)
         {
@@ -109,8 +102,7 @@ namespace cineflow.servicos
                 produto.EstoqueMinimo = estoqueMinimo.Value;
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public void DeletarProduto(int id)
         {
             var produto = produtos.FirstOrDefault(p => p.Id == id);

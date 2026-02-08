@@ -10,15 +10,6 @@ namespace cineflow.modelos
         public List<Sala> Salas { get; set; }
         public List<Funcionario> Funcionarios { get; set; }
 
-        // ANTIGO:
-        // public Cinema(int id, string nome, string endereco)
-        // {
-        //     Id = id;
-        //     Nome = nome;
-        //     Endereco = endereco;
-        //     Salas = new List<Sala>();
-        // }
-
         // Mantem funcionarios no cinema para facilitar consultas por unidade.
         public Cinema(int id, string nome, string endereco)
         {

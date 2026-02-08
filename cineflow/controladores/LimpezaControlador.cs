@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de LimpezaController para LimpezaControlador.
     public class LimpezaControlador
     {
         private readonly LimpezaServico LimpezaServico;
@@ -13,8 +12,6 @@ namespace cineflow.controladores
         {
             this.LimpezaServico = LimpezaServico;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
         public (bool sucesso, string mensagem) CriarEscala(Sala sala, Funcionario funcionario, DateTime inicio, DateTime fim)
         {
             try
@@ -35,8 +32,6 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao criar escala.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<EscalaLimpeza> escalas, string mensagem) ListarEscalas()
         {
             try
@@ -53,8 +48,6 @@ namespace cineflow.controladores
                 return (new List<EscalaLimpeza>(), "Erro inesperado ao listar escalas.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<EscalaLimpeza> escalas, string mensagem) ListarPorSala(int salaId)
         {
             try
@@ -71,8 +64,6 @@ namespace cineflow.controladores
                 return (new List<EscalaLimpeza>(), "Erro inesperado ao listar escalas por sala.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
         public (List<EscalaLimpeza> escalas, string mensagem) ListarPorFuncionario(int funcionarioId)
         {
             try
@@ -89,8 +80,6 @@ namespace cineflow.controladores
                 return (new List<EscalaLimpeza>(), "Erro inesperado ao listar escalas por funcionario.");
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
         public (bool sucesso, string mensagem) DeletarEscala(int id)
         {
             try

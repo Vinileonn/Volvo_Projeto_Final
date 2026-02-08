@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de CinemaController para CinemaControlador.
     public class CinemaControlador
     {
         private readonly CinemaServico CinemaServico;
@@ -13,8 +12,7 @@ namespace cineflow.controladores
         {
             this.CinemaServico = CinemaServico;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public (bool sucesso, string mensagem) CriarCinema(Cinema cinema)
         {
             try
@@ -35,8 +33,7 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao cadastrar cinema.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (Cinema? cinema, string mensagem) ObterCinema(int id)
         {
             try
@@ -53,8 +50,7 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao obter cinema.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (List<Cinema> cinemas, string mensagem) ListarCinemas()
         {
             try
@@ -71,8 +67,7 @@ namespace cineflow.controladores
                 return (new List<Cinema>(), "Erro inesperado ao listar cinemas.");
             }
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
+
         public (bool sucesso, string mensagem) AtualizarCinema(int id, string? nome = null, string? endereco = null)
         {
             try
@@ -93,8 +88,7 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao atualizar cinema.");
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public (bool sucesso, string mensagem) DeletarCinema(int id)
         {
             try
@@ -113,8 +107,4 @@ namespace cineflow.controladores
         }
     }
 }
-
-
-
-
 

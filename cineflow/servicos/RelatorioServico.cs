@@ -3,7 +3,6 @@ using cineflow.modelos.IngressoModelo;
 
 namespace cineflow.servicos
 {
-    // Renomeado de RelatorioService para RelatorioServico.
     public class RelatorioServico
     {
         private readonly IngressoServico IngressoServico;
@@ -30,8 +29,6 @@ namespace cineflow.servicos
         public float ReceitaTotalIngressos()
         {
             var ingressos = IngressoServico.ListarIngressos();
-            // ANTIGO:
-            // return ingressos.Sum(i => i.CalcularPreco(i.Sessao.Preco));
             return ingressos.Sum(i => i.CalcularPreco(i.Sessao.PrecoFinal));
         }
 
@@ -102,8 +99,6 @@ namespace cineflow.servicos
 
             return (
                 ingressos: ingressos.Count,
-                // ANTIGO:
-                // receitaIngressos: ingressos.Sum(i => i.CalcularPreco(i.Sessao.Preco)),
                 receitaIngressos: ingressos.Sum(i => i.CalcularPreco(i.Sessao.PrecoFinal)),
                 pedidos: pedidos.Count,
                 receitaPedidos: pedidos.Sum(p => p.ValorTotal)

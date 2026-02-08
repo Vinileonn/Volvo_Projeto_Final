@@ -4,15 +4,9 @@ using cineflow.enumeracoes;
 
 namespace cineflow.servicos
 {
-    // Renomeado de SessaoService para SessaoServico.
     public class SessaoServico
     {
         private readonly List<Sessao> sessoes;
-        // ANTIGO:
-        // private const float AdicionalSalaXD = 10f;
-        // private const float AdicionalFilme3D = 5f;
-
-        // Ajuste de valores para diferenciar melhor XD e 3D no preco final.
         private const float AdicionalSalaXD = 12f;
         private const float AdicionalFilme3D = 7f;
 
@@ -20,49 +14,6 @@ namespace cineflow.servicos
         {
             sessoes = new List<Sessao>();
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
-        // ANTIGO:
-        // public void CriarSessao(Sessao sessao)
-        // {
-        //     if (sessao == null)
-        //     {
-        //         throw new DadosInvalidosExcecao("Sessão não pode ser nula.");
-        //     }
-        //
-        //     if (sessao.DataHorario == default)
-        //     {
-        //         throw new DadosInvalidosExcecao("Data e horário são obrigatórios.");
-        //     }
-        //
-        //     if (sessao.Preco < 0)
-        //     {
-        //         throw new DadosInvalidosExcecao("Preço não pode ser negativo.");
-        //     }
-        //
-        //     if (sessao.Filme == null)
-        //     {
-        //         throw new DadosInvalidosExcecao("Filme é obrigatório.");
-        //     }
-        //
-        //     if (sessao.Sala == null)
-        //     {
-        //         throw new DadosInvalidosExcecao("Sala é obrigatória.");
-        //     }
-        //
-        //     if (ExisteConflito(sessao.DataHorario, sessao.DataHorario.AddMinutes(sessao.Filme.Duracao), sessao.Sala))
-        //     {
-        //         throw new OperacaoNaoPermitidaExcecao($"Conflito de horário na sala '{sessao.Sala.Nome}'. Já existe uma sessão neste horário.");
-        //     }
-        //
-        //     sessao.Id = sessoes.Count > 0 ? sessoes.Max(s => s.Id) + 1 : 1;
-        //     sessoes.Add(sessao);
-        //
-        //     if (sessao.Filme.Sessoes != null && !sessao.Filme.Sessoes.Contains(sessao))
-        //     {
-        //         sessao.Filme.Sessoes.Add(sessao);
-        //     }
-        // }
 
         public void CriarSessao(Sessao sessao)
         {
@@ -108,8 +59,7 @@ namespace cineflow.servicos
                 sessao.Filme.Sessoes.Add(sessao);
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public Sessao ObterSessao(int id)
         {
             var sessao = sessoes.FirstOrDefault(s => s.Id == id);
@@ -119,84 +69,21 @@ namespace cineflow.servicos
             }
             return sessao;
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Sessao> ListarSessoes()
         {
             return new List<Sessao>(sessoes);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Sessao> ListarSessoesPorFilme(int filmeId)
         {
             return sessoes.Where(s => s.Filme?.Id == filmeId).ToList();
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Sessao> ListarSessoesPorSala(int salaId)
         {
             return sessoes.Where(s => s.Sala?.Id == salaId).ToList();
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
-        // ANTIGO:
-        // public void AtualizarSessao(int id, DateTime? dataHorario = null, float? preco = null, Filme? filme = null, Sala? sala = null)
-        // {
-        //     var sessao = ObterSessao(id);
-        //
-        //     var novoDataHorario = dataHorario ?? sessao.DataHorario;
-        //     var novoPreco = preco ?? sessao.Preco;
-        //     var novoFilme = filme ?? sessao.Filme;
-        //     var novaSala = sala ?? sessao.Sala;
-        //
-        //     if (novoDataHorario == default)
-        //     {
-        //         throw new DadosInvalidosExcecao("Data e horário inválidos.");
-        //     }
-        //
-        //     if (novoPreco < 0)
-        //     {
-        //         throw new DadosInvalidosExcecao("Preço não pode ser negativo.");
-        //     }
-        //
-        //     if (novoFilme == null)
-        //     {
-        //         throw new DadosInvalidosExcecao("Filme não pode ser nulo.");
-        //     }
-        //
-        //     if (novaSala == null)
-        //     {
-        //         throw new DadosInvalidosExcecao("Sala não pode ser nula.");
-        //     }
-        //
-        //     // Validação de conflito (excluindo a própria sessão)
-        //     if (sessoes.Any(s =>
-        //         s.Id != sessao.Id &&
-        //         s.Sala?.Id == novaSala.Id &&
-        //         novoDataHorario < s.DataHorario.AddMinutes(s.Filme.Duracao) &&
-        //         novoDataHorario.AddMinutes(novoFilme.Duracao) > s.DataHorario))
-        //     {
-        //         throw new OperacaoNaoPermitidaExcecao($"Conflito de horário na sala '{novaSala.Nome}'. Já existe uma sessão neste horário.");
-        //     }
-        //
-        //     // Se mudou o filme, atualiza relacionamento
-        //     if (sessao.Filme?.Id != novoFilme.Id)
-        //     {
-        //         if (sessao.Filme?.Sessoes != null)
-        //         {
-        //             sessao.Filme.Sessoes.Remove(sessao);
-        //         }
-        //         if (novoFilme.Sessoes != null && !novoFilme.Sessoes.Contains(sessao))
-        //         {
-        //             novoFilme.Sessoes.Add(sessao);
-        //         }
-        //     }
-        //
-        //     sessao.DataHorario = novoDataHorario;
-        //     sessao.Preco = novoPreco;
-        //     sessao.Filme = novoFilme;
-        //     sessao.Sala = novaSala;
-        // }
 
         public void AtualizarSessao(int id, DateTime? dataHorario = null, float? precoBase = null, Filme? filme = null, Sala? sala = null)
         {
@@ -259,8 +146,7 @@ namespace cineflow.servicos
             var adicional3D = CalcularAdicional3D(novoFilme.Eh3D);
             sessao.RecalcularPreco(adicionalSala, adicional3D);
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public void DeletarSessao(int id)
         {
             var sessao = ObterSessao(id);

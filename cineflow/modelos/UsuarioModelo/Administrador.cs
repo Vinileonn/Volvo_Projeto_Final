@@ -2,7 +2,6 @@ using System.Text;
 
 namespace cineflow.modelos.UsuarioModelo
 {
-    // Renomeado de Admin para Administrador.
     public class Administrador : Usuario
     {
         // credenciais fixas para o Administrador
@@ -23,7 +22,3 @@ namespace cineflow.modelos.UsuarioModelo
         }
     }
 }
-
-
-
-

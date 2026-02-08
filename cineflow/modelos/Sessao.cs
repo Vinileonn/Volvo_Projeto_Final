@@ -8,9 +8,6 @@ namespace cineflow.modelos
         public int Id { get; set; }
         public DateTime DataHorario { get; set; }
 
-        // ANTIGO:
-        // public float Preco { get; set; }
-
         public float PrecoBase { get; set; }
         public float PrecoFinal { get; set; }
 
@@ -19,17 +16,6 @@ namespace cineflow.modelos
         public Sala Sala { get; set; }
 
         public List<Ingresso> Ingressos { get; set; } 
-
-        // ANTIGO:
-        // public Sessao(int id, DateTime dataHorario, float preco, Filme filme, Sala sala)
-        // {
-        //     Id = id;
-        //     DataHorario = dataHorario;
-        //     Preco = preco;
-        //     Filme = filme;
-        //     Sala = sala;
-        //     Ingressos = new List<Ingresso>();
-        // }
 
         public Sessao(int id, DateTime dataHorario, float precoBase, Filme filme, Sala sala)
         {

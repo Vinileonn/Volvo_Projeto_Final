@@ -3,7 +3,6 @@ namespace cineflow.excecoes
     /// <summary>
     /// Exceção lançada quando um recurso (usuário, filme, assento, etc) não é encontrado
     /// </summary>
-    // Renomeado de RecursoNaoEncontradoException para RecursoNaoEncontradoExcecao.
     public class RecursoNaoEncontradoExcecao : Exception
     {
         public RecursoNaoEncontradoExcecao(string mensagem) : base(mensagem) { }
@@ -12,8 +11,4 @@ namespace cineflow.excecoes
             : base(mensagem, innerException) { }
     }
 }
-
-
-
-
 

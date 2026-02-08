@@ -5,7 +5,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de FuncionarioController para FuncionarioControlador.
     public class FuncionarioControlador
     {
         private readonly FuncionarioServico FuncionarioServico;
@@ -14,8 +13,7 @@ namespace cineflow.controladores
         {
             this.FuncionarioServico = FuncionarioServico;
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public (bool sucesso, string mensagem) CriarFuncionario(Funcionario funcionario)
         {
             try
@@ -36,8 +34,7 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao cadastrar funcionario.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (Funcionario? funcionario, string mensagem) ObterFuncionario(int id)
         {
             try
@@ -54,8 +51,7 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao obter funcionario.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (List<Funcionario> funcionarios, string mensagem) ListarFuncionarios()
         {
             try
@@ -72,8 +68,7 @@ namespace cineflow.controladores
                 return (new List<Funcionario>(), "Erro inesperado ao listar funcionarios.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (List<Funcionario> funcionarios, string mensagem) ListarPorCargo(CargoFuncionario cargo)
         {
             try
@@ -90,8 +85,7 @@ namespace cineflow.controladores
                 return (new List<Funcionario>(), "Erro inesperado ao listar funcionarios por cargo.");
             }
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public (List<Funcionario> funcionarios, string mensagem) ListarPorCinema(int cinemaId)
         {
             try
@@ -108,8 +102,7 @@ namespace cineflow.controladores
                 return (new List<Funcionario>(), "Erro inesperado ao listar funcionarios por cinema.");
             }
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
+
         public (bool sucesso, string mensagem) AtualizarFuncionario(int id, string? nome = null, CargoFuncionario? cargo = null, Cinema? cinema = null)
         {
             try
@@ -130,8 +123,7 @@ namespace cineflow.controladores
                 return (false, "Erro inesperado ao atualizar funcionario.");
             }
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public (bool sucesso, string mensagem) DeletarFuncionario(int id)
         {
             try
@@ -150,8 +142,4 @@ namespace cineflow.controladores
         }
     }
 }
-
-
-
-
 

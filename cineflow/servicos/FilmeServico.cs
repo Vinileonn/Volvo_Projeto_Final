@@ -3,7 +3,6 @@ using cineflow.excecoes;
 
 namespace cineflow.servicos
 {
-    // Renomeado de FilmeService para FilmeServico.
     public class FilmeServico
     {
         private readonly List<Filme> filmes;
@@ -12,8 +11,7 @@ namespace cineflow.servicos
         {
             filmes = new List<Filme>();
         }
-// ANTIGO: // CRIAR - 
-// CRIAR - 
+
         public void CriarFilme(Filme filme)
         {
             if (filme == null)
@@ -51,8 +49,7 @@ namespace cineflow.servicos
             filme.Id = filmes.Count > 0 ? filmes.Max(f => f.Id) + 1 : 1;
             filmes.Add(filme);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public Filme ObterFilme(int id)
         {
             var filme = filmes.FirstOrDefault(f => f.Id == id);
@@ -62,14 +59,12 @@ namespace cineflow.servicos
             }
             return filme;
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Filme> ListarFilmes()
         {
             return new List<Filme>(filmes);
         }
-// ANTIGO: // LER - 
-// LER - 
+
         public List<Filme> BuscarPorTitulo(string titulo)
         {
             if (string.IsNullOrWhiteSpace(titulo))
@@ -81,8 +76,7 @@ namespace cineflow.servicos
                 .Where(f => f.Titulo.Contains(titulo, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
-// ANTIGO: // ATUALIZAR - 
-// ATUALIZAR - 
+
         public void AtualizarFilme(int id, string? titulo = null, int? duracao = null,
                                    string? genero = null, DateTime? anoLancamento = null)
         {
@@ -111,8 +105,7 @@ namespace cineflow.servicos
 
             filme.AtualizarDetalhes(titulo, duracao, genero, anoLancamento);
         }
-// ANTIGO: // EXCLUIR - 
-// EXCLUIR - 
+
         public void DeletarFilme(int id)
         {
             var filme = ObterFilme(id);
