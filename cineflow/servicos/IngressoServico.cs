@@ -13,6 +13,10 @@ namespace cineflow.servicos
         // Casal cobra mais por 2 lugares; PCD sem adicional.
         private const float AdicionalAssentoCasal = 10f;
         private const float AdicionalAssentoPCD = 0f;
+        private const float AdicionalAssentoPreferencial = 3f;
+        private const float DescontoCupomParceiro = 0.10f;
+        private const float TaxaReservaAntecipada = 5f;
+        private const float ValorPorPonto = 0.10f;
 
         public IngressoServico()
         {
@@ -20,12 +24,24 @@ namespace cineflow.servicos
         }
 
         // VENDA - inteira com pagamento
-        public Ingresso VenderInteira(Sessao sessao, Cliente cliente, char fila, int numero, FormaPagamento formaPagamento, decimal valorPago = 0m)
+        public Ingresso VenderInteira(Sessao sessao, Cliente cliente, char fila, int numero, FormaPagamento formaPagamento,
+            decimal valorPago = 0m, string? cupomParceiro = null, bool reservaAntecipada = false, int pontosUsados = 0)
         {
             var assento = ValidarVenda(sessao, cliente, fila, numero);
 
             var precoFinalCompra = sessao.PrecoFinal + CalcularAdicionalAssento(assento);
+            precoFinalCompra = AplicarDescontoAniversario(precoFinalCompra, cliente, sessao.Sala.Tipo);
+            precoFinalCompra = AplicarDescontoCupom(precoFinalCompra, sessao, cupomParceiro);
+            precoFinalCompra = AplicarDescontoPontos(precoFinalCompra, cliente, pontosUsados);
+            var taxaReserva = 0f;
+            if (reservaAntecipada)
+            {
+                ValidarReservaAntecipada(sessao);
+                taxaReserva = TaxaReservaAntecipada;
+                precoFinalCompra += taxaReserva;
+            }
             var ingresso = new IngressoInteira(precoFinalCompra, ProximoId(), fila, numero, sessao, cliente, assento, DateTime.Now);
+            AtualizarDadosFidelidade(ingresso, cliente, pontosUsados, taxaReserva, reservaAntecipada);
 
             RegistrarPagamento(ingresso, formaPagamento, valorPago);
             RegistrarVenda(ingresso, assento, sessao, cliente);
@@ -33,7 +49,8 @@ namespace cineflow.servicos
         }
 
         // VENDA - meia com pagamento
-        public Ingresso VenderMeia(Sessao sessao, Cliente cliente, char fila, int numero, string motivo, FormaPagamento formaPagamento, decimal valorPago = 0m)
+        public Ingresso VenderMeia(Sessao sessao, Cliente cliente, char fila, int numero, string motivo, FormaPagamento formaPagamento,
+            decimal valorPago = 0m, string? cupomParceiro = null, bool reservaAntecipada = false, int pontosUsados = 0)
         {
             if (string.IsNullOrWhiteSpace(motivo))
             {
@@ -43,7 +60,18 @@ namespace cineflow.servicos
             var assento = ValidarVenda(sessao, cliente, fila, numero);
 
             var precoFinalCompra = sessao.PrecoFinal + CalcularAdicionalAssento(assento);
+            precoFinalCompra = AplicarDescontoAniversario(precoFinalCompra, cliente, sessao.Sala.Tipo);
+            precoFinalCompra = AplicarDescontoCupom(precoFinalCompra, sessao, cupomParceiro);
+            precoFinalCompra = AplicarDescontoPontos(precoFinalCompra, cliente, pontosUsados);
+            var taxaReserva = 0f;
+            if (reservaAntecipada)
+            {
+                ValidarReservaAntecipada(sessao);
+                taxaReserva = TaxaReservaAntecipada;
+                precoFinalCompra += taxaReserva;
+            }
             var ingresso = new IngressoMeia(precoFinalCompra, ProximoId(), fila, numero, sessao, cliente, assento, DateTime.Now, motivo);
+            AtualizarDadosFidelidade(ingresso, cliente, pontosUsados, taxaReserva, reservaAntecipada);
 
             RegistrarPagamento(ingresso, formaPagamento, valorPago);
             RegistrarVenda(ingresso, assento, sessao, cliente);
@@ -73,12 +101,42 @@ namespace cineflow.servicos
                 throw new RecursoNaoEncontradoExcecao($"Ingresso com ID {id} não encontrado.");
             }
 
+            if (ingresso.Sessao.DataHorario <= DateTime.Now.AddHours(24))
+            {
+                throw new OperacaoNaoPermitidaExcecao("Cancelamento permitido apenas com 24 horas de antecedencia.");
+            }
+
             ingresso.Assento.Liberar();
             ingresso.Assento.Ingresso = null;
             ingresso.Sessao.Ingressos.Remove(ingresso);
             ingresso.Cliente.Ingressos.Remove(ingresso);
 
             ingressos.Remove(ingresso);
+        }
+
+        // CHECK-IN - registrar presenca do cliente
+        public void RealizarCheckIn(int ingressoId)
+        {
+            var ingresso = ObterIngresso(ingressoId);
+            if (ingresso == null)
+            {
+                throw new RecursoNaoEncontradoExcecao($"Ingresso com ID {ingressoId} não encontrado.");
+            }
+
+            if (ingresso.CheckInRealizado)
+            {
+                throw new OperacaoNaoPermitidaExcecao("Check-in ja realizado.");
+            }
+
+            if (DateTime.Now > ingresso.Sessao.DataHorario)
+            {
+                throw new OperacaoNaoPermitidaExcecao("Check-in indisponivel para sessao encerrada.");
+            }
+
+            ingresso.CheckInRealizado = true;
+            ingresso.DataCheckIn = DateTime.Now;
+            // Bonus simples de fidelidade por check-in.
+            ingresso.Cliente.AdicionarPontos(5);
         }
 
         private Assento ValidarVenda(Sessao sessao, Cliente cliente, char fila, int numero)
@@ -110,6 +168,13 @@ namespace cineflow.servicos
             if (sessao.PrecoFinal < 0)
             {
                 throw new ErroOperacaoCriticaExcecao("Preco invalido.");
+            }
+
+            int idadeCliente = cliente.ObterIdade(DateTime.Now);
+            int classificacao = (int)sessao.Filme.Classificacao;
+            if (idadeCliente < classificacao)
+            {
+                throw new OperacaoNaoPermitidaExcecao("Cliente nao possui idade minima para este filme.");
             }
 
             // Validações de localização do assento (fila e número)
@@ -191,17 +256,116 @@ namespace cineflow.servicos
         // Aplica adicional por tipo de assento (casal cobra mais por 2 lugares, PCD sem adicional).
         private static float CalcularAdicionalAssento(Assento assento)
         {
+            float adicional = 0f;
+
             if (assento.Tipo == TipoAssento.Casal)
             {
-                return AdicionalAssentoCasal;
+                adicional += AdicionalAssentoCasal;
             }
 
             if (assento.Tipo == TipoAssento.PCD)
             {
-                return AdicionalAssentoPCD;
+                adicional += AdicionalAssentoPCD;
             }
 
-            return 0f;
+            if (assento.Preferencial)
+            {
+                adicional += AdicionalAssentoPreferencial;
+            }
+
+            return adicional;
+        }
+
+        private static float AplicarDescontoAniversario(float preco, Cliente cliente, TipoSala tipoSala)
+        {
+            if (cliente == null || !cliente.EhMesAniversario(DateTime.Now))
+            {
+                return preco;
+            }
+
+            float desconto = 0f;
+            if (tipoSala == TipoSala.Normal)
+            {
+                desconto = 1.0f;
+            }
+            else if (tipoSala == TipoSala.XD)
+            {
+                desconto = 0.50f;
+            }
+            else
+            {
+                desconto = 0.25f;
+            }
+
+            var precoComDesconto = preco - (preco * desconto);
+            return Math.Max(0f, precoComDesconto);
+        }
+
+        private static float AplicarDescontoCupom(float preco, Sessao sessao, string? cupomParceiro)
+        {
+            if (sessao == null || string.IsNullOrWhiteSpace(sessao.Parceiro))
+            {
+                return preco;
+            }
+
+            if (string.IsNullOrWhiteSpace(cupomParceiro))
+            {
+                return preco;
+            }
+
+            if (!cupomParceiro.Equals(sessao.Parceiro, StringComparison.OrdinalIgnoreCase))
+            {
+                return preco;
+            }
+
+            var precoComDesconto = preco - (preco * DescontoCupomParceiro);
+            return Math.Max(0f, precoComDesconto);
+        }
+
+        private static float AplicarDescontoPontos(float preco, Cliente cliente, int pontosUsados)
+        {
+            if (cliente == null || pontosUsados <= 0)
+            {
+                return preco;
+            }
+
+            if (!cliente.TentarUsarPontos(pontosUsados))
+            {
+                throw new OperacaoNaoPermitidaExcecao("Pontos insuficientes.");
+            }
+
+            var desconto = pontosUsados * ValorPorPonto;
+            var precoComDesconto = preco - desconto;
+            return Math.Max(0f, precoComDesconto);
+        }
+
+        private static void ValidarReservaAntecipada(Sessao sessao)
+        {
+            if (sessao == null)
+            {
+                return;
+            }
+
+            if (sessao.DataHorario <= DateTime.Now.AddHours(1))
+            {
+                throw new OperacaoNaoPermitidaExcecao("Reserva antecipada deve ser feita com pelo menos 1 hora de antecedencia.");
+            }
+        }
+
+        private static void AtualizarDadosFidelidade(Ingresso ingresso, Cliente cliente, int pontosUsados, float taxaReserva, bool reservaAntecipada)
+        {
+            if (ingresso == null || cliente == null)
+            {
+                return;
+            }
+
+            ingresso.ReservaAntecipada = reservaAntecipada;
+            ingresso.TaxaReserva = taxaReserva;
+            ingresso.PontosUsados = pontosUsados;
+
+            var pontosGerados = (int)Math.Floor(ingresso.CalcularPreco(0f));
+            ingresso.PontosGerados = pontosGerados;
+            cliente.AdicionarPontos(pontosGerados);
         }
     }
 }

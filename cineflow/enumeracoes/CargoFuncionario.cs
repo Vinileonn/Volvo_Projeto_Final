@@ -4,7 +4,9 @@ namespace cineflow.enumeracoes
     {
         AtendenteIngressos = 1,
         AtendenteAlimentos = 2,
-        Limpeza = 3
+        Limpeza = 3,
+        Garcom = 4,
+        Gerente = 5
     }
 }
 

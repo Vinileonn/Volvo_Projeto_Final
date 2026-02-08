@@ -23,6 +23,12 @@ namespace cineflow.modelos.IngressoModelo
         public decimal ValorPago { get; set; }
         public decimal ValorTroco { get; set; }
         public Dictionary<decimal, int> TrocoDetalhado { get; set; }
+        public bool ReservaAntecipada { get; set; }
+        public float TaxaReserva { get; set; }
+        public bool CheckInRealizado { get; set; }
+        public DateTime? DataCheckIn { get; set; }
+        public int PontosUsados { get; set; }
+        public int PontosGerados { get; set; }
 
         public Ingresso(int id, char fila, int numero, Sessao sessao, Cliente cliente, Assento assento, DateTime dataCompra)
         {
@@ -34,6 +40,12 @@ namespace cineflow.modelos.IngressoModelo
             Assento = assento;
             DataCompra = dataCompra;
             TrocoDetalhado = new Dictionary<decimal, int>();
+            ReservaAntecipada = false;
+            TaxaReserva = 0f;
+            CheckInRealizado = false;
+            DataCheckIn = null;
+            PontosUsados = 0;
+            PontosGerados = 0;
         }
 
         //métodos
@@ -62,6 +74,26 @@ namespace cineflow.modelos.IngressoModelo
                         sb.AppendLine($"{FormatadorMoeda.Formatar(kvp.Key)} x {kvp.Value}");
                     }
                 }
+            }
+
+            if (ReservaAntecipada)
+            {
+                sb.AppendLine($"Reserva Antecipada: Sim (Taxa: {FormatadorMoeda.Formatar(TaxaReserva)})");
+            }
+
+            if (CheckInRealizado && DataCheckIn.HasValue)
+            {
+                sb.AppendLine($"Check-in: {FormatadorData.FormatarDataComHora(DataCheckIn.Value)}");
+            }
+
+            if (PontosUsados > 0)
+            {
+                sb.AppendLine($"Pontos usados: {PontosUsados}");
+            }
+
+            if (PontosGerados > 0)
+            {
+                sb.AppendLine($"Pontos gerados: {PontosGerados}");
             }
 
             return sb.ToString();

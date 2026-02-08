@@ -1,4 +1,5 @@
 using System.Text;
+using cineflow.enumeracoes;
 
 namespace cineflow.modelos
 {
@@ -10,10 +11,12 @@ namespace cineflow.modelos
         public string Genero { get; set; }
         public DateTime AnoLancamento { get; set; }
         public bool Eh3D { get; set; }
+        public ClassificacaoIndicativa Classificacao { get; set; }
 
         public List<Sessao> Sessoes { get; set; }
 
-        public Filme(int id, string titulo, int duracao, string genero, DateTime anoLancamento, bool eh3D = false)
+        public Filme(int id, string titulo, int duracao, string genero, DateTime anoLancamento,
+            bool eh3D = false, ClassificacaoIndicativa classificacao = ClassificacaoIndicativa.Livre)
         {
             Id = id;
             Titulo = titulo;
@@ -21,11 +24,13 @@ namespace cineflow.modelos
             Genero = genero;
             AnoLancamento = anoLancamento;
             Eh3D = eh3D;
+            Classificacao = classificacao;
             Sessoes = new List<Sessao>();
         }
 
         //métodos
-        public void AtualizarDetalhes(string? titulo = null, int? duracao = null, string? genero = null, DateTime? anoLancamento = null)
+        public void AtualizarDetalhes(string? titulo = null, int? duracao = null, string? genero = null,
+            DateTime? anoLancamento = null, ClassificacaoIndicativa? classificacao = null)
         {
             if (!string.IsNullOrWhiteSpace(titulo))
             {
@@ -44,6 +49,11 @@ namespace cineflow.modelos
             if (anoLancamento.HasValue)
             {
                 AnoLancamento = anoLancamento.Value;
+            }
+
+            if (classificacao.HasValue)
+            {
+                Classificacao = classificacao.Value;
             }
         }
 
@@ -65,6 +75,7 @@ namespace cineflow.modelos
             sb.AppendLine($"Gênero: {Genero}");
             sb.AppendLine($"Ano de Lançamento: {AnoLancamento.Year}");
             sb.AppendLine($"3D: {(Eh3D ? "Sim" : "Nao")}");
+            sb.AppendLine($"Classificacao: {Classificacao}");
             return sb.ToString();
         }
     }

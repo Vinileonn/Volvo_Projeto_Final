@@ -1,6 +1,7 @@
 using cineflow.modelos;
 using cineflow.servicos;
 using cineflow.excecoes;
+using cineflow.enumeracoes;
 
 namespace cineflow.controladores
 {
@@ -91,11 +92,12 @@ namespace cineflow.controladores
         }
 
         public (bool sucesso, string mensagem) AtualizarFilme(int id, string? titulo = null, int? duracao = null,
-                                   string? genero = null, DateTime? anoLancamento = null)
+                                   string? genero = null, DateTime? anoLancamento = null,
+                                   ClassificacaoIndicativa? classificacao = null)
         {
             try
             {
-                FilmeServico.AtualizarFilme(id, titulo, duracao, genero, anoLancamento);
+                FilmeServico.AtualizarFilme(id, titulo, duracao, genero, anoLancamento, classificacao);
                 return (true, "Filme atualizado com sucesso.");
             }
             catch (RecursoNaoEncontradoExcecao ex)

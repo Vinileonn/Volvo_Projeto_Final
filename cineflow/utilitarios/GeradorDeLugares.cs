@@ -43,7 +43,8 @@ namespace cineflow.utilitarios
 						quantidadeCasal--;
 					}
 
-					Assento assento = new Assento(assentos.Count + 1, filaAtual, assentoNumero, sala, null, tipo, lugares);
+					bool preferencial = filaAtual == 'A';
+					Assento assento = new Assento(assentos.Count + 1, filaAtual, assentoNumero, sala, null, tipo, lugares, preferencial);
 					assentos.Add(assento);
 					assentoNumero++;
 					lugaresGerados += lugares;

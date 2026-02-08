@@ -12,16 +12,22 @@ namespace cineflow.visualizacao
         private readonly ClienteControlador clienteControlador;
         private readonly PedidoControlador pedidoControlador;
         private readonly AutenticacaoControlador autenticacaoControlador;
+        private readonly SalaControlador salaControlador;
+        private readonly AluguelSalaControlador aluguelControlador;
         private List<ItemPedidoAlimento> carrinho = new List<ItemPedidoAlimento>();
 
         public MenuCliente(
             ClienteControlador clienteControlador,
             PedidoControlador pedidoControlador,
-            AutenticacaoControlador autenticacaoControlador)
+            AutenticacaoControlador autenticacaoControlador,
+            SalaControlador salaControlador,
+            AluguelSalaControlador aluguelControlador)
         {
             this.clienteControlador = clienteControlador;
             this.pedidoControlador = pedidoControlador;
             this.autenticacaoControlador = autenticacaoControlador;
+            this.salaControlador = salaControlador;
+            this.aluguelControlador = aluguelControlador;
         }
 
         public void Executar(Cliente cliente, List<ItemPedidoAlimento> carrinho)
@@ -37,12 +43,17 @@ namespace cineflow.visualizacao
                     "Visualizar sessoes",
                     "Comprar ingresso",
                     "Ver meus ingressos",
+                    "Ver minhas cortesias",
+                    "Ver pontos de fidelidade",
+                    "Realizar check-in",
                     "Gerenciar carrinho de produtos",
                     "Ver historico de pedidos",
                     "Alterar senha",
+                    "Solicitar aluguel de sala",
+                    "Ver meus alugueis",
                     "Logout");
 
-                var opcao = MenuHelper.LerOpcaoInteira(0, 8);
+                var opcao = MenuHelper.LerOpcaoInteira(0, 13);
 
                 switch (opcao)
                 {
@@ -59,15 +70,30 @@ namespace cineflow.visualizacao
                         VerIngressos(cliente);
                         break;
                     case 5:
-                        GerenciarCarrinho(cliente);
+                        VerCortesias(cliente);
                         break;
                     case 6:
-                        VerHistoricoPedidos(cliente);
+                        VerPontosFidelidade(cliente);
                         break;
                     case 7:
-                        AlterarSenha(cliente);
+                        RealizarCheckIn(cliente);
                         break;
                     case 8:
+                        GerenciarCarrinho(cliente);
+                        break;
+                    case 9:
+                        VerHistoricoPedidos(cliente);
+                        break;
+                    case 10:
+                        AlterarSenha(cliente);
+                        break;
+                    case 11:
+                        SolicitarAluguel(cliente);
+                        break;
+                    case 12:
+                        VerMeusAlugueis(cliente);
+                        break;
+                    case 13:
                     case 0:
                         return;
                 }
@@ -170,6 +196,20 @@ namespace cineflow.visualizacao
             char fila = LerFila();
             int numero = MenuHelper.LerInteiro("Numero do assento: ", 1, 999);
 
+            bool reservaAntecipada = MenuHelper.Confirmar("Reserva antecipada? (taxa fixa)");
+
+            int pontosUsados = 0;
+            if (cliente.PontosFidelidade > 0 && MenuHelper.Confirmar("Usar pontos de fidelidade?"))
+            {
+                pontosUsados = MenuHelper.LerInteiro("Quantidade de pontos a usar: ", 1, cliente.PontosFidelidade);
+            }
+
+            string? cupomParceiro = null;
+            if (!string.IsNullOrWhiteSpace(sessao.Parceiro))
+            {
+                cupomParceiro = MenuHelper.LerTextoOpcional("Cupom de parceria (ENTER para nenhum): ");
+            }
+
             var formaPagamento = LerFormaPagamento();
             decimal valorPago = 0m;
             if (formaPagamento == FormaPagamento.Dinheiro)
@@ -185,10 +225,14 @@ namespace cineflow.visualizacao
                     fila,
                     numero,
                     formaPagamento,
-                    valorPago);
+                    valorPago,
+                    cupomParceiro,
+                    reservaAntecipada,
+                    pontosUsados);
 
                 MenuHelper.ExibirMensagem(mensagem);
                 ExibirTrocoIngresso(ingresso);
+                OferecerCombo(sessao);
                 MenuHelper.Pausar();
                 return;
             }
@@ -201,10 +245,14 @@ namespace cineflow.visualizacao
                 numero,
                 motivo,
                 formaPagamento,
-                valorPago);
+                valorPago,
+                cupomParceiro,
+                reservaAntecipada,
+                pontosUsados);
 
             MenuHelper.ExibirMensagem(mensagemMeia);
             ExibirTrocoIngresso(ingressoMeia);
+            OferecerCombo(sessao);
             MenuHelper.Pausar();
         }
 
@@ -221,6 +269,53 @@ namespace cineflow.visualizacao
                 ExibirIngressosTabela(ingressos);
             }
 
+            MenuHelper.Pausar();
+        }
+
+        private void VerCortesias(Cliente cliente)
+        {
+            MenuHelper.LimparConsole();
+            MenuHelper.MostrarTitulo("Minhas Cortesias");
+
+            if (cliente.Cortesias.Count == 0)
+            {
+                MenuHelper.ExibirMensagem("Nenhuma cortesia disponivel.");
+                MenuHelper.Pausar();
+                return;
+            }
+
+            ExibirCortesiasTabela(cliente.Cortesias);
+            MenuHelper.Pausar();
+        }
+
+        private void VerPontosFidelidade(Cliente cliente)
+        {
+            MenuHelper.LimparConsole();
+            MenuHelper.MostrarTitulo("Pontos de Fidelidade");
+            Console.WriteLine($"Pontos atuais: {cliente.PontosFidelidade}");
+            Console.WriteLine("Cada ponto vale R$ 0,10 para desconto.");
+            MenuHelper.Pausar();
+        }
+
+        private void RealizarCheckIn(Cliente cliente)
+        {
+            MenuHelper.LimparConsole();
+            MenuHelper.MostrarTitulo("Check-in Antecipado");
+
+            var (ingressos, mensagem) = clienteControlador.ListarIngressosDoCliente(cliente);
+            MenuHelper.ExibirMensagem(mensagem);
+            if (ingressos.Count == 0)
+            {
+                MenuHelper.Pausar();
+                return;
+            }
+
+            ExibirIngressosTabela(ingressos);
+            int maxId = ingressos.Max(i => i.Id);
+            int ingressoId = MenuHelper.LerInteiro("ID do ingresso: ", 1, maxId);
+
+            var resultado = clienteControlador.RealizarCheckIn(ingressoId);
+            MenuHelper.ExibirMensagem(resultado.mensagem);
             MenuHelper.Pausar();
         }
 
@@ -401,7 +496,7 @@ namespace cineflow.visualizacao
                     return;
                 }
 
-                var resultadoItem = clienteControlador.AdicionarItemAoPedido(pedido.Id, item.Produto.Id, item.Quantidade);
+                var resultadoItem = clienteControlador.AdicionarItemAoPedido(pedido.Id, item.Produto.Id, item.Quantidade, item.Preco);
                 if (!resultadoItem.sucesso)
                 {
                     MenuHelper.ExibirMensagem(resultadoItem.mensagem);
@@ -426,7 +521,14 @@ namespace cineflow.visualizacao
                 valorPago = MenuHelper.LerDecimal("Valor pago: ", 0m, 100000m);
             }
 
-            var resultado = pedidoControlador.RegistrarPagamento(pedido.Id, formaPagamento, valorPago);
+            int pontosUsados = 0;
+            if (pedidoAtualizado.Cliente != null && pedidoAtualizado.Cliente.PontosFidelidade > 0 &&
+                MenuHelper.Confirmar("Usar pontos de fidelidade?"))
+            {
+                pontosUsados = MenuHelper.LerInteiro("Quantidade de pontos a usar: ", 1, pedidoAtualizado.Cliente.PontosFidelidade);
+            }
+
+            var resultado = pedidoControlador.RegistrarPagamento(pedido.Id, formaPagamento, valorPago, pontosUsados);
             MenuHelper.ExibirMensagem(resultado.mensagem);
 
             var (pedidoPago, mensagemPago) = clienteControlador.ObterPedido(pedido.Id);
@@ -462,6 +564,51 @@ namespace cineflow.visualizacao
             }
 
             MenuHelper.Pausar();
+        }
+
+        private void OferecerCombo(Sessao sessao)
+        {
+            if (!MenuHelper.Confirmar("Deseja adicionar um combo da sessao (10% de desconto)?"))
+            {
+                return;
+            }
+
+            var (produtos, mensagem) = clienteControlador.ListarProdutosAlimento();
+            MenuHelper.ExibirMensagem(mensagem);
+            if (produtos.Count == 0)
+            {
+                return;
+            }
+
+            ExibirProdutosTabela(produtos);
+            int maxId = produtos.Max(p => p.Id);
+            int produtoId = MenuHelper.LerInteiro("ID do produto: ", 1, maxId);
+            var produto = produtos.FirstOrDefault(p => p.Id == produtoId);
+            if (produto == null)
+            {
+                MenuHelper.ExibirMensagem("Produto nao encontrado.");
+                return;
+            }
+
+            int quantidade = MenuHelper.LerInteiro("Quantidade: ", 1, 999);
+            if (quantidade > produto.EstoqueAtual)
+            {
+                MenuHelper.ExibirMensagem("Quantidade indisponivel em estoque.");
+                return;
+            }
+            var precoCombo = produto.Preco * 0.9f;
+
+            var itemExistente = carrinho.FirstOrDefault(i => i.Produto?.Id == produtoId && System.Math.Abs(i.Preco - precoCombo) < 0.01f);
+            if (itemExistente != null)
+            {
+                itemExistente.Quantidade += quantidade;
+            }
+            else
+            {
+                carrinho.Add(new ItemPedidoAlimento(0, produto, quantidade, precoCombo));
+            }
+
+            MenuHelper.ExibirMensagem("Combo adicionado ao carrinho com desconto.");
         }
 
         private void AlterarSenha(Cliente cliente)
@@ -586,13 +733,13 @@ namespace cineflow.visualizacao
         private static void ExibirFilmesTabela(List<Filme> filmes)
         {
             Console.WriteLine();
-            Console.WriteLine($"{"ID",-4}{"Titulo",-32}{"Genero",-18}{"Duracao",-10}{"3D",-4}");
-            Console.WriteLine(new string('-', 68));
+            Console.WriteLine($"{"ID",-4}{"Titulo",-28}{"Genero",-16}{"Duracao",-10}{"3D",-4}{"Classif",-7}");
+            Console.WriteLine(new string('-', 70));
 
             foreach (var filme in filmes)
             {
                 string duracao = FormatarDuracao(filme.Duracao);
-                Console.WriteLine($"{filme.Id,-4}{Truncar(filme.Titulo, 30),-32}{Truncar(filme.Genero, 16),-18}{duracao,-10}{(filme.Eh3D ? "Sim" : "Nao"),-4}");
+                Console.WriteLine($"{filme.Id,-4}{Truncar(filme.Titulo, 26),-28}{Truncar(filme.Genero, 14),-16}{duracao,-10}{(filme.Eh3D ? "Sim" : "Nao"),-4}{((int)filme.Classificacao),-6}");
             }
 
             Console.WriteLine();
@@ -601,13 +748,13 @@ namespace cineflow.visualizacao
         private static void ExibirSessoesTabela(List<Sessao> sessoes)
         {
             Console.WriteLine();
-            Console.WriteLine($"{"ID",-4}{"Filme",-28}{"Sala",-12}{"Data/Hora",-18}{"Preco",-10}");
-            Console.WriteLine(new string('-', 72));
+            Console.WriteLine($"{"ID",-4}{"Filme",-20}{"Sala",-10}{"Data/Hora",-18}{"Preco",-10}{"Tipo",-10}{"Idioma",-10}{"Classif",-7}");
+            Console.WriteLine(new string('-', 95));
 
             foreach (var sessao in sessoes)
             {
                 string dataHora = FormatadorData.FormatarDataComHora(sessao.DataHorario);
-                Console.WriteLine($"{sessao.Id,-4}{Truncar(sessao.Filme.Titulo, 26),-28}{Truncar(sessao.Sala.Nome, 10),-12}{dataHora,-18}{FormatadorMoeda.Formatar(sessao.PrecoFinal),-10}");
+                Console.WriteLine($"{sessao.Id,-4}{Truncar(sessao.Filme.Titulo, 18),-20}{Truncar(sessao.Sala.Nome, 8),-10}{dataHora,-18}{FormatadorMoeda.Formatar(sessao.PrecoFinal),-10}{Truncar(sessao.Tipo.ToString(), 8),-10}{Truncar(sessao.Idioma.ToString(), 8),-10}{((int)sessao.Filme.Classificacao),-6}");
             }
 
             Console.WriteLine();
@@ -616,13 +763,15 @@ namespace cineflow.visualizacao
         private static void ExibirProdutosTabela(List<ProdutoAlimento> produtos)
         {
             Console.WriteLine();
-            Console.WriteLine($"{"ID",-4}{"Produto",-28}{"Categoria",-14}{"Preco",-12}{"Estoque",-8}");
-            Console.WriteLine(new string('-', 70));
+            Console.WriteLine($"{"ID",-4}{"Produto",-22}{"Categoria",-12}{"Preco",-10}{"Estoque",-8}{"Tematico",-10}{"Pre-Est",-8}");
+            Console.WriteLine(new string('-', 80));
 
             foreach (var produto in produtos)
             {
                 string categoria = produto.Categoria?.ToString() ?? "-";
-                Console.WriteLine($"{produto.Id,-4}{Truncar(produto.Nome, 26),-28}{Truncar(categoria, 12),-14}{FormatadorMoeda.Formatar(produto.Preco),-12}{produto.EstoqueAtual,-8}");
+                string tematico = produto.EhTematico ? (produto.TemaFilme ?? "Sim") : "Nao";
+                string pre = produto.ExclusivoPreEstreia ? "Sim" : "Nao";
+                Console.WriteLine($"{produto.Id,-4}{Truncar(produto.Nome, 20),-22}{Truncar(categoria, 10),-12}{FormatadorMoeda.Formatar(produto.Preco),-10}{produto.EstoqueAtual,-8}{Truncar(tematico, 8),-10}{pre,-8}");
             }
 
             Console.WriteLine();
@@ -647,14 +796,30 @@ namespace cineflow.visualizacao
         private static void ExibirIngressosTabela(List<Ingresso> ingressos)
         {
             Console.WriteLine();
-            Console.WriteLine($"{"ID",-4}{"Filme",-28}{"Sessao",-18}{"Assento",-8}{"Tipo",-18}{"Preco",-10}");
-            Console.WriteLine(new string('-', 90));
+            Console.WriteLine($"{"ID",-4}{"Filme",-22}{"Sessao",-18}{"Assento",-8}{"Tipo",-14}{"Preco",-10}{"Check-in",-10}{"Reserva",-8}");
+            Console.WriteLine(new string('-', 100));
 
             foreach (var ingresso in ingressos)
             {
                 string dataHora = FormatadorData.FormatarDataComHora(ingresso.Sessao.DataHorario);
                 string preco = FormatadorMoeda.Formatar((decimal)ingresso.CalcularPreco(0f));
-                Console.WriteLine($"{ingresso.Id,-4}{Truncar(ingresso.Sessao.Filme.Titulo, 26),-28}{dataHora,-18}{ingresso.Fila}{ingresso.Numero,-6}{Truncar(ingresso.ObterTipo(), 16),-18}{preco,-10}");
+                string checkin = ingresso.CheckInRealizado ? "Sim" : "Nao";
+                string reserva = ingresso.ReservaAntecipada ? "Sim" : "Nao";
+                Console.WriteLine($"{ingresso.Id,-4}{Truncar(ingresso.Sessao.Filme.Titulo, 20),-22}{dataHora,-18}{ingresso.Fila}{ingresso.Numero,-6}{Truncar(ingresso.ObterTipo(), 12),-14}{preco,-10}{checkin,-10}{reserva,-8}");
+            }
+
+            Console.WriteLine();
+        }
+
+        private static void ExibirCortesiasTabela(List<ProdutoAlimento> cortesias)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"{"ID",-4}{"Cortesia",-30}{"Descricao",-30}");
+            Console.WriteLine(new string('-', 70));
+
+            foreach (var item in cortesias)
+            {
+                Console.WriteLine($"{item.Id,-4}{Truncar(item.Nome, 28),-30}{Truncar(item.Descricao ?? "-", 28),-30}");
             }
 
             Console.WriteLine();
@@ -666,11 +831,106 @@ namespace cineflow.visualizacao
             Console.WriteLine($"Pedido {pedido.Id} - {FormatadorData.FormatarDataComHora(pedido.DataPedido)}");
             ExibirItensPedido(pedido.Itens);
             Console.WriteLine($"Total: {FormatadorMoeda.Formatar(pedido.ValorTotal)}");
+            if (pedido.ValorDesconto > 0)
+            {
+                Console.WriteLine($"Desconto: {FormatadorMoeda.Formatar(pedido.ValorDesconto)}");
+                if (!string.IsNullOrWhiteSpace(pedido.MotivoDesconto))
+                {
+                    Console.WriteLine($"Motivo: {pedido.MotivoDesconto}");
+                }
+            }
+            if (pedido.PontosUsados > 0)
+            {
+                Console.WriteLine($"Pontos usados: {pedido.PontosUsados}");
+            }
+            if (pedido.PontosGerados > 0)
+            {
+                Console.WriteLine($"Pontos gerados: {pedido.PontosGerados}");
+            }
             if (pedido.FormaPagamento.HasValue)
             {
                 Console.WriteLine($"Pagamento: {pedido.FormaPagamento}");
             }
             Console.WriteLine();
+        }
+
+        private static void ExibirSalasTabela(List<Sala> salas)
+        {
+            Console.WriteLine("\n{0,-4} {1,-25} {2,-12} {3,-20} {4,-8}", "ID", "Nome", "Capacidade", "Cinema", "Tipo");
+            Console.WriteLine(new string('-', 80));
+            foreach (var sala in salas)
+            {
+                var cinemaName = sala.Cinema != null ? sala.Cinema.Nome : "Nao informado";
+                Console.WriteLine("{0,-4} {1,-25} {2,-12} {3,-20} {4,-8}", sala.Id, sala.Nome, sala.Capacidade, cinemaName, sala.Tipo);
+            }
+        }
+
+        private static void ExibirAlugueisTabela(List<AluguelSala> alugueis)
+        {
+            Console.WriteLine("\n{0,-4} {1,-18} {2,-16} {3,-16} {4,-8} {5,-8} {6,-10}", "ID", "Sala", "Inicio", "Fim", "Status", "Pacote", "Valor");
+            Console.WriteLine(new string('-', 95));
+            foreach (var aluguel in alugueis)
+            {
+                Console.WriteLine("{0,-4} {1,-18} {2,-16} {3,-16} {4,-8} {5,-8} {6,-10}",
+                    aluguel.Id,
+                    Truncar(aluguel.Sala.Nome, 16),
+                    aluguel.Inicio.ToString("dd/MM/yyyy HH:mm"),
+                    aluguel.Fim.ToString("dd/MM/yyyy HH:mm"),
+                    aluguel.Status,
+                    aluguel.PacoteAniversario ? "Sim" : "Nao",
+                    FormatadorMoeda.Formatar((float)aluguel.Valor));
+            }
+        }
+
+        private void SolicitarAluguel(Cliente cliente)
+        {
+            MenuHelper.LimparConsole();
+            MenuHelper.MostrarTitulo("Solicitar Aluguel de Sala");
+
+            var (salas, mensagem) = salaControlador.ListarSalas();
+            MenuHelper.ExibirMensagem(mensagem);
+            if (salas.Count == 0)
+            {
+                MenuHelper.Pausar();
+                return;
+            }
+
+            ExibirSalasTabela(salas);
+            var salaId = MenuHelper.LerInteiro("ID da Sala: ", 1, salas.Max(s => s.Id));
+            var sala = salas.FirstOrDefault(s => s.Id == salaId);
+            if (sala == null)
+            {
+                MenuHelper.ExibirMensagem("Sala nao encontrada.");
+                MenuHelper.Pausar();
+                return;
+            }
+
+            var inicio = MenuHelper.LerDataHora("Data/Hora de inicio (dd/MM/yyyy HH:mm): ");
+            var fim = MenuHelper.LerDataHora("Data/Hora de fim (dd/MM/yyyy HH:mm): ");
+            var motivo = MenuHelper.LerTextoNaoVazio("Motivo (aniversario, evento, etc): ");
+            var contato = MenuHelper.LerTextoOpcional("Contato (ENTER para usar telefone cadastrado): ");
+            var contatoFinal = string.IsNullOrWhiteSpace(contato) ? cliente.Telefone : contato;
+            bool pacoteAniversario = MenuHelper.Confirmar("Pacote aniversario?");
+
+            var aluguel = new AluguelSala(0, sala, inicio, fim, cliente.Nome, contatoFinal, motivo, 0m, StatusAluguel.Solicitado, cliente, pacoteAniversario);
+            var (sucesso, msg) = aluguelControlador.SolicitarAluguel(aluguel);
+            MenuHelper.ExibirMensagem(msg);
+            MenuHelper.Pausar();
+        }
+
+        private void VerMeusAlugueis(Cliente cliente)
+        {
+            MenuHelper.LimparConsole();
+            MenuHelper.MostrarTitulo("Meus Alugueis");
+
+            var (alugueis, mensagem) = aluguelControlador.ListarPorCliente(cliente);
+            MenuHelper.ExibirMensagem(mensagem);
+            if (alugueis.Count > 0)
+            {
+                ExibirAlugueisTabela(alugueis);
+            }
+
+            MenuHelper.Pausar();
         }
 
         private static void ExibirItensPedido(List<ItemPedidoAlimento> itens)

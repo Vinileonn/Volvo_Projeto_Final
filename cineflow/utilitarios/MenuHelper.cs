@@ -7,6 +7,11 @@ namespace cineflow.utilitarios
     {
         public static void LimparConsole()
         {
+            if (Console.IsOutputRedirected || Console.IsInputRedirected)
+            {
+                return;
+            }
+
             Console.Clear();
         }
 

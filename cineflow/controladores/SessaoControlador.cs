@@ -1,6 +1,7 @@
 using cineflow.modelos;
 using cineflow.servicos;
 using cineflow.excecoes;
+using cineflow.enumeracoes;
 
 namespace cineflow.controladores
 {
@@ -97,11 +98,13 @@ namespace cineflow.controladores
             }
         }
 
-        public (bool sucesso, string mensagem) AtualizarSessao(int id, DateTime? dataHorario = null, float? precoBase = null, Filme? filme = null, Sala? sala = null)
+        public (bool sucesso, string mensagem) AtualizarSessao(int id, DateTime? dataHorario = null, float? precoBase = null,
+            Filme? filme = null, Sala? sala = null, TipoSessao? tipo = null, string? nomeEvento = null, string? parceiro = null,
+            IdiomaSessao? idioma = null)
         {
             try
             {
-                SessaoServico.AtualizarSessao(id, dataHorario, precoBase, filme, sala);
+                SessaoServico.AtualizarSessao(id, dataHorario, precoBase, filme, sala, tipo, nomeEvento, parceiro, idioma);
                 return (true, "Sessao atualizada com sucesso.");
             }
             catch (RecursoNaoEncontradoExcecao ex)

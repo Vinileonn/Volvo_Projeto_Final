@@ -82,7 +82,8 @@ namespace cineflow.modelos
                 if (assento.Disponivel)
                 {
                     string marcador = assento.Tipo == TipoAssento.PCD ? "P" :
-                        assento.Tipo == TipoAssento.Casal ? "C" : " ";
+                        assento.Tipo == TipoAssento.Casal ? "C" :
+                        assento.Preferencial ? "F" : " ";
                     sb.Append($"[{assento.Fila}{assento.Numero:D2}{marcador}] ");
                 }
                 else
@@ -93,7 +94,7 @@ namespace cineflow.modelos
 
             sb.AppendLine();
             sb.AppendLine();
-            sb.AppendLine("Legenda: [A01 ] = Disponivel | [ X ] = Reservado | P = PCD | C = Casal");
+            sb.AppendLine("Legenda: [A01 ] = Disponivel | [ X ] = Reservado | P = PCD | C = Casal | F = Preferencial");
             sb.AppendLine($"Ocupação: {Assentos.Count(a => !a.Disponivel)} / {Assentos.Count}");
 
             return sb.ToString();

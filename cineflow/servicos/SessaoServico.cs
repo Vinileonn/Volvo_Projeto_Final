@@ -8,7 +8,14 @@ namespace cineflow.servicos
     {
         private readonly List<Sessao> sessoes;
         private const float AdicionalSalaXD = 12f;
+        private const float AdicionalSalaVIP = 35f;
+        private const float AdicionalSala4D = 25f;
         private const float AdicionalFilme3D = 7f;
+        private const float AdicionalPreEstreia = 15f;
+        private const float AdicionalEvento = 10f;
+        private const float DescontoEspecialBebe = 0.20f;
+        private const float DescontoEspecialPet = 0.15f;
+        private const float DescontoMatine = 0.25f;
 
         public SessaoServico()
         {
@@ -47,9 +54,19 @@ namespace cineflow.servicos
                 throw new OperacaoNaoPermitidaExcecao($"Conflito de horario na sala '{sessao.Sala.Nome}'. Ja existe uma sessao neste horario.");
             }
 
+            if (sessao.Tipo != TipoSessao.Evento)
+            {
+                sessao.NomeEvento = null;
+                sessao.Parceiro = null;
+            }
+
+            ValidarRequisitos(sessao);
+
             var adicionalSala = CalcularAdicionalSala(sessao.Sala.Tipo);
             var adicional3D = CalcularAdicional3D(sessao.Filme.Eh3D);
-            sessao.RecalcularPreco(adicionalSala, adicional3D);
+            var adicionalTipoSessao = CalcularAdicionalTipoSessao(sessao.Tipo);
+            sessao.RecalcularPreco(adicionalSala + adicionalTipoSessao, adicional3D);
+            sessao.PrecoFinal = AplicarDescontos(sessao.PrecoFinal, sessao);
 
             sessao.Id = sessoes.Count > 0 ? sessoes.Max(s => s.Id) + 1 : 1;
             sessoes.Add(sessao);
@@ -85,7 +102,9 @@ namespace cineflow.servicos
             return sessoes.Where(s => s.Sala?.Id == salaId).ToList();
         }
 
-        public void AtualizarSessao(int id, DateTime? dataHorario = null, float? precoBase = null, Filme? filme = null, Sala? sala = null)
+        public void AtualizarSessao(int id, DateTime? dataHorario = null, float? precoBase = null, Filme? filme = null,
+            Sala? sala = null, TipoSessao? tipo = null, string? nomeEvento = null, string? parceiro = null,
+            IdiomaSessao? idioma = null)
         {
             var sessao = ObterSessao(id);
 
@@ -93,6 +112,16 @@ namespace cineflow.servicos
             var novoPrecoBase = precoBase ?? sessao.PrecoBase;
             var novoFilme = filme ?? sessao.Filme;
             var novaSala = sala ?? sessao.Sala;
+            var novoTipo = tipo ?? sessao.Tipo;
+            var novoNomeEvento = nomeEvento ?? sessao.NomeEvento;
+            var novoParceiro = parceiro ?? sessao.Parceiro;
+            var novoIdioma = idioma ?? sessao.Idioma;
+
+            if (novoTipo != TipoSessao.Evento)
+            {
+                novoNomeEvento = null;
+                novoParceiro = null;
+            }
 
             if (novoDataHorario == default)
             {
@@ -141,10 +170,18 @@ namespace cineflow.servicos
             sessao.PrecoBase = novoPrecoBase;
             sessao.Filme = novoFilme;
             sessao.Sala = novaSala;
+            sessao.Tipo = novoTipo;
+            sessao.NomeEvento = novoNomeEvento;
+            sessao.Parceiro = novoParceiro;
+            sessao.Idioma = novoIdioma;
+
+            ValidarRequisitos(sessao);
 
             var adicionalSala = CalcularAdicionalSala(novaSala.Tipo);
             var adicional3D = CalcularAdicional3D(novoFilme.Eh3D);
-            sessao.RecalcularPreco(adicionalSala, adicional3D);
+            var adicionalTipoSessao = CalcularAdicionalTipoSessao(novoTipo);
+            sessao.RecalcularPreco(adicionalSala + adicionalTipoSessao, adicional3D);
+            sessao.PrecoFinal = AplicarDescontos(sessao.PrecoFinal, sessao);
         }
 
         public void DeletarSessao(int id)
@@ -170,12 +207,86 @@ namespace cineflow.servicos
 
         private static float CalcularAdicionalSala(TipoSala tipoSala)
         {
-            return tipoSala == TipoSala.XD ? AdicionalSalaXD : 0f;
+            if (tipoSala == TipoSala.XD)
+            {
+                return AdicionalSalaXD;
+            }
+
+            if (tipoSala == TipoSala.VIP)
+            {
+                return AdicionalSalaVIP;
+            }
+
+            if (tipoSala == TipoSala.QuatroD)
+            {
+                return AdicionalSala4D;
+            }
+
+            return 0f;
+        }
+
+        private static float CalcularAdicionalTipoSessao(TipoSessao tipoSessao)
+        {
+            if (tipoSessao == TipoSessao.PreEstreia)
+            {
+                return AdicionalPreEstreia;
+            }
+
+            if (tipoSessao == TipoSessao.Evento)
+            {
+                return AdicionalEvento;
+            }
+
+            return 0f;
+        }
+
+        private static float AplicarDescontos(float precoAtual, Sessao sessao)
+        {
+            float desconto = 0f;
+            if (sessao.Tipo == TipoSessao.EspecialBebe)
+            {
+                desconto += DescontoEspecialBebe;
+            }
+            else if (sessao.Tipo == TipoSessao.EspecialPet)
+            {
+                desconto += DescontoEspecialPet;
+            }
+            else if (sessao.Tipo == TipoSessao.Matine)
+            {
+                desconto += DescontoMatine;
+            }
+
+            if (desconto <= 0f)
+            {
+                return precoAtual;
+            }
+
+            var precoComDesconto = precoAtual - (precoAtual * desconto);
+            return Math.Max(0f, precoComDesconto);
         }
 
         private static float CalcularAdicional3D(bool eh3D)
         {
             return eh3D ? AdicionalFilme3D : 0f;
+        }
+
+        private static void ValidarRequisitos(Sessao sessao)
+        {
+            if (sessao.Sala?.Cinema == null)
+            {
+                return;
+            }
+
+            var funcionarios = sessao.Sala.Cinema.Funcionarios;
+            if (sessao.Sala.Tipo == TipoSala.VIP && !funcionarios.Any(f => f.Cargo == CargoFuncionario.Garcom))
+            {
+                throw new OperacaoNaoPermitidaExcecao("Sala VIP exige ao menos um garcom no cinema.");
+            }
+
+            if (sessao.Tipo == TipoSessao.PreEstreia && !funcionarios.Any(f => f.Cargo == CargoFuncionario.Gerente))
+            {
+                throw new OperacaoNaoPermitidaExcecao("Pre-estreia exige gerente no cinema.");
+            }
         }
     }
 }

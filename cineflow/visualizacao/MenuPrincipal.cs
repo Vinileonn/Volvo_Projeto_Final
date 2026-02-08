@@ -288,13 +288,13 @@ namespace cineflow.menus
         private static void ExibirFilmesTabela(List<Filme> filmes)
         {
             Console.WriteLine();
-            Console.WriteLine($"{"ID",-4}{"Titulo",-32}{"Genero",-18}{"Duracao",-10}{"3D",-4}");
-            Console.WriteLine(new string('-', 68));
+            Console.WriteLine($"{"ID",-4}{"Titulo",-28}{"Genero",-16}{"Duracao",-10}{"3D",-4}{"Classif",-7}");
+            Console.WriteLine(new string('-', 70));
 
             foreach (var filme in filmes)
             {
                 string duracao = FormatarDuracao(filme.Duracao);
-                Console.WriteLine($"{filme.Id,-4}{Truncar(filme.Titulo, 30),-32}{Truncar(filme.Genero, 16),-18}{duracao,-10}{(filme.Eh3D ? "Sim" : "Nao"),-4}");
+                Console.WriteLine($"{filme.Id,-4}{Truncar(filme.Titulo, 26),-28}{Truncar(filme.Genero, 14),-16}{duracao,-10}{(filme.Eh3D ? "Sim" : "Nao"),-4}{((int)filme.Classificacao),-6}");
             }
 
             Console.WriteLine();
@@ -303,13 +303,13 @@ namespace cineflow.menus
         private static void ExibirSessoesTabela(List<Sessao> sessoes)
         {
             Console.WriteLine();
-            Console.WriteLine($"{"ID",-4}{"Filme",-28}{"Sala",-12}{"Data/Hora",-18}{"Preco",-10}");
-            Console.WriteLine(new string('-', 72));
+            Console.WriteLine($"{"ID",-4}{"Filme",-20}{"Sala",-10}{"Data/Hora",-18}{"Preco",-10}{"Tipo",-10}{"Idioma",-10}{"Classif",-7}");
+            Console.WriteLine(new string('-', 95));
 
             foreach (var sessao in sessoes)
             {
                 string dataHora = FormatadorData.FormatarDataComHora(sessao.DataHorario);
-                Console.WriteLine($"{sessao.Id,-4}{Truncar(sessao.Filme.Titulo, 26),-28}{Truncar(sessao.Sala.Nome, 10),-12}{dataHora,-18}{FormatadorMoeda.Formatar(sessao.PrecoFinal),-10}");
+                Console.WriteLine($"{sessao.Id,-4}{Truncar(sessao.Filme.Titulo, 18),-20}{Truncar(sessao.Sala.Nome, 8),-10}{dataHora,-18}{FormatadorMoeda.Formatar(sessao.PrecoFinal),-10}{Truncar(sessao.Tipo.ToString(), 8),-10}{Truncar(sessao.Idioma.ToString(), 8),-10}{((int)sessao.Filme.Classificacao),-6}");
             }
 
             Console.WriteLine();
@@ -318,13 +318,15 @@ namespace cineflow.menus
         private static void ExibirProdutosTabela(List<ProdutoAlimento> produtos)
         {
             Console.WriteLine();
-            Console.WriteLine($"{"ID",-4}{"Produto",-28}{"Categoria",-14}{"Preco",-12}{"Estoque",-8}");
-            Console.WriteLine(new string('-', 70));
+            Console.WriteLine($"{"ID",-4}{"Produto",-22}{"Categoria",-12}{"Preco",-10}{"Estoque",-8}{"Tematico",-10}{"Pre-Est",-8}");
+            Console.WriteLine(new string('-', 80));
 
             foreach (var produto in produtos)
             {
                 string categoria = produto.Categoria?.ToString() ?? "-";
-                Console.WriteLine($"{produto.Id,-4}{Truncar(produto.Nome, 26),-28}{Truncar(categoria, 12),-14}{FormatadorMoeda.Formatar(produto.Preco),-12}{produto.EstoqueAtual,-8}");
+                string tematico = produto.EhTematico ? (produto.TemaFilme ?? "Sim") : "Nao";
+                string pre = produto.ExclusivoPreEstreia ? "Sim" : "Nao";
+                Console.WriteLine($"{produto.Id,-4}{Truncar(produto.Nome, 20),-22}{Truncar(categoria, 10),-12}{FormatadorMoeda.Formatar(produto.Preco),-10}{produto.EstoqueAtual,-8}{Truncar(tematico, 8),-10}{pre,-8}");
             }
 
             Console.WriteLine();

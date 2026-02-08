@@ -1,103 +1,106 @@
 RELATORIO GERAL DE ALTERACOES
 
-1) Traducoes e padronizacao para portugues
-- Pastas renomeadas: controllers -> controladores, services -> servicos, models -> modelos,
-    enums -> enumeracoes, utils -> utilitarios, exceptions -> excecoes.
-- Namespaces, classes, arquivos e comentarios ajustados para portugues.
-- Comentarios antigos padronizados como "ANTIGO" e marcadores CRUD traduzidos
-    (CRIAR/LER/ATUALIZAR/EXCLUIR).
-Arquivos: toda a arvore cinema/ (controladores, servicos, modelos, enumeracoes, utilitarios, excecoes).
+1) Padronizacao e idioma
+- Ajustes de textos e comentarios para portugues, incluindo menus e exibicoes.
+- Guard de Console.Clear quando a saida esta redirecionada.
+Arquivos: cineflow/utilitarios/MenuHelper.cs, cineflow/visualizacao/*
 
-2) Cinemas (varios cinemas)
-- Criado modelo, servico e controlador para Cinema.
-- Sala e Funcionario passam a se relacionar com Cinema.
-Arquivos: cinema/modelos/Cinema.cs, cinema/servicos/CinemaServico.cs,
-                    cinema/controladores/CinemaControlador.cs
+2) Novos enums e conceitos
+- TipoSala com VIP e QuatroD.
+- CategoriaProduto com Tematico, Brinde, Poster e Cortesia.
+- CargoFuncionario com Garcom e Gerente.
+- TipoSessao com PreEstreia, EspecialBebe, EspecialPet, Matine e Evento.
+- StatusAluguel, IdiomaSessao e ClassificacaoIndicativa.
+Arquivos: cineflow/enumeracoes/TipoSala.cs, CategoriaProduto.cs, CargoFuncionario.cs,
+          TipoSessao.cs, StatusAluguel.cs, IdiomaSessao.cs, ClassificacaoIndicativa.cs
 
-3) Tipo de sala e filme 3D
-- Criado enum TipoSala.
-- Filme ganhou flag Eh3D.
-- Sessao agora usa PrecoBase e PrecoFinal e recalcula preco com adicionais.
-Arquivos: cinema/enumeracoes/TipoSala.cs, cinema/modelos/Filme.cs,
-                    cinema/modelos/Sessao.cs, cinema/servicos/SessaoServico.cs
+3) Modelos atualizados e novos
+- ProdutoAlimento com flags de tematico, cortesia e exclusividade de pre-estreia.
+- Sessao com tipo, idioma, parceiro e nome de evento.
+- Cliente com pontos de fidelidade, cortesia e verificacoes de aniversario.
+- Ingresso com reserva antecipada, check-in e pontos.
+- PedidoAlimento com descontos, pontos e taxa de cancelamento.
+- Assento com marcador preferencial.
+- Filme com classificacao indicativa.
+- AluguelSala para locacao de sala e pacote aniversario.
+Arquivos: cineflow/modelos/ProdutoAlimento.cs, Sessao.cs, Cliente.cs, Ingresso.cs,
+          PedidoAlimento.cs, Assento.cs, Filme.cs, AluguelSala.cs
 
-4) Ajuste de valores de adicionais (XD e 3D)
-- Valores atualizados e antigos comentados.
-Arquivo: cinema/servicos/SessaoServico.cs
+4) Servicos e regras de negocio
+- Regras de preco por tipo de sala e sessao (VIP/4D/pre-estreia/evento).
+- Descontos por aniversario do cliente com regra por tipo de sala.
+- Cupom de parceria, taxa de reserva e preferenciais.
+- Fidelidade (acumulo e uso de pontos) em ingresso e pedido.
+- Check-in e politica de cancelamento.
+- Alertas de estoque para produtos.
+- Aluguel de sala com precificacao automatica e pacote aniversario.
+Arquivos: cineflow/servicos/SessaoServico.cs, IngressoServico.cs, PedidoAlimentoServico.cs,
+          ProdutoAlimentoServico.cs, AluguelSalaServico.cs, FilmeServico.cs
 
-5) Assentos especiais (PCD e Casal/2 lugares)
-- Criado enum TipoAssento.
-- Assento ganhou Tipo e QuantidadeLugares.
-- Sala guarda quantidades de PCD e Casal e exibe marcadores na disposicao.
-Arquivos: cinema/enumeracoes/TipoAssento.cs, cinema/modelos/Assento.cs,
-                    cinema/modelos/Sala.cs
+5) Controladores
+- Fluxos para pontos, reserva, cupom, check-in e cortesia pre-estreia.
+- Aluguel de sala com validacoes e cancelamento.
+- Atualizacoes de sessao, produtos e filmes com novos campos.
+Arquivos: cineflow/controladores/ClienteControlador.cs, PedidoControlador.cs,
+          SessaoControlador.cs, ProdutoControlador.cs, FilmeControlador.cs,
+          AluguelSalaControlador.cs
 
-6) Geracao de assentos com categorias especiais
-- Gerador cria PCD e Casal respeitando capacidade; metodo antigo comentado.
-Arquivo: cinema/utilitarios/GeradorDeLugares.cs
+6) Menus e visualizacao
+- Novas opcoes de cliente: pontos, cortesias, check-in, carrinho, aluguel.
+- Tabelas com colunas de idioma, classificacao, tipo de sessao e descontos.
+- Menus de produtos com tematicos/cortesias e alertas de estoque.
+- Menu de aluguel e exibicao de alugueis.
+Arquivos: cineflow/visualizacao/MenuCliente.cs, MenuSessoes.cs, MenuProdutos.cs,
+          MenuFilmes.cs, MenuRelatorios.cs, MenuPedidos.cs, MenuAlugueis.cs,
+          MenuAdmin.cs, MenuPrincipal.cs
 
-7) SalaServico e SalaControlador
-- Validacao de quantidades especiais.
-- Atualizacao de sala aceita quantidade de PCD e Casal.
-- Geracao de disposicao com especiais.
-Arquivos: cinema/servicos/SalaServico.cs, cinema/controladores/SalaControlador.cs
+7) Dados iniciais
+- Seed com salas VIP e QuatroD, produtos tematicos/cortesias, sessoes especiais,
+  classificacao indicativa e idioma.
+Arquivo: cineflow/Program.cs
 
-8) Preco por tipo de assento
-- Ingresso soma adicional para assento Casal; PCD sem adicional.
-- Valores antigos comentados.
-Arquivo: cinema/servicos/IngressoServico.cs
+8) Utilitarios
+- Geracao de lugares com assentos preferenciais.
+Arquivo: cineflow/utilitarios/GeradorDeLugares.cs
 
-9) Funcionarios e limpeza
-- Criado enum CargoFuncionario.
-- Criados modelos Funcionario e EscalaLimpeza.
-- Servicos e controladores para funcionarios e limpeza.
-- Validacao de cargo e conflito de horario na limpeza.
-Arquivos: cinema/enumeracoes/CargoFuncionario.cs, cinema/modelos/Funcionario.cs,
-                    cinema/modelos/EscalaLimpeza.cs, cinema/servicos/FuncionarioServico.cs,
-                    cinema/servicos/LimpezaServico.cs, cinema/controladores/FuncionarioControlador.cs,
-                    cinema/controladores/LimpezaControlador.cs
+CHECKLIST DE MIGRACAO PARA API REST (CINEFLOW)
 
-10) Pagamentos e troco
-- Criado enum FormaPagamento.
-- Registro de pagamento em ingresso e pedido de alimento.
-- Calculo de troco detalhado para dinheiro.
-Arquivos: cinema/enumeracoes/FormaPagamento.cs, cinema/utilitarios/CalculadoraTroco.cs,
-                    cinema/servicos/IngressoServico.cs, cinema/servicos/PedidoAlimentoServico.cs,
-                    cinema/controladores/PedidoControlador.cs, cinema/controladores/ClienteControlador.cs
+1) Criar projeto Web API
+[ ] Criar projeto ASP.NET Core Web API no repositorio (ex: cineflow-api/)
+[ ] Manter o console separado ou mover para pasta legacy/
 
-11) Autenticacao e usuarios
-- Admin renomeado para Administrador e credenciais ajustadas.
-- Login renomeado para Autenticar (servico e controlador).
-Arquivos: cinema/modelos/UsuarioModelo/Administrador.cs,
-                    cinema/servicos/AutenticacaoServico.cs, cinema/controladores/AutenticacaoControlador.cs
+2) Modelagem e EF Core
+[ ] Criar DbContext e entidades principais: Filme, Sala, Sessao, Ingresso
+[ ] Definir relacionamentos e chaves (FKs)
+[ ] Adicionar EF Core SQL Server e configurar connection string
+[ ] Criar migrations e executar Update-Database
 
-12) AdministradorControlador
-- Agora expoe controladores de cinema, funcionarios e limpeza.
-- Construtor corrigido para inicializar propriedades corretamente.
-Arquivo: cinema/controladores/AdministradorControlador.cs
+3) Controllers REST
+[ ] FilmesController (CRUD completo)
+[ ] SalasController (CRUD completo)
+[ ] SessoesController (CRUD + validacao de conflito de horario)
+[ ] IngressosController (venda + checagem de lotacao)
+[ ] Status codes corretos (200/201/400/404/409)
 
-13) Relatorios de receita
-- Agora usam PrecoFinal (linhas antigas comentadas).
-Arquivo: cinema/servicos/RelatorioServico.cs
+4) Regras de negocio
+[ ] Bloquear sessao com intersecao de horarios na mesma sala
+[ ] Impedir venda se a sessao estiver lotada
+[ ] Validacoes de entrada (DTOs + DataAnnotations)
 
-14) Program.cs
-- Substituido Hello World por 2 fluxos de demonstracao.
-- Fluxo 1: cinema + sala XD + filme 3D + ingresso inteiro.
-- Fluxo 2: assento PCD + meia entrada.
-- Uso de VisualizarDisposicao no lugar de VisualizarLayout.
-- Codigo antigo comentado.
-Arquivo: cinema/Program.cs
+5) Endpoints de desafio (LINQ/SQL)
+[ ] GET /cartaz: filmes com sessoes nos proximos 7 dias
+[ ] GET /ocupacao: taxa de ocupacao por sala (vendidos/capacidade)
 
-15) Ideias
-- Sala vip(Com comida, garçom e etc:. CARISSIMA).
-- Funcionários novos: Garçom e Gerente.
-- Pré Estreia = mais cargo.
-- Tipo de comida tematica do filme, tipo balde especial de filme.
-- Alugar sala de cinema(e aniversário).
-- Beneficio aniversário entre outros.
-- Eventos e parceria com outros lugares.
-- Salas 4d.
-- Produtos especiais como Posters/Brindes e cortesias de pré-estreia.
-- Sessão especial todo mês para levar bebes.
-- Sessão especial para Pet .
-- Sessão matine nas férias, ou seja, sessão mais cedo para as crianças.
+6) Swagger
+[ ] Swagger habilitado com exemplos e descricoes
+[ ] Testar todos endpoints pelo Swagger
+
+7) README e diagrama do banco
+[ ] Incluir diagrama das tabelas (draw.io ou similar)
+[ ] Documentar como rodar a API e configurar o banco
+[ ] Informar rotas principais e exemplos de payload
+
+8) Qualidade e organizacao
+[ ] Separar pastas: Controllers, Models, Services, Data, DTOs
+[ ] Injecao de dependencia no Program.cs
+[ ] Padronizar nomenclatura e tratar erros com respostas claras

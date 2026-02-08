@@ -1,6 +1,7 @@
 using cineflow.controladores;
 using cineflow.modelos;
 using cineflow.utilitarios;
+using cineflow.enumeracoes;
 
 namespace cineflow.menus
 {
@@ -69,8 +70,9 @@ namespace cineflow.menus
                 var ano = MenuHelper.LerInteiro("Ano de Lancamento: ", 1900, 2100);
                 var anoLancamento = new DateTime(ano, 1, 1);
                 var eh3D = MenuHelper.Confirmar("É um filme 3D?");
+                var classificacao = LerClassificacao();
 
-                var filme = new Filme(0, titulo, duracao, genero, anoLancamento, eh3D);
+                var filme = new Filme(0, titulo, duracao, genero, anoLancamento, eh3D, classificacao);
                 var (sucesso, mensagem) = administradorControlador.FilmeControlador.CriarFilme(filme);
 
                 MenuHelper.ExibirMensagem(mensagem);
@@ -138,6 +140,7 @@ namespace cineflow.menus
                 Console.WriteLine($"Gênero: {filme.Genero}");
                 Console.WriteLine($"Ano de Lançamento: {filme.AnoLancamento.Year}");
                 Console.WriteLine($"Filme 3D: {(filme.Eh3D ? "Sim" : "Não")}");
+                Console.WriteLine($"Classificacao: {filme.Classificacao}");
                 Console.WriteLine($"Sessões: {filme.Sessoes.Count}");
             }
 
@@ -166,8 +169,10 @@ namespace cineflow.menus
                 anoLancamento = new DateTime(ano, 1, 1);
             }
 
+            var classificacao = LerClassificacaoOpcional();
+
             var (sucesso, mensagem) = administradorControlador.FilmeControlador.AtualizarFilme(
-                id, titulo, duracaoInt, genero, anoLancamento);
+                id, titulo, duracaoInt, genero, anoLancamento, classificacao);
 
             MenuHelper.ExibirMensagem(mensagem);
             MenuHelper.Pausar();
@@ -199,12 +204,73 @@ namespace cineflow.menus
 
         private void ExibirFilmesTabela(List<Filme> filmes)
         {
-            Console.WriteLine("\n{0,-4} {1,-30} {2,-12} {3,-15} {4,-6}", "ID", "Titulo", "Duracao", "Genero", "3D");
-            Console.WriteLine(new string('-', 80));
+            Console.WriteLine("\n{0,-4} {1,-26} {2,-10} {3,-14} {4,-4} {5,-7}", "ID", "Titulo", "Duracao", "Genero", "3D", "Classif");
+            Console.WriteLine(new string('-', 85));
             foreach (var filme in filmes)
             {
-                Console.WriteLine("{0,-4} {1,-30} {2,-12} {3,-15} {4,-6}", filme.Id, filme.Titulo, filme.Duracao + "min", filme.Genero, (filme.Eh3D ? "Sim" : "Não"));
+                Console.WriteLine("{0,-4} {1,-26} {2,-10} {3,-14} {4,-4} {5,-6}", filme.Id,
+                    Truncar(filme.Titulo, 24),
+                    filme.Duracao + "min",
+                    Truncar(filme.Genero, 12),
+                    (filme.Eh3D ? "Sim" : "Nao"),
+                    (int)filme.Classificacao);
             }
+        }
+
+        private static string Truncar(string texto, int max)
+        {
+            if (string.IsNullOrEmpty(texto))
+            {
+                return string.Empty;
+            }
+
+            if (texto.Length <= max)
+            {
+                return texto;
+            }
+
+            return texto.Substring(0, max - 3) + "...";
+        }
+        private static ClassificacaoIndicativa LerClassificacao()
+        {
+            Console.WriteLine("Classificacao indicativa:");
+            MenuHelper.MostrarOpcoes("Livre", "10", "12", "14", "16", "18");
+            var opcao = MenuHelper.LerOpcaoInteira(1, 6);
+            return opcao switch
+            {
+                1 => ClassificacaoIndicativa.Livre,
+                2 => ClassificacaoIndicativa.Dez,
+                3 => ClassificacaoIndicativa.Doze,
+                4 => ClassificacaoIndicativa.Quatorze,
+                5 => ClassificacaoIndicativa.Dezesseis,
+                _ => ClassificacaoIndicativa.Dezoito
+            };
+        }
+
+        private static ClassificacaoIndicativa? LerClassificacaoOpcional()
+        {
+            Console.Write("Classificacao (1-6, ENTER para manter): ");
+            var entrada = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(entrada))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(entrada, out int opcao) || opcao < 1 || opcao > 6)
+            {
+                Console.WriteLine("Opcao invalida. Mantendo classificacao atual.");
+                return null;
+            }
+
+            return opcao switch
+            {
+                1 => ClassificacaoIndicativa.Livre,
+                2 => ClassificacaoIndicativa.Dez,
+                3 => ClassificacaoIndicativa.Doze,
+                4 => ClassificacaoIndicativa.Quatorze,
+                5 => ClassificacaoIndicativa.Dezesseis,
+                _ => ClassificacaoIndicativa.Dezoito
+            };
         }
     }
 }

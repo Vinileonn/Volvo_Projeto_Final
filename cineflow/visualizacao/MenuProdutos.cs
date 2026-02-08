@@ -29,9 +29,10 @@ namespace cineflow.menus
                     "Adicionar ao Estoque",
                     "Reduzir Estoque",
                     "Listar Produtos com Estoque Baixo",
+                    "Ver Alertas de Estoque",
                     "Deletar Produto");
 
-                var opcao = MenuHelper.LerOpcaoInteira(0, 9);
+                var opcao = MenuHelper.LerOpcaoInteira(0, 10);
 
                 switch (opcao)
                 {
@@ -60,6 +61,9 @@ namespace cineflow.menus
                         ListarProdutosEstoqueBaixo();
                         break;
                     case 9:
+                        ListarAlertasEstoque();
+                        break;
+                    case 10:
                         DeletarProduto();
                         break;
                     case 0:
@@ -80,16 +84,26 @@ namespace cineflow.menus
                 var descricao = MenuHelper.LerTextoNaoVazio("Descricao: ");
 
                 Console.WriteLine("Categoria do Produto:");
-                MenuHelper.MostrarOpcoes("Bebida", "Alimento", "Doce");
-                var categoriaOpcao = MenuHelper.LerOpcaoInteira(1, 3);
-                var categoria = categoriaOpcao == 1 ? CategoriaProduto.Bebida : 
-                                categoriaOpcao == 2 ? CategoriaProduto.Alimento : CategoriaProduto.Doce;
+                MenuHelper.MostrarOpcoes("Bebida", "Alimento", "Doce", "Tematico", "Brinde", "Poster", "Cortesia");
+                var categoriaOpcao = MenuHelper.LerOpcaoInteira(1, 7);
+                var categoria = (CategoriaProduto)categoriaOpcao;
 
-                var preco = MenuHelper.LerDecimal("Preco: ", 0m, 1000m);
+                bool ehCortesia = categoria == CategoriaProduto.Cortesia || MenuHelper.Confirmar("Eh cortesia?");
+                var preco = ehCortesia ? 0m : MenuHelper.LerDecimal("Preco: ", 0m, 1000m);
                 var estoqueAtual = MenuHelper.LerInteiro("Estoque Inicial: ", 0, 10000);
                 var estoqueMinimo = MenuHelper.LerInteiro("Estoque Mínimo: ", 0, 1000);
 
-                var produto = new ProdutoAlimento(0, nome, descricao, categoria, (float)preco, estoqueAtual, estoqueMinimo);
+                bool ehTematico = categoria == CategoriaProduto.Tematico || MenuHelper.Confirmar("Produto tematico?");
+                string? temaFilme = null;
+                if (ehTematico)
+                {
+                    temaFilme = MenuHelper.LerTextoNaoVazio("Tema do filme: ");
+                }
+
+                bool exclusivoPreEstreia = MenuHelper.Confirmar("Exclusivo pre-estreia?");
+
+                var produto = new ProdutoAlimento(0, nome, descricao, categoria, (float)preco, estoqueAtual, estoqueMinimo,
+                    ehTematico, temaFilme, ehCortesia, exclusivoPreEstreia);
                 var (sucesso, mensagem) = administradorControlador.ProdutoControlador.CriarProduto(produto);
 
                 MenuHelper.ExibirMensagem(mensagem);
@@ -182,8 +196,34 @@ namespace cineflow.menus
                 preco = (float)p;
             }
 
+            Console.WriteLine("Nova Categoria (ou ENTER para manter):");
+            MenuHelper.MostrarOpcoes("Bebida", "Alimento", "Doce", "Tematico", "Brinde", "Poster", "Cortesia");
+            var categoriaStr = Console.ReadLine();
+            CategoriaProduto? categoria = null;
+            if (!string.IsNullOrWhiteSpace(categoriaStr) && int.TryParse(categoriaStr, out int catOpcao) && catOpcao >= 1 && catOpcao <= 7)
+            {
+                categoria = (CategoriaProduto)catOpcao;
+            }
+
+            bool? ehTematico = null;
+            bool? ehCortesia = null;
+            bool? exclusivoPreEstreia = null;
+            string? temaFilme = null;
+
+            if (MenuHelper.Confirmar("Alterar flags especiais?") )
+            {
+                ehTematico = MenuHelper.Confirmar("Produto tematico?");
+                if (ehTematico.Value)
+                {
+                    temaFilme = MenuHelper.LerTextoNaoVazio("Tema do filme: ");
+                }
+
+                ehCortesia = MenuHelper.Confirmar("Eh cortesia?");
+                exclusivoPreEstreia = MenuHelper.Confirmar("Exclusivo pre-estreia?");
+            }
+
             var (sucesso, mensagem) = administradorControlador.ProdutoControlador.AtualizarProduto(
-                id, nome, descricao, preco);
+                id, nome, descricao, preco, null, ehTematico, temaFilme, ehCortesia, exclusivoPreEstreia, categoria);
 
             MenuHelper.ExibirMensagem(mensagem);
             MenuHelper.Pausar();
@@ -237,6 +277,24 @@ namespace cineflow.menus
             MenuHelper.Pausar();
         }
 
+        private void ListarAlertasEstoque()
+        {
+            MenuHelper.LimparConsole();
+            MenuHelper.MostrarTitulo("Alertas de Estoque");
+
+            var (alertas, mensagem) = administradorControlador.ProdutoControlador.ListarAlertasEstoque();
+            MenuHelper.ExibirMensagem(mensagem);
+            if (alertas.Count > 0)
+            {
+                foreach (var alerta in alertas)
+                {
+                    Console.WriteLine($"- {alerta}");
+                }
+            }
+
+            MenuHelper.Pausar();
+        }
+
         private void DeletarProduto()
         {
             MenuHelper.LimparConsole();
@@ -262,12 +320,29 @@ namespace cineflow.menus
 
         private void ExibirProdutosTabela(List<ProdutoAlimento> produtos)
         {
-            Console.WriteLine("\n{0,-4} {1,-25} {2,-12} {3,-12} {4,-15}", "ID", "Nome", "Preco", "Estoque", "Categoria");
-            Console.WriteLine(new string('-', 80));
+            Console.WriteLine("\n{0,-4} {1,-20} {2,-10} {3,-10} {4,-12} {5,-10} {6,-12}", "ID", "Nome", "Preco", "Estoque", "Categoria", "Tematico", "Pre-Estreia");
+            Console.WriteLine(new string('-', 95));
             foreach (var produto in produtos)
             {
-                Console.WriteLine("{0,-4} {1,-25} {2,-12} {3,-12} {4,-15}", produto.Id, produto.Nome, FormatadorMoeda.Formatar(produto.Preco), produto.EstoqueAtual, produto.Categoria);
+                var tematico = produto.EhTematico ? (produto.TemaFilme ?? "Sim") : "Nao";
+                var pre = produto.ExclusivoPreEstreia ? "Sim" : "Nao";
+                Console.WriteLine("{0,-4} {1,-20} {2,-10} {3,-10} {4,-12} {5,-10} {6,-12}", produto.Id, Truncar(produto.Nome, 18), FormatadorMoeda.Formatar(produto.Preco), produto.EstoqueAtual, produto.Categoria, Truncar(tematico, 10), pre);
             }
+        }
+
+        private static string Truncar(string texto, int max)
+        {
+            if (string.IsNullOrEmpty(texto))
+            {
+                return string.Empty;
+            }
+
+            if (texto.Length <= max)
+            {
+                return texto;
+            }
+
+            return texto.Substring(0, max - 3) + "...";
         }
     }
 }

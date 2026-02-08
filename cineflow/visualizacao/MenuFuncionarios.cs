@@ -71,10 +71,12 @@ namespace cineflow.menus
                 var nome = MenuHelper.LerTextoNaoVazio("Nome do Funcionario: ");
 
                 Console.WriteLine("Cargo do Funcionario:");
-                MenuHelper.MostrarOpcoes("Atendente de Ingressos", "Atendente de Alimentos", "Limpeza");
-                var cargoOpcao = MenuHelper.LerOpcaoInteira(1, 3);
+                MenuHelper.MostrarOpcoes("Atendente de Ingressos", "Atendente de Alimentos", "Limpeza", "Garcom", "Gerente");
+                var cargoOpcao = MenuHelper.LerOpcaoInteira(1, 5);
                 var cargo = cargoOpcao == 1 ? CargoFuncionario.AtendenteIngressos :
-                            cargoOpcao == 2 ? CargoFuncionario.AtendenteAlimentos : CargoFuncionario.Limpeza;
+                            cargoOpcao == 2 ? CargoFuncionario.AtendenteAlimentos :
+                            cargoOpcao == 3 ? CargoFuncionario.Limpeza :
+                            cargoOpcao == 4 ? CargoFuncionario.Garcom : CargoFuncionario.Gerente;
 
                 var (cinemas, mensagem) = administradorControlador.CinemaControlador.ListarCinemas();
                 if (cinemas.Count == 0)
@@ -134,10 +136,12 @@ namespace cineflow.menus
             MenuHelper.MostrarTitulo("Listar Funcionarios por Cargo");
 
             Console.WriteLine("Selecione o Cargo:");
-                MenuHelper.MostrarOpcoes("Atendente de Ingressos", "Atendente de Alimentos", "Limpeza");
-                var cargoOpcao = MenuHelper.LerOpcaoInteira(1, 3);
+                MenuHelper.MostrarOpcoes("Atendente de Ingressos", "Atendente de Alimentos", "Limpeza", "Garcom", "Gerente");
+                var cargoOpcao = MenuHelper.LerOpcaoInteira(1, 5);
                 var cargo = cargoOpcao == 1 ? CargoFuncionario.AtendenteIngressos :
-                            cargoOpcao == 2 ? CargoFuncionario.AtendenteAlimentos : CargoFuncionario.Limpeza;
+                            cargoOpcao == 2 ? CargoFuncionario.AtendenteAlimentos :
+                            cargoOpcao == 3 ? CargoFuncionario.Limpeza :
+                            cargoOpcao == 4 ? CargoFuncionario.Garcom : CargoFuncionario.Gerente;
             var (funcionarios, mensagem) = administradorControlador.FuncionarioControlador.ListarPorCargo(cargo);
             MenuHelper.ExibirMensagem(mensagem);
 

@@ -12,13 +12,15 @@ namespace cineflow.modelos
 
         public TipoAssento Tipo { get; set; }
         public int QuantidadeLugares { get; set; }
+        public bool Preferencial { get; set; }
 
         public Sala Sala { get; set; }
 
         public Ingresso? Ingresso { get; set; }
 
         // Inclui tipo e quantidade para suportar PCD e casal.
-        public Assento(int id, char fila, int numero, Sala sala, Ingresso? ingresso, TipoAssento tipo, int quantidadeLugares)
+        public Assento(int id, char fila, int numero, Sala sala, Ingresso? ingresso, TipoAssento tipo, int quantidadeLugares,
+            bool preferencial = false)
         {
             Id = id;
             Fila = fila;
@@ -28,6 +30,7 @@ namespace cineflow.modelos
             Ingresso = ingresso;
             Tipo = tipo;
             QuantidadeLugares = quantidadeLugares;
+            Preferencial = preferencial;
         }
 
         // Métodos
@@ -50,6 +53,7 @@ namespace cineflow.modelos
             sb.AppendLine($"Sala ID: {Sala.Id}");
             sb.AppendLine($"Tipo: {Tipo}");
             sb.AppendLine($"Lugares: {QuantidadeLugares}");
+            sb.AppendLine($"Preferencial: {(Preferencial ? "Sim" : "Nao")}");
 
             return sb.ToString();
         }

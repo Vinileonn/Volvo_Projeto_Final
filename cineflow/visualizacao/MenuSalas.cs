@@ -89,9 +89,11 @@ namespace cineflow.menus
                 var capacidade = MenuHelper.LerInteiro("Capacidade (numero de assentos): ", 1, 500);
 
                 Console.WriteLine("Tipo de Sala:");
-                MenuHelper.MostrarOpcoes("Normal", "XD");
-                var tipoOpcao = MenuHelper.LerOpcaoInteira(1, 2);
-                var tipo = tipoOpcao == 1 ? TipoSala.Normal : TipoSala.XD;
+                MenuHelper.MostrarOpcoes("Normal", "XD", "VIP", "4D");
+                var tipoOpcao = MenuHelper.LerOpcaoInteira(1, 4);
+                var tipo = tipoOpcao == 1 ? TipoSala.Normal :
+                           tipoOpcao == 2 ? TipoSala.XD :
+                           tipoOpcao == 3 ? TipoSala.VIP : TipoSala.QuatroD;
 
                 var sala = new Sala(0, nome, capacidade, cinema, tipo);
                 var (sucesso, mensagemResultado) = administradorControlador.SalaControlador.CriarSala(sala);

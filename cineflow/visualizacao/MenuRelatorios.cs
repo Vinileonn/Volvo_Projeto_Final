@@ -156,12 +156,34 @@ namespace cineflow.menus
 
         private void ExibirSessoesTabela(List<Sessao> sessoes)
         {
-            Console.WriteLine("\n{0,-4} {1,-30} {2,-25} {3,-20} {4,-12}", "ID", "Filme", "Sala", "Data/Hora", "Preço");
-            Console.WriteLine(new string('-', 95));
+            Console.WriteLine("\n{0,-4} {1,-20} {2,-14} {3,-18} {4,-10} {5,-8} {6,-9} {7,-7}", "ID", "Filme", "Sala", "Data/Hora", "Preço", "Tipo", "Idioma", "Classif");
+            Console.WriteLine(new string('-', 100));
             foreach (var sessao in sessoes)
             {
-                Console.WriteLine("{0,-4} {1,-30} {2,-25} {3,-20} {4,-12}", sessao.Id, (sessao.Filme != null ? sessao.Filme.Titulo : "N/A"), (sessao.Sala != null ? sessao.Sala.Nome : "N/A"), sessao.DataHorario.ToString("dd/MM/yyyy HH:mm"), FormatadorMoeda.Formatar(sessao.PrecoFinal));
+                Console.WriteLine("{0,-4} {1,-20} {2,-14} {3,-18} {4,-10} {5,-8} {6,-9} {7,-6}", sessao.Id,
+                    (sessao.Filme != null ? Truncar(sessao.Filme.Titulo, 18) : "N/A"),
+                    (sessao.Sala != null ? Truncar(sessao.Sala.Nome, 12) : "N/A"),
+                    sessao.DataHorario.ToString("dd/MM/yyyy HH:mm"),
+                    FormatadorMoeda.Formatar(sessao.PrecoFinal),
+                    Truncar(sessao.Tipo.ToString(), 6),
+                    Truncar(sessao.Idioma.ToString(), 7),
+                    (int)sessao.Filme.Classificacao);
             }
+        }
+
+        private static string Truncar(string texto, int max)
+        {
+            if (string.IsNullOrEmpty(texto))
+            {
+                return string.Empty;
+            }
+
+            if (texto.Length <= max)
+            {
+                return texto;
+            }
+
+            return texto.Substring(0, max - 3) + "...";
         }
 
         private void ExibirProdutosTabela(List<ProdutoAlimento> produtos)

@@ -89,7 +89,9 @@ namespace cineflow.controladores
         }
 
         // COMPRA - venda de ingresso inteiro
-        public (Ingresso? ingresso, string mensagem) ComprarIngressoInteiro(Sessao sessao, Cliente cliente, char fila, int numero, FormaPagamento formaPagamento, decimal valorPago = 0m)
+        public (Ingresso? ingresso, string mensagem) ComprarIngressoInteiro(Sessao sessao, Cliente cliente, char fila, int numero,
+            FormaPagamento formaPagamento, decimal valorPago = 0m, string? cupomParceiro = null, bool reservaAntecipada = false,
+            int pontosUsados = 0)
         {
             try
             {
@@ -98,8 +100,15 @@ namespace cineflow.controladores
                     return (null, "Dados invalidos: sessao ou cliente nulo.");
                 }
 
-                var ingresso = IngressoServico.VenderInteira(sessao, cliente, fila, numero, formaPagamento, valorPago);
-                return (ingresso, $"Ingresso inteiro comprado com sucesso! Assento: {fila}{numero}");
+                var ingresso = IngressoServico.VenderInteira(sessao, cliente, fila, numero, formaPagamento, valorPago,
+                    cupomParceiro, reservaAntecipada, pontosUsados);
+                var mensagem = $"Ingresso inteiro comprado com sucesso! Assento: {fila}{numero}";
+                var cortesiaMensagem = ConcederCortesiaPreEstreia(sessao, cliente);
+                if (!string.IsNullOrWhiteSpace(cortesiaMensagem))
+                {
+                    mensagem += $" | {cortesiaMensagem}";
+                }
+                return (ingresso, mensagem);
             }
             catch (DadosInvalidosExcecao ex)
             {
@@ -124,7 +133,9 @@ namespace cineflow.controladores
         }
 
         // COMPRA - venda de meia entrada
-        public (Ingresso? ingresso, string mensagem) ComprarIngressoMeia(Sessao sessao, Cliente cliente, char fila, int numero, string motivo, FormaPagamento formaPagamento, decimal valorPago = 0m)
+        public (Ingresso? ingresso, string mensagem) ComprarIngressoMeia(Sessao sessao, Cliente cliente, char fila, int numero, string motivo,
+            FormaPagamento formaPagamento, decimal valorPago = 0m, string? cupomParceiro = null, bool reservaAntecipada = false,
+            int pontosUsados = 0)
         {
             try
             {
@@ -133,8 +144,15 @@ namespace cineflow.controladores
                     return (null, "Dados invalidos: sessao ou cliente nulo.");
                 }
 
-                var ingresso = IngressoServico.VenderMeia(sessao, cliente, fila, numero, motivo, formaPagamento, valorPago);
-                return (ingresso, $"Meia entrada comprada com sucesso! Assento: {fila}{numero}. Motivo: {motivo}");
+                var ingresso = IngressoServico.VenderMeia(sessao, cliente, fila, numero, motivo, formaPagamento, valorPago,
+                    cupomParceiro, reservaAntecipada, pontosUsados);
+                var mensagem = $"Meia entrada comprada com sucesso! Assento: {fila}{numero}. Motivo: {motivo}";
+                var cortesiaMensagem = ConcederCortesiaPreEstreia(sessao, cliente);
+                if (!string.IsNullOrWhiteSpace(cortesiaMensagem))
+                {
+                    mensagem += $" | {cortesiaMensagem}";
+                }
+                return (ingresso, mensagem);
             }
             catch (DadosInvalidosExcecao ex)
             {
@@ -200,11 +218,11 @@ namespace cineflow.controladores
         }
 
         // PEDIDO - adicionar item ao pedido de alimento
-        public (bool sucesso, string mensagem) AdicionarItemAoPedido(int pedidoId, int produtoId, int quantidade)
+        public (bool sucesso, string mensagem) AdicionarItemAoPedido(int pedidoId, int produtoId, int quantidade, float? precoUnitario = null)
         {
             try
             {
-                PedidoAlimentoServico.AdicionarItem(pedidoId, produtoId, quantidade);
+                PedidoAlimentoServico.AdicionarItem(pedidoId, produtoId, quantidade, precoUnitario);
                 return (true, "Item adicionado ao pedido com sucesso.");
             }
             catch (DadosInvalidosExcecao ex)
@@ -322,6 +340,51 @@ namespace cineflow.controladores
             {
                 return (new List<Ingresso>(), "Erro inesperado ao listar ingressos.");
             }
+        }
+
+        // CHECK-IN - registrar presenca do cliente
+        public (bool sucesso, string mensagem) RealizarCheckIn(int ingressoId)
+        {
+            try
+            {
+                IngressoServico.RealizarCheckIn(ingressoId);
+                return (true, "Check-in realizado com sucesso.");
+            }
+            catch (RecursoNaoEncontradoExcecao ex)
+            {
+                return (false, $"Recurso nao encontrado: {ex.Message}");
+            }
+            catch (OperacaoNaoPermitidaExcecao ex)
+            {
+                return (false, $"Operacao nao permitida: {ex.Message}");
+            }
+            catch (Exception)
+            {
+                return (false, "Erro inesperado ao realizar check-in.");
+            }
+        }
+
+        private string? ConcederCortesiaPreEstreia(Sessao sessao, Cliente cliente)
+        {
+            if (sessao == null || cliente == null)
+            {
+                return null;
+            }
+
+            if (sessao.Tipo != TipoSessao.PreEstreia)
+            {
+                return null;
+            }
+
+            var cortesia = ProdutoAlimentoServico.ObterCortesiaPreEstreiaDisponivel();
+            if (cortesia == null)
+            {
+                return "Sem cortesia disponivel para pre-estreia.";
+            }
+
+            ProdutoAlimentoServico.ReduzirEstoque(cortesia.Id, 1);
+            cliente.Cortesias.Add(cortesia);
+            return $"Cortesia liberada: {cortesia.Nome}";
         }
     }
 }

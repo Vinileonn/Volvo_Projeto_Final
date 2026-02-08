@@ -30,11 +30,11 @@ namespace cineflow.controladores
                 return (null, "Erro inesperado ao criar pedido.");
             }
         }
-        public (bool sucesso, string mensagem) AdicionarItem(int pedidoId, int produtoId, int quantidade)
+        public (bool sucesso, string mensagem) AdicionarItem(int pedidoId, int produtoId, int quantidade, float? precoUnitario = null)
         {
             try
             {
-                pedidoService.AdicionarItem(pedidoId, produtoId, quantidade);
+                pedidoService.AdicionarItem(pedidoId, produtoId, quantidade, precoUnitario);
                 return (true, "Item adicionado ao pedido com sucesso.");
             }
             catch (DadosInvalidosExcecao ex)
@@ -117,6 +117,10 @@ namespace cineflow.controladores
             {
                 return (false, $"Recurso não encontrado: {ex.Message}");
             }
+            catch (OperacaoNaoPermitidaExcecao ex)
+            {
+                return (false, $"Operacao nao permitida: {ex.Message}");
+            }
             catch (Exception)
             {
                 return (false, "Erro inesperado ao cancelar pedido.");
@@ -142,11 +146,11 @@ namespace cineflow.controladores
         }
 
         // PAGAMENTO - registrar forma de pagamento do pedido
-        public (bool sucesso, string mensagem) RegistrarPagamento(int pedidoId, FormaPagamento formaPagamento, decimal valorPago = 0m)
+        public (bool sucesso, string mensagem) RegistrarPagamento(int pedidoId, FormaPagamento formaPagamento, decimal valorPago = 0m, int pontosUsados = 0)
         {
             try
             {
-                pedidoService.RegistrarPagamento(pedidoId, formaPagamento, valorPago);
+                pedidoService.RegistrarPagamento(pedidoId, formaPagamento, valorPago, pontosUsados);
                 return (true, "Pagamento registrado com sucesso.");
             }
             catch (DadosInvalidosExcecao ex)
@@ -156,6 +160,10 @@ namespace cineflow.controladores
             catch (RecursoNaoEncontradoExcecao ex)
             {
                 return (false, $"Recurso nao encontrado: {ex.Message}");
+            }
+            catch (OperacaoNaoPermitidaExcecao ex)
+            {
+                return (false, $"Operacao nao permitida: {ex.Message}");
             }
             catch (Exception)
             {

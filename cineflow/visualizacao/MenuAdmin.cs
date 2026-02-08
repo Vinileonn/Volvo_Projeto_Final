@@ -18,10 +18,12 @@ namespace cineflow.menus
         private readonly MenuEscalasLimpeza menuEscalasLimpeza;
         private readonly MenuPedidos menuPedidos;
         private readonly MenuRelatorios menuRelatorios;
+        private readonly MenuAlugueis menuAlugueis;
 
         public MenuAdmin(
             AdministradorControlador administradorControlador,
-            AutenticacaoControlador autenticacaoControlador)
+            AutenticacaoControlador autenticacaoControlador,
+            AluguelSalaControlador aluguelControlador)
         {
             this.administradorControlador = administradorControlador;
             this.autenticacaoControlador = autenticacaoControlador;
@@ -35,6 +37,7 @@ namespace cineflow.menus
             this.menuEscalasLimpeza = new MenuEscalasLimpeza(administradorControlador);
             this.menuPedidos = new MenuPedidos(administradorControlador);
             this.menuRelatorios = new MenuRelatorios(administradorControlador);
+            this.menuAlugueis = new MenuAlugueis(aluguelControlador, administradorControlador.SalaControlador);
         }
 
         public void Executar(Administrador admin)
@@ -51,12 +54,13 @@ namespace cineflow.menus
                     "Gestao de Cinemas",
                     "Gestao de Funcionarios",
                     "Gestao de Escalas de Limpeza",
+                    "Gestao de Alugueis",
                     "Gestao de Pedidos",
                     "Relatorios e Estatisticas",
                     "Alterar Senha",
                     "Logout");
 
-                var opcao = MenuHelper.LerOpcaoInteira(0, 11);
+                var opcao = MenuHelper.LerOpcaoInteira(0, 12);
 
                 switch (opcao)
                 {
@@ -82,14 +86,18 @@ namespace cineflow.menus
                         menuEscalasLimpeza.Executar();
                         break;
                     case 8:
-                        menuPedidos.Executar();
+                        menuAlugueis.Executar();
                         break;
                     case 9:
-                        menuRelatorios.Executar();
+                        menuPedidos.Executar();
                         break;
                     case 10:
+                        menuRelatorios.Executar();
+                        break;
+                    case 11:
                         AlterarSenha(admin);
                         break;
+                    case 12:
                     case 0:
                         return;
                 }

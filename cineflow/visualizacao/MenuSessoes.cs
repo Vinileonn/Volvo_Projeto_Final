@@ -1,6 +1,7 @@
 using cineflow.controladores;
 using cineflow.modelos;
 using cineflow.utilitarios;
+using cineflow.enumeracoes;
 
 namespace cineflow.menus
 {
@@ -118,7 +119,19 @@ namespace cineflow.menus
 
                 var precoBase = MenuHelper.LerDecimal("Preço Base (em reais): ", 0m, 1000m);
 
-                var sessao = new Sessao(0, dataHora, (float)precoBase, filme, sala);
+                var tipoSessao = LerTipoSessao();
+                string? nomeEvento = null;
+                string? parceiro = null;
+
+                if (tipoSessao == TipoSessao.Evento)
+                {
+                    nomeEvento = MenuHelper.LerTextoNaoVazio("Nome do evento: ");
+                    parceiro = MenuHelper.LerTextoOpcional("Parceiro (opcional): ");
+                }
+
+                var idioma = LerIdiomaSessao();
+
+                var sessao = new Sessao(0, dataHora, (float)precoBase, filme, sala, tipoSessao, nomeEvento, parceiro, idioma);
                 var (sucesso, mensagem) = administradorControlador.SessaoControlador.CriarSessao(sessao);
 
                 MenuHelper.ExibirMensagem(mensagem);
@@ -228,6 +241,16 @@ namespace cineflow.menus
                 Console.WriteLine($"Preco Base: {FormatadorMoeda.Formatar(sessao.PrecoBase)}");
                 Console.WriteLine($"Preço Final: {FormatadorMoeda.Formatar(sessao.PrecoFinal)}");
                 Console.WriteLine($"Ingressos Vendidos: {sessao.Ingressos.Count}");
+                Console.WriteLine($"Tipo: {sessao.Tipo}");
+                Console.WriteLine($"Idioma: {sessao.Idioma}");
+                if (!string.IsNullOrWhiteSpace(sessao.NomeEvento))
+                {
+                    Console.WriteLine($"Evento: {sessao.NomeEvento}");
+                }
+                if (!string.IsNullOrWhiteSpace(sessao.Parceiro))
+                {
+                    Console.WriteLine($"Parceiro: {sessao.Parceiro}");
+                }
             }
 
             MenuHelper.Pausar();
@@ -268,8 +291,20 @@ namespace cineflow.menus
                 }
             }
 
+            var tipoSessao = LerTipoSessaoOpcional();
+            string? nomeEvento = null;
+            string? parceiro = null;
+            if (tipoSessao.HasValue && tipoSessao.Value == TipoSessao.Evento)
+            {
+                nomeEvento = MenuHelper.LerTextoNaoVazio("Nome do evento: ");
+                parceiro = MenuHelper.LerTextoOpcional("Parceiro (opcional): ");
+            }
+
+            var idioma = LerIdiomaSessaoOpcional();
+
             var (sucesso, mensagem) = administradorControlador.SessaoControlador.AtualizarSessao(
-                id, novaDataHora, novoPreco != null ? (float?)novoPreco : null);
+                id, novaDataHora, novoPreco != null ? (float?)novoPreco : null, null, null, tipoSessao, nomeEvento, parceiro,
+                idioma);
 
             MenuHelper.ExibirMensagem(mensagem);
         // DELETAR - 
@@ -321,12 +356,86 @@ namespace cineflow.menus
 
         private void ExibirSessoesTabela(List<Sessao> sessoes)
         {
-            Console.WriteLine("\n{0,-4} {1,-30} {2,-25} {3,-20} {4,-12}", "ID", "Filme", "Sala", "Data/Hora", "Preço");
+            Console.WriteLine("\n{0,-4} {1,-22} {2,-16} {3,-18} {4,-10} {5,-10} {6,-10}", "ID", "Filme", "Sala", "Data/Hora", "Preço", "Tipo", "Idioma");
             Console.WriteLine(new string('-', 95));
             foreach (var sessao in sessoes)
             {
-                Console.WriteLine("{0,-4} {1,-30} {2,-25} {3,-20} {4,-12}", sessao.Id, (sessao.Filme != null ? sessao.Filme.Titulo : "N/A"), (sessao.Sala != null ? sessao.Sala.Nome : "N/A"), sessao.DataHorario.ToString("dd/MM/yyyy HH:mm"), FormatadorMoeda.Formatar(sessao.PrecoFinal));
+                Console.WriteLine("{0,-4} {1,-22} {2,-16} {3,-18} {4,-10} {5,-10} {6,-10}", sessao.Id,
+                    (sessao.Filme != null ? Truncar(sessao.Filme.Titulo, 22) : "N/A"),
+                    (sessao.Sala != null ? Truncar(sessao.Sala.Nome, 14) : "N/A"),
+                    sessao.DataHorario.ToString("dd/MM/yyyy HH:mm"),
+                    FormatadorMoeda.Formatar(sessao.PrecoFinal),
+                    sessao.Tipo,
+                    sessao.Idioma);
             }
+        }
+
+        private static TipoSessao LerTipoSessao()
+        {
+            Console.WriteLine("Tipo de Sessao:");
+            MenuHelper.MostrarOpcoes("Regular", "Pre-estreia", "Especial bebe", "Especial pet", "Matine", "Evento");
+            var opcao = MenuHelper.LerOpcaoInteira(1, 6);
+            return (TipoSessao)opcao;
+        }
+
+        private static TipoSessao? LerTipoSessaoOpcional()
+        {
+            Console.WriteLine("Tipos: 1-Regular, 2-Pre-estreia, 3-Especial bebe, 4-Especial pet, 5-Matine, 6-Evento");
+            Console.Write("Tipo de sessao (1-6, ENTER para manter): ");
+            var entrada = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(entrada))
+            {
+                return null;
+            }
+
+            if (int.TryParse(entrada, out int opcao) && opcao >= 1 && opcao <= 6)
+            {
+                return (TipoSessao)opcao;
+            }
+
+            Console.WriteLine("Opcao invalida. Mantendo tipo atual.");
+            return null;
+        }
+
+        private static IdiomaSessao LerIdiomaSessao()
+        {
+            Console.WriteLine("Idioma da sessao:");
+            MenuHelper.MostrarOpcoes("Dublado", "Legendado");
+            var opcao = MenuHelper.LerOpcaoInteira(1, 2);
+            return opcao == 1 ? IdiomaSessao.Dublado : IdiomaSessao.Legendado;
+        }
+
+        private static IdiomaSessao? LerIdiomaSessaoOpcional()
+        {
+            Console.Write("Idioma (1-Dublado, 2-Legendado, ENTER para manter): ");
+            var entrada = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(entrada))
+            {
+                return null;
+            }
+
+            if (!int.TryParse(entrada, out int opcao) || (opcao != 1 && opcao != 2))
+            {
+                Console.WriteLine("Opcao invalida. Mantendo idioma atual.");
+                return null;
+            }
+
+            return opcao == 1 ? IdiomaSessao.Dublado : IdiomaSessao.Legendado;
+        }
+
+        private static string Truncar(string texto, int max)
+        {
+            if (string.IsNullOrEmpty(texto))
+            {
+                return string.Empty;
+            }
+
+            if (texto.Length <= max)
+            {
+                return texto;
+            }
+
+            return texto.Substring(0, max - 3) + "...";
         }
     }
 }

@@ -1,5 +1,6 @@
 using cineflow.modelos;
 using cineflow.excecoes;
+using cineflow.enumeracoes;
 
 namespace cineflow.servicos
 {
@@ -78,7 +79,8 @@ namespace cineflow.servicos
         }
 
         public void AtualizarFilme(int id, string? titulo = null, int? duracao = null,
-                                   string? genero = null, DateTime? anoLancamento = null)
+                                   string? genero = null, DateTime? anoLancamento = null,
+                                   ClassificacaoIndicativa? classificacao = null)
         {
             var filme = ObterFilme(id);
 
@@ -103,7 +105,7 @@ namespace cineflow.servicos
                 throw new DadosInvalidosExcecao("Ano de lançamento inválido.");
             }
 
-            filme.AtualizarDetalhes(titulo, duracao, genero, anoLancamento);
+            filme.AtualizarDetalhes(titulo, duracao, genero, anoLancamento, classificacao);
         }
 
         public void DeletarFilme(int id)

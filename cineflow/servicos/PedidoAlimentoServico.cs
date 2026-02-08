@@ -10,6 +10,9 @@ namespace cineflow.servicos
     {
         private readonly List<PedidoAlimento> pedidos;
         private readonly ProdutoAlimentoServico produtoService;
+        private const decimal DescontoAniversarioPedidos = 0.10m;
+        private const decimal ValorPorPonto = 0.10m;
+        private const int PrazoCancelamentoMinutos = 15;
 
         public PedidoAlimentoServico(ProdutoAlimentoServico produtoService)
         {
@@ -25,6 +28,7 @@ namespace cineflow.servicos
             }
 
             var pedido = new PedidoAlimento(pedidos.Count > 0 ? pedidos.Max(p => p.Id) + 1 : 1, 0);
+            pedido.Cliente = cliente;
             pedidos.Add(pedido);
 
             if (!cliente.Pedidos.Contains(pedido))
@@ -35,7 +39,7 @@ namespace cineflow.servicos
             return pedido;
         }
 
-        public void AdicionarItem(int pedidoId, int produtoId, int quantidade)
+        public void AdicionarItem(int pedidoId, int produtoId, int quantidade, float? precoUnitario = null)
         {
             var pedido = pedidos.FirstOrDefault(p => p.Id == pedidoId);
             var produto = produtoService.ObterProduto(produtoId);
@@ -58,7 +62,8 @@ namespace cineflow.servicos
             produtoService.ReduzirEstoque(produtoId, quantidade);
 
             var itemId = pedido.Itens.Count > 0 ? pedido.Itens.Max(i => i.Id) + 1 : 1;
-            var item = new ItemPedidoAlimento(itemId, produto, quantidade, produto.Preco);
+            var precoFinal = precoUnitario.HasValue && precoUnitario.Value >= 0 ? precoUnitario.Value : produto.Preco;
+            var item = new ItemPedidoAlimento(itemId, produto, quantidade, precoFinal);
             pedido.AdicionarItem(item);
         }
 
@@ -106,6 +111,11 @@ namespace cineflow.servicos
                 throw new RecursoNaoEncontradoExcecao($"Pedido com ID {id} não encontrado.");
             }
 
+            if (pedido.FormaPagamento.HasValue && DateTime.Now > pedido.DataPedido.AddMinutes(PrazoCancelamentoMinutos))
+            {
+                throw new OperacaoNaoPermitidaExcecao("Cancelamento permitido apenas ate 15 minutos apos o pedido pago.");
+            }
+
             foreach (var item in pedido.Itens)
             {
                 if (item.Produto != null)
@@ -130,7 +140,7 @@ namespace cineflow.servicos
         }
 
         // PAGAMENTO - registra forma de pagamento e calcula troco se for dinheiro.
-        public void RegistrarPagamento(int pedidoId, FormaPagamento formaPagamento, decimal valorPago = 0m)
+        public void RegistrarPagamento(int pedidoId, FormaPagamento formaPagamento, decimal valorPago = 0m, int pontosUsados = 0)
         {
             var pedido = ObterPedido(pedidoId);
             if (pedido == null)
@@ -139,6 +149,37 @@ namespace cineflow.servicos
             }
 
             var total = Math.Round((decimal)pedido.ValorTotal, 2);
+            if (pedido.Cliente != null && pedido.Cliente.EhMesAniversario(DateTime.Now) && pedido.ValorDesconto <= 0)
+            {
+                var desconto = Math.Round(total * DescontoAniversarioPedidos, 2);
+                if (desconto > 0)
+                {
+                    pedido.ValorDesconto = (float)desconto;
+                    pedido.MotivoDesconto = "Desconto de aniversario";
+                    total -= desconto;
+                    pedido.ValorTotal = (float)total;
+                }
+            }
+
+            if (pedido.Cliente != null && pontosUsados > 0)
+            {
+                if (!pedido.Cliente.TentarUsarPontos(pontosUsados))
+                {
+                    throw new OperacaoNaoPermitidaExcecao("Pontos insuficientes.");
+                }
+
+                var descontoPontos = Math.Round(pontosUsados * ValorPorPonto, 2);
+                if (descontoPontos > 0)
+                {
+                    total -= descontoPontos;
+                    if (total < 0)
+                    {
+                        total = 0;
+                    }
+                    pedido.ValorTotal = (float)total;
+                    pedido.PontosUsados = pontosUsados;
+                }
+            }
 
             pedido.FormaPagamento = formaPagamento;
             pedido.TrocoDetalhado = new Dictionary<decimal, int>();
@@ -159,6 +200,12 @@ namespace cineflow.servicos
 
             // Para outras formas, considera pagamento exato.
             pedido.ValorPago = total;
+            if (pedido.Cliente != null)
+            {
+                var pontosGerados = (int)Math.Floor((double)total);
+                pedido.PontosGerados = pontosGerados;
+                pedido.Cliente.AdicionarPontos(pontosGerados);
+            }
         }
     }
 }

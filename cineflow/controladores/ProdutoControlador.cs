@@ -1,6 +1,7 @@
 using cineflow.modelos;
 using cineflow.servicos;
 using cineflow.excecoes;
+using cineflow.enumeracoes;
 
 namespace cineflow.controladores
 {
@@ -97,12 +98,31 @@ namespace cineflow.controladores
                 return (new List<ProdutoAlimento>(), "Erro inesperado ao listar produtos com estoque baixo.");
             }
         }
-        public (bool sucesso, string mensagem) AtualizarProduto(int id, string? nome = null, string? descricao = null,
-            float? preco = null, int? estoqueMinimo = null)
+
+        public (List<string> alertas, string mensagem) ListarAlertasEstoque()
         {
             try
             {
-                produtoService.AtualizarProduto(id, nome, descricao, preco, estoqueMinimo);
+                var alertas = produtoService.ListarAlertasEstoque();
+                if (alertas.Count == 0)
+                {
+                    return (alertas, "Nenhum alerta de estoque.");
+                }
+                return (alertas, $"{alertas.Count} alerta(s) de estoque.");
+            }
+            catch (Exception)
+            {
+                return (new List<string>(), "Erro inesperado ao listar alertas.");
+            }
+        }
+        public (bool sucesso, string mensagem) AtualizarProduto(int id, string? nome = null, string? descricao = null,
+            float? preco = null, int? estoqueMinimo = null, bool? ehTematico = null, string? temaFilme = null,
+            bool? ehCortesia = null, bool? exclusivoPreEstreia = null, CategoriaProduto? categoria = null)
+        {
+            try
+            {
+                produtoService.AtualizarProduto(id, nome, descricao, preco, estoqueMinimo, ehTematico, temaFilme,
+                    ehCortesia, exclusivoPreEstreia, categoria);
                 return (true, "Produto atualizado com sucesso.");
             }
             catch (RecursoNaoEncontradoExcecao ex)

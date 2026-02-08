@@ -16,8 +16,14 @@ namespace cineflow.modelos
 
         public int EstoqueMinimo { get; set; }
 
+        public bool EhTematico { get; set; }
+        public string? TemaFilme { get; set; }
+        public bool EhCortesia { get; set; }
+        public bool ExclusivoPreEstreia { get; set; }
+
         public ProdutoAlimento(int id, string nome, string? descricao, CategoriaProduto? categoria,
-                              float preco, int estoqueAtual, int estoqueMinimo)
+                              float preco, int estoqueAtual, int estoqueMinimo, bool ehTematico = false,
+                              string? temaFilme = null, bool ehCortesia = false, bool exclusivoPreEstreia = false)
         {
             Id = id;
             Nome = nome;
@@ -26,6 +32,10 @@ namespace cineflow.modelos
             Preco = preco;
             EstoqueAtual = estoqueAtual;
             EstoqueMinimo = estoqueMinimo;
+            EhTematico = ehTematico;
+            TemaFilme = temaFilme;
+            EhCortesia = ehCortesia;
+            ExclusivoPreEstreia = exclusivoPreEstreia;
         }
 
         public override string ToString()
@@ -38,6 +48,18 @@ namespace cineflow.modelos
             sb.AppendLine($"Preço: {FormatadorMoeda.Formatar(Preco)}");
             sb.AppendLine($"Estoque Atual: {EstoqueAtual}");
             sb.AppendLine($"Estoque Mínimo: {EstoqueMinimo}");
+            if (EhTematico)
+            {
+                sb.AppendLine($"Temático: Sim ({TemaFilme ?? "Sem tema"})");
+            }
+            if (EhCortesia)
+            {
+                sb.AppendLine("Cortesia: Sim");
+            }
+            if (ExclusivoPreEstreia)
+            {
+                sb.AppendLine("Exclusivo Pré-Estreia: Sim");
+            }
             return sb.ToString();
         }
     }

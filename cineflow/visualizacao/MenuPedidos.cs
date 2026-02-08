@@ -91,6 +91,22 @@ namespace cineflow.menus
 
                 var (total, totalMensagem) = administradorControlador.PedidoControlador.CalcularTotal(id);
                 Console.WriteLine($"\nTotal: {FormatadorMoeda.Formatar(total)}");
+                if (pedido.ValorDesconto > 0)
+                {
+                    Console.WriteLine($"Desconto: {FormatadorMoeda.Formatar(pedido.ValorDesconto)}");
+                    if (!string.IsNullOrWhiteSpace(pedido.MotivoDesconto))
+                    {
+                        Console.WriteLine($"Motivo: {pedido.MotivoDesconto}");
+                    }
+                }
+                if (pedido.PontosUsados > 0)
+                {
+                    Console.WriteLine($"Pontos usados: {pedido.PontosUsados}");
+                }
+                if (pedido.PontosGerados > 0)
+                {
+                    Console.WriteLine($"Pontos gerados: {pedido.PontosGerados}");
+                }
             }
 
             MenuHelper.Pausar();
