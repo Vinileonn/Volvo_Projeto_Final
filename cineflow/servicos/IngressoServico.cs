@@ -141,10 +141,6 @@ namespace cineflow.servicos
 
         private Assento ValidarVenda(Sessao sessao, Cliente cliente, char fila, int numero)
         {
-            if (sessao == null)
-            {
-                throw new DadosInvalidosExcecao("Sessão nula.");
-            }
             // Validações básicas agrupadas
             var erros = new List<string>();
             
@@ -160,9 +156,14 @@ namespace cineflow.servicos
             }
 
             // Validações críticas da sessão
-            if (sessao?.Sala == null)
+            if (sessao!.Sala == null)
             {
                 throw new ErroOperacaoCriticaExcecao("Sessão sem sala associada.");
+            }
+
+            if (sessao.Filme == null)
+            {
+                throw new ErroOperacaoCriticaExcecao("Sessão sem filme associado.");
             }
 
             if (sessao.PrecoFinal < 0)
@@ -170,7 +171,7 @@ namespace cineflow.servicos
                 throw new ErroOperacaoCriticaExcecao("Preco invalido.");
             }
 
-            int idadeCliente = cliente.ObterIdade(DateTime.Now);
+            int idadeCliente = cliente!.ObterIdade(DateTime.Now);
             int classificacao = (int)sessao.Filme.Classificacao;
             if (idadeCliente < classificacao)
             {

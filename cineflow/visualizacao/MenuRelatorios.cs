@@ -167,7 +167,7 @@ namespace cineflow.menus
                     FormatadorMoeda.Formatar(sessao.PrecoFinal),
                     Truncar(sessao.Tipo.ToString(), 6),
                     Truncar(sessao.Idioma.ToString(), 7),
-                    (int)sessao.Filme.Classificacao);
+                    (sessao.Filme != null ? (int)sessao.Filme.Classificacao : 0));
             }
         }
 
