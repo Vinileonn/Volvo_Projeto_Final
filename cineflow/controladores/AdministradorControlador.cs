@@ -2,7 +2,6 @@ using cineflow.controladores;
 
 namespace cineflow.controladores
 {
-    // Renomeado de AdminController para AdministradorControlador.
     public class AdministradorControlador
     {
         public FilmeControlador FilmeControlador { get; }

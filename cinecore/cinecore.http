@@ -1,0 +1,6 @@
+@cinecore_HostAddress = http://localhost:5211
+
+GET {{cinecore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

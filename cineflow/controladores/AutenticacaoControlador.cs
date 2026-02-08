@@ -4,7 +4,6 @@ using cineflow.excecoes;
 
 namespace cineflow.controladores
 {
-    // Renomeado de AuthController para AutenticacaoControlador.
     public class AutenticacaoControlador
     {
         private readonly AutenticacaoServico AutenticacaoServico;
