@@ -50,11 +50,11 @@ namespace cineflow.utilitarios
 			int filas = (int)Math.Ceiling(Math.Sqrt(capacidade));
 			int assentosPorFila = (int)Math.Ceiling((double)capacidade / filas);
 			char filaAtual = 'A';
-			int assentoNumero = 1;
 			int lugaresGerados = 0;
 
 			for (int i = 0; i < filas; i++)
 			{
+				int assentoNumero = 1;
 				for (int j = 0; j < assentosPorFila; j++)
 				{
 					if (lugaresGerados >= capacidade)

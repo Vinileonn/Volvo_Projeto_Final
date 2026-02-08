@@ -25,6 +25,16 @@ namespace cineflow.servicos
         }
 // ANTIGO: // CRIAR - 
 // CRIAR - 
+        // Método para adicionar usuário diretamente (usado para dados de teste)
+        public void AdicionarUsuario(Usuario usuario)
+        {
+            if (usuario == null)
+            {
+                throw new DadosInvalidosExcecao("Usuário nulo.");
+            }
+            usuarios.Add(usuario);
+        }
+
         // Método para registrar um novo cliente
         public void RegistrarCliente(Cliente cliente)
         {

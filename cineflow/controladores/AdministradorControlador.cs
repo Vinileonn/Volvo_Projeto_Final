@@ -14,42 +14,7 @@ namespace cineflow.controladores
         public CinemaControlador CinemaControlador { get; }
         public FuncionarioControlador FuncionarioControlador { get; }
         public LimpezaControlador LimpezaControlador { get; }
-
-        // ANTIGO:
-        // public AdministradorControlador(
-        //     FilmeControlador FilmeControlador,
-        //     SalaControlador SalaControlador,
-        //     SessaoControlador SessaoControlador,
-        //     ProdutoControlador ProdutoControlador,
-        //     PedidoControlador PedidoControlador,
-        //     RelatorioControlador RelatorioControlador)
-        // {
-        //     FilmeControlador = FilmeControlador;
-        //     SalaControlador = SalaControlador;
-        //     SessaoControlador = SessaoControlador;
-        //     ProdutoControlador = ProdutoControlador;
-        //     PedidoControlador = PedidoControlador;
-        //     RelatorioControlador = RelatorioControlador;
-        // }
-
-        // ANTIGO:
-        // public AdministradorControlador(
-        //     FilmeControlador FilmeControlador,
-        //     SalaControlador SalaControlador,
-        //     SessaoControlador SessaoControlador,
-        //     ProdutoControlador ProdutoControlador,
-        //     PedidoControlador PedidoControlador,
-        //     RelatorioControlador RelatorioControlador,
-        //     CinemaControlador CinemaControlador)
-        // {
-        //     FilmeControlador = FilmeControlador;
-        //     SalaControlador = SalaControlador;
-        //     SessaoControlador = SessaoControlador;
-        //     ProdutoControlador = ProdutoControlador;
-        //     PedidoControlador = PedidoControlador;
-        //     RelatorioControlador = RelatorioControlador;
-        //     CinemaControlador = CinemaControlador;
-        // }
+        public UsuarioControlador UsuarioControlador { get; }
 
         public AdministradorControlador(
             FilmeControlador FilmeControlador,
@@ -60,7 +25,8 @@ namespace cineflow.controladores
             RelatorioControlador RelatorioControlador,
             CinemaControlador CinemaControlador,
             FuncionarioControlador FuncionarioControlador,
-            LimpezaControlador LimpezaControlador)
+            LimpezaControlador LimpezaControlador,
+            UsuarioControlador UsuarioControlador)
         {
             this.FilmeControlador = FilmeControlador;
             this.SalaControlador = SalaControlador;
@@ -71,6 +37,7 @@ namespace cineflow.controladores
             this.CinemaControlador = CinemaControlador;
             this.FuncionarioControlador = FuncionarioControlador;
             this.LimpezaControlador = LimpezaControlador;
+            this.UsuarioControlador = UsuarioControlador;
         }
     }
 }

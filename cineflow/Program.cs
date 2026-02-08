@@ -1,92 +1,173 @@
-// ANTIGO:
-// // Veja https://aka.ms/new-console-template para mais informacoes
-// Console.WriteLine("Ola, Mundo!");
-
-using cineflow.enumeracoes;
+using cineflow.controladores;
+using cineflow.servicos;
 using cineflow.modelos;
 using cineflow.modelos.UsuarioModelo;
-using cineflow.servicos;
-using System.Linq;
+using cineflow.enumeracoes;
+using cineflow.menus;
+using cineflow.visualizacao;
+using cineflow.utilitarios;
 
-// Fluxo simples para demonstrar cinema, sala com especiais e preco final.
+// Inicializacao de servicos (ordem conforme o plano).
 var cinemaServico = new CinemaServico();
-var salaServico = new SalaServico();
 var filmeServico = new FilmeServico();
+var salaServico = new SalaServico();
 var sessaoServico = new SessaoServico();
+var produtoAlimentoServico = new ProdutoAlimentoServico();
+var pedidoAlimentoServico = new PedidoAlimentoServico(produtoAlimentoServico);
 var ingressoServico = new IngressoServico();
 var usuarioServico = new UsuarioServico();
+var autenticacaoServico = new AutenticacaoServico(usuarioServico);
+var funcionarioServico = new FuncionarioServico();
+var limpezaServico = new LimpezaServico();
+var relatorioServico = new RelatorioServico(
+	ingressoServico,
+	sessaoServico,
+	produtoAlimentoServico,
+	pedidoAlimentoServico);
 
-var cinema = new Cinema(0, "Cinema Centro", "Rua Principal, 123");
-cinemaServico.CriarCinema(cinema);
+// Inicializacao de controladores (ordem conforme o plano).
+var filmeControlador = new FilmeControlador(filmeServico);
+var salaControlador = new SalaControlador(salaServico);
+var sessaoControlador = new SessaoControlador(sessaoServico);
+var produtoControlador = new ProdutoControlador(produtoAlimentoServico);
+var pedidoControlador = new PedidoControlador(pedidoAlimentoServico);
+var cinemaControlador = new CinemaControlador(cinemaServico);
+var funcionarioControlador = new FuncionarioControlador(funcionarioServico);
+var limpezaControlador = new LimpezaControlador(limpezaServico);
+var relatorioControlador = new RelatorioControlador(relatorioServico);
+var usuarioControlador = new UsuarioControlador(usuarioServico);
+var clienteControlador = new ClienteControlador(
+	filmeServico,
+	sessaoServico,
+	ingressoServico,
+	pedidoAlimentoServico,
+	produtoAlimentoServico);
+var autenticacaoControlador = new AutenticacaoControlador(autenticacaoServico, usuarioServico);
+var administradorControlador = new AdministradorControlador(
+	filmeControlador,
+	salaControlador,
+	sessaoControlador,
+	produtoControlador,
+	pedidoControlador,
+	relatorioControlador,
+	cinemaControlador,
+	funcionarioControlador,
+	limpezaControlador,
+	usuarioControlador);
 
-// Sala XD com 2 assentos PCD e 2 assentos casal (2 lugares cada).
-var sala = new Sala(0, "Sala 1", 30, cinema, TipoSala.XD, quantidadeAssentosCasal: 2, quantidadeAssentosPCD: 2);
-salaServico.CriarSala(sala);
+// ═══════════════════════════════════════════════════════════════════════════════
+// CRIAR DADOS DE TESTE INICIAIS
+// ═══════════════════════════════════════════════════════════════════════════════
+CriarDadosDeTeste();
 
-// Filme 3D para aplicar adicional do 3D no preco final.
-var filme = new Filme(0, "Aventura 3D", 120, "Aventura", new DateTime(2024, 1, 1), eh3D: true);
-filmeServico.CriarFilme(filme);
+var menuPrincipal = new MenuPrincipal(clienteControlador, autenticacaoControlador, produtoControlador);
+var menuCliente = new MenuCliente(clienteControlador, pedidoControlador, autenticacaoControlador);
+var menuAdmin = new MenuAdmin(administradorControlador, autenticacaoControlador);
 
-// Preco base da sessao, adicionais aplicados pelo SessaoServico.
-var sessao = new Sessao(0, DateTime.Now.AddHours(2), 25f, filme, sala);
-sessaoServico.CriarSessao(sessao);
-
-var cliente = new Cliente(0, "Ana", "ana@email.com", "123", "12345678900", "9999-0000", "Rua B", new DateTime(2000, 1, 1));
-usuarioServico.RegistrarCliente(cliente);
-
-// Escolhe um assento casal se existir; senao, usa o primeiro disponivel.
-Assento? assentoEscolhido = null;
-foreach (var assento in sala.Assentos)
+while (true)
 {
-	if (assento.Tipo == TipoAssento.Casal)
-	{
-		assentoEscolhido = assento;
-		break;
-	}
+    var resultado = menuPrincipal.Executar();
+    if (resultado.Encerrar)
+    {
+        break;
+    }
+
+    if (resultado.UsuarioLogado is Cliente cliente)
+    {
+        menuCliente.Executar(cliente, resultado.Carrinho);
+        continue;
+    }
+
+    if (resultado.UsuarioLogado is Administrador admin)
+    {
+        menuAdmin.Executar(admin);
+    }
 }
 
-assentoEscolhido ??= sala.Assentos.First();
-
-// Pagamento em dinheiro acima do total para gerar troco.
-var ingresso = ingressoServico.VenderInteira(sessao, cliente, assentoEscolhido.Fila, assentoEscolhido.Numero, FormaPagamento.Dinheiro, 100m);
-
-Console.WriteLine(cinema.ToString());
-Console.WriteLine(sala.ToString());
-Console.WriteLine(filme.ToString());
-Console.WriteLine(sessao.ToString());
-Console.WriteLine(ingresso.ToString());
-Console.WriteLine(sala.VisualizarDisposicao());
-
-// Fluxo 2: assento PCD + meia entrada.
-var salaPCD = new Sala(0, "Sala PCD", 20, cinema, TipoSala.Normal, quantidadeAssentosCasal: 0, quantidadeAssentosPCD: 2);
-salaServico.CriarSala(salaPCD);
-
-var filme2D = new Filme(0, "Drama", 90, "Drama", new DateTime(2023, 1, 1), eh3D: false);
-filmeServico.CriarFilme(filme2D);
-
-var sessaoPCD = new Sessao(0, DateTime.Now.AddHours(4), 20f, filme2D, salaPCD);
-sessaoServico.CriarSessao(sessaoPCD);
-
-Assento? assentoPCD = null;
-foreach (var assento in salaPCD.Assentos)
+void CriarDadosDeTeste()
 {
-	if (assento.Tipo == TipoAssento.PCD)
-	{
-		assentoPCD = assento;
-		break;
-	}
+    Console.WriteLine("Inicializando dados de teste...");
+
+    // 1. CRIAR ADMINISTRADOR PADRÃO
+    var admin = new Administrador(1, "Administrador do Sistema");
+    usuarioControlador.AdicionarUsuario(admin);
+
+    // 2. CRIAR CINEMA
+    var cinema = new Cinema(1, "CineFlow Plaza", "Av. Principal, 123");
+    cinemaControlador.CriarCinema(cinema);
+
+    // 3. CRIAR SALAS
+    var sala1 = new Sala(1, "Sala 1", 50, cinema, TipoSala.Normal, 4, 2);
+    salaControlador.CriarSala(sala1);
+    salaControlador.GerarAssentosParaSala(1);
+
+    var sala2 = new Sala(2, "Sala 2", 80, cinema, TipoSala.XD, 6, 4);
+    salaControlador.CriarSala(sala2);
+    salaControlador.GerarAssentosParaSala(2);
+
+    var sala3 = new Sala(3, "Sala 3", 120, cinema, TipoSala.XD, 8, 6);
+    salaControlador.CriarSala(sala3);
+    salaControlador.GerarAssentosParaSala(3);
+
+    // 4. CRIAR FILMES
+    var filme1 = new Filme(1, "Avatar: O Caminho da Água", 192, "Ficção Científica", new DateTime(2022, 12, 16), true);
+    filmeControlador.CriarFilme(filme1);
+
+    var filme2 = new Filme(2, "Vingadores: Ultimato", 181, "Ação/Aventura", new DateTime(2019, 4, 26), false);
+    filmeControlador.CriarFilme(filme2);
+
+    var filme3 = new Filme(3, "Interestelar", 169, "Ficção Científica", new DateTime(2014, 11, 7), false);
+    filmeControlador.CriarFilme(filme3);
+
+    var filme4 = new Filme(4, "O Poderoso Chefão", 175, "Drama/Crime", new DateTime(1972, 3, 24), false);
+    filmeControlador.CriarFilme(filme4);
+
+    var filme5 = new Filme(5, "Homem-Aranha: Através do Aranhaverso", 140, "Animação/Ação", new DateTime(2023, 6, 1), true);
+    filmeControlador.CriarFilme(filme5);
+
+    // 5. CRIAR PRODUTOS
+    produtoControlador.CriarProduto(new ProdutoAlimento(1, "Pipoca Pequena", "Pipoca salgada 50g", CategoriaProduto.Alimento, 8.00f, 100, 20));
+    produtoControlador.CriarProduto(new ProdutoAlimento(2, "Pipoca Média", "Pipoca salgada 100g", CategoriaProduto.Alimento, 12.00f, 100, 20));
+    produtoControlador.CriarProduto(new ProdutoAlimento(3, "Pipoca Grande", "Pipoca salgada 150g", CategoriaProduto.Alimento, 16.00f, 100, 20));
+    produtoControlador.CriarProduto(new ProdutoAlimento(4, "Refrigerante Pequeno", "Refrigerante 300ml", CategoriaProduto.Bebida, 6.00f, 150, 30));
+    produtoControlador.CriarProduto(new ProdutoAlimento(5, "Refrigerante Médio", "Refrigerante 500ml", CategoriaProduto.Bebida, 9.00f, 150, 30));
+    produtoControlador.CriarProduto(new ProdutoAlimento(6, "Refrigerante Grande", "Refrigerante 700ml", CategoriaProduto.Bebida, 12.00f, 150, 30));
+    produtoControlador.CriarProduto(new ProdutoAlimento(7, "Combo Casal", "Pipoca Grande + 2 Refrigerantes Médios", CategoriaProduto.Alimento, 32.00f, 50, 10));
+    produtoControlador.CriarProduto(new ProdutoAlimento(8, "Combo Individual", "Pipoca Média + Refrigerante Médio", CategoriaProduto.Alimento, 18.00f, 80, 15));
+    produtoControlador.CriarProduto(new ProdutoAlimento(9, "Combo Família", "2 Pipocas Grandes + 4 Refrigerantes Grandes", CategoriaProduto.Alimento, 60.00f, 30, 5));
+    produtoControlador.CriarProduto(new ProdutoAlimento(10, "Chocolate", "Barra de chocolate ao leite", CategoriaProduto.Doce, 5.00f, 200, 40));
+    produtoControlador.CriarProduto(new ProdutoAlimento(11, "Bala de Goma", "Pacote de balas sortidas", CategoriaProduto.Doce, 4.00f, 200, 40));
+    produtoControlador.CriarProduto(new ProdutoAlimento(12, "Nachos com Queijo", "Nachos crocantes com molho de queijo", CategoriaProduto.Alimento, 15.00f, 60, 12));
+
+    // 6. CRIAR SESSÕES (próximos 7 dias)
+    int sessaoId = 1;
+    DateTime dataBase = new DateTime(2026, 2, 7);
+    
+    for (int dia = 0; dia < 7; dia++)
+    {
+        DateTime data = dataBase.AddDays(dia);
+        
+        // Avatar (Sala 3) - 14h e 20h
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 14, 0, 0), 25.00f, filme1, sala3));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 20, 0, 0), 30.00f, filme1, sala3));
+        
+        // Vingadores (Sala 2) - 15h e 21h
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 15, 0, 0), 22.00f, filme2, sala2));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 21, 0, 0), 25.00f, filme2, sala2));
+        
+        // Interestelar (Sala 1) - 16h
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 16, 0, 0), 18.00f, filme3, sala1));
+        
+        // O Poderoso Chefão (Sala 1) - 19h
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 19, 0, 0), 20.00f, filme4, sala1));
+        
+        // Homem-Aranha (Sala 2) - 13h e 18h
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 13, 0, 0), 24.00f, filme5, sala2));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 18, 0, 0), 26.00f, filme5, sala2));
+    }
+
+    Console.WriteLine("✓ Dados de teste criados com sucesso!");
+    Console.WriteLine($"  • Admin: Administrador@cinema.com / administrador123");
+    Console.WriteLine($"  • 1 Cinema, 3 Salas, 5 Filmes, 12 Produtos, {sessaoId - 1} Sessões");
+    Console.WriteLine();
 }
-
-assentoPCD ??= salaPCD.Assentos.First();
-
-// Pagamento por PIX para meia entrada.
-var ingressoMeia = ingressoServico.VenderMeia(sessaoPCD, cliente, assentoPCD.Fila, assentoPCD.Numero, "Estudante", FormaPagamento.Pix);
-
-Console.WriteLine(sessaoPCD.ToString());
-Console.WriteLine(ingressoMeia.ToString());
-Console.WriteLine(salaPCD.VisualizarDisposicao());
-
-
-
-
-
