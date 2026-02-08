@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using cinecore.enums;
 
-namespace cinecore.DTOs
+namespace cinecore.DTOs.Filme
 {
     /// <summary>
     /// DTO para criação de um novo Filme

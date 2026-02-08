@@ -1,6 +1,6 @@
 using cinecore.enums;
 
-namespace cinecore.DTOs
+namespace cinecore.DTOs.Filme
 {
     /// <summary>
     /// DTO para retorno de dados de Filme
@@ -16,5 +16,6 @@ namespace cinecore.DTOs
         public ClassificacaoIndicativa Classificacao { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
+        public int QuantidadeSessoes { get; set; }
     }
 }

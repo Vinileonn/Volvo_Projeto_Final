@@ -98,6 +98,32 @@ CHECKLIST DE MIGRACAO PARA API REST (CINEFLOW)
 7) README e diagrama do banco
 [ ] Incluir diagrama das tabelas (draw.io ou similar)
 [ ] Documentar como rodar a API e configurar o banco
+
+9) MIGRACAO SESSAOSERVICO PARA CINECORE
+[✓] Criadas classes de exceção em cinecore: DadosInvalidosExcecao, OperacaoNaoPermitidaExcecao, RecursoNaoEncontradoExcecao
+[✓] Adicionado método RecalcularPreco() ao modelo Sessao em cinecore
+[✓] Criado SessaoServico em cinecore/servicos com todas as funcionalidades de cineflow
+[✓] Criados DTOs para Sessão: SessaoDto, CriarSessaoDto, AtualizarSessaoDto
+[✓] Criado SessaoMappingProfile para mapeamento de DTOs
+[✓] Criado SessaoControlador REST seguindo padrão de FilmeControlador
+[✓] Registrado SessaoServico no Program.cs como Singleton
+[✓] AutoMapper configurado automaticamente para registrar SessaoMappingProfile
+
+Arquivos criados:
+- cinecore/excecoes/DadosInvalidosExcecao.cs
+- cinecore/excecoes/OperacaoNaoPermitidaExcecao.cs
+- cinecore/excecoes/RecursoNaoEncontradoExcecao.cs
+- cinecore/servicos/SessaoServico.cs
+- cinecore/DTOs/SessaoDto.cs
+- cinecore/DTOs/CriarSessaoDto.cs
+- cinecore/DTOs/AtualizarSessaoDto.cs
+- cinecore/Mappings/SessaoMappingProfile.cs
+- cinecore/controladores/SessaoControlador.cs
+
+Arquivos modificados:
+- cinecore/modelos/Sessao.cs (adicionado método RecalcularPreco)
+- cinecore/Program.cs (registrado SessaoServico)
+
 [ ] Informar rotas principais e exemplos de payload
 
 8) Qualidade e organizacao

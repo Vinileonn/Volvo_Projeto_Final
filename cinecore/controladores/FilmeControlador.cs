@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using cinecore.modelos;
 using cinecore.servicos;
-using cinecore.DTOs;
+using cinecore.DTOs.Filme;
 
 namespace cinecore.controladores
 {
@@ -140,6 +140,25 @@ namespace cinecore.controladores
             {
                 _filmeServico.DeletarFilme(id);
                 return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { mensagem = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Obtém as sessões de um filme
+        /// </summary>
+        [HttpGet("{id}/sessoes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<object> ObterSessoesDoFilme(int id)
+        {
+            try
+            {
+                var sessoes = _filmeServico.ObterSessoesDoFilme(id);
+                return Ok(new { quantidade = sessoes.Count, sessoes });
             }
             catch (KeyNotFoundException ex)
             {

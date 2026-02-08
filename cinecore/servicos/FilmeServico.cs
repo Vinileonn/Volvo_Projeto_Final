@@ -29,6 +29,11 @@ namespace cinecore.servicos
 
             filme.Id = _filmes.Count > 0 ? _filmes.Max(f => f.Id) + 1 : 1;
             filme.DataCriacao = DateTime.Now;
+            
+            // Inicializa a lista de sessões se ainda não foi inicializada
+            if (filme.Sessoes == null)
+                filme.Sessoes = new List<Sessao>();
+            
             _filmes.Add(filme);
 
             return filme;
@@ -119,6 +124,15 @@ namespace cinecore.servicos
         {
             var filme = ObterFilme(id);
             _filmes.Remove(filme);
+        }
+
+        /// <summary>
+        /// Obtém as sessões de um filme
+        /// </summary>
+        public List<Sessao> ObterSessoesDoFilme(int id)
+        {
+            var filme = ObterFilme(id);
+            return new List<Sessao>(filme.Sessoes);
         }
 
         // ===== MÉTODOS PRIVADOS DE VALIDAÇÃO =====

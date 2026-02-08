@@ -31,6 +31,8 @@ namespace cinecore.modelos
         [Required(ErrorMessage = "A classificação indicativa é obrigatória")]
         public ClassificacaoIndicativa Classificacao { get; set; } = ClassificacaoIndicativa.Livre;
 
+        public List<Sessao> Sessoes { get; set; } = new List<Sessao>();
+
         public DateTime DataCriacao { get; set; } = DateTime.Now;
 
         public DateTime? DataAtualizacao { get; set; }
@@ -47,6 +49,7 @@ namespace cinecore.modelos
             AnoLancamento = anoLancamento;
             Eh3D = eh3D;
             Classificacao = classificacao;
+            Sessoes = new List<Sessao>();
             DataCriacao = DateTime.Now;
         }
     }
