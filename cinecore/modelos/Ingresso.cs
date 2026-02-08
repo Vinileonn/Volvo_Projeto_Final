@@ -29,6 +29,8 @@ namespace cinecore.modelos
         [Range(0, double.MaxValue, ErrorMessage = "O valor do troco não pode ser negativo")]
         public decimal ValorTroco { get; set; } = 0;
 
+        public Dictionary<decimal, int> TrocoDetalhado { get; set; } = new Dictionary<decimal, int>();
+
         public bool ReservaAntecipada { get; set; } = false;
 
         [Range(0, float.MaxValue, ErrorMessage = "A taxa de reserva não pode ser negativa")]

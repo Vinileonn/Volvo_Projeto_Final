@@ -51,5 +51,17 @@ namespace cinecore.modelos
             Assentos = new List<Assento>();
             DataCriacao = DateTime.Now;
         }
+
+        public Assento? ConsultarAssento(char fila, int numero)
+        {
+            foreach (var assento in Assentos)
+            {
+                if (assento.Fila == fila && assento.Numero == numero)
+                {
+                    return assento;
+                }
+            }
+            return null;
+        }
     }
 }

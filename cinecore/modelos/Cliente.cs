@@ -46,5 +46,45 @@ namespace cinecore.modelos
             Pedidos = new List<PedidoAlimento>();
             Cortesias = new List<ProdutoAlimento>();
         }
+
+        public bool EhAniversario(DateTime data)
+        {
+            return DataNascimento.Day == data.Day && DataNascimento.Month == data.Month;
+        }
+
+        public bool EhMesAniversario(DateTime data)
+        {
+            return DataNascimento.Month == data.Month;
+        }
+
+        public int ObterIdade(DateTime data)
+        {
+            int idade = data.Year - DataNascimento.Year;
+            if (data.Month < DataNascimento.Month ||
+                (data.Month == DataNascimento.Month && data.Day < DataNascimento.Day))
+            {
+                idade--;
+            }
+            return idade;
+        }
+
+        public void AdicionarPontos(int pontos)
+        {
+            if (pontos > 0)
+            {
+                PontosFidelidade += pontos;
+            }
+        }
+
+        public bool TentarUsarPontos(int pontos)
+        {
+            if (pontos <= 0 || PontosFidelidade < pontos)
+            {
+                return false;
+            }
+
+            PontosFidelidade -= pontos;
+            return true;
+        }
     }
 }

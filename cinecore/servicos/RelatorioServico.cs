@@ -1,0 +1,125 @@
+using cinecore.modelos;
+
+namespace cinecore.servicos
+{
+    public class RelatorioServico
+    {
+        private readonly IngressoServico _ingressoServico;
+        private readonly SessaoServico _sessaoServico;
+        private readonly ProdutoAlimentoServico _produtoServico;
+        private readonly PedidoAlimentoServico _pedidoServico;
+
+        public RelatorioServico(IngressoServico ingressoServico, SessaoServico sessaoServico,
+                                ProdutoAlimentoServico produtoServico, PedidoAlimentoServico pedidoServico)
+        {
+            _ingressoServico = ingressoServico;
+            _sessaoServico = sessaoServico;
+            _produtoServico = produtoServico;
+            _pedidoServico = pedidoServico;
+        }
+
+        // Relatório de ingressos vendidos
+        public int TotalIngressosVendidos()
+        {
+            return _ingressoServico.ListarIngressos().Count;
+        }
+
+        // Receita total de ingressos
+        public float ReceitaTotalIngressos()
+        {
+            var ingressos = _ingressoServico.ListarIngressos();
+            return ingressos.Sum(i => i.CalcularPreco(i.Sessao?.PrecoFinal ?? 0));
+        }
+
+        // Ingressos vendidos por filme
+        public Dictionary<string, int> IngressosPorFilme()
+        {
+            var ingressos = _ingressoServico.ListarIngressos();
+            return ingressos
+                .Where(i => i.Sessao?.Filme?.Titulo != null)
+                .GroupBy(i => i.Sessao!.Filme!.Titulo)
+                .ToDictionary(g => g.Key, g => g.Count());
+        }
+
+        // Sessões com maior ocupação
+        public List<(Sessao sessao, int ingressosVendidos, float percentualOcupacao)> SessoesComMaiorOcupacao(int top = 5)
+        {
+            var sessoes = _sessaoServico.ListarSessoes();
+            return sessoes
+                .Where(s => s.Sala != null)
+                .Select(s => (
+                    sessao: s,
+                    ingressosVendidos: s.Ingressos.Count,
+                    percentualOcupacao: s.Sala!.Capacidade > 0 ? (float)s.Ingressos.Count / s.Sala.Capacidade * 100 : 0
+                ))
+                .OrderByDescending(x => x.percentualOcupacao)
+                .Take(top)
+                .ToList();
+        }
+
+        // Receita total de pedidos
+        public float ReceitaTotalPedidos()
+        {
+            var pedidos = _pedidoServico.ListarPedidos();
+            return pedidos.Sum(p => p.ValorTotal);
+        }
+
+        // Produtos mais vendidos
+        public Dictionary<string, int> ProdutosMaisVendidos()
+        {
+            var pedidos = _pedidoServico.ListarPedidos();
+            return pedidos
+                .SelectMany(p => p.Itens)
+                .Where(i => i.Produto != null)
+                .GroupBy(i => i.Produto!.Nome)
+                .ToDictionary(g => g.Key, g => g.Sum(i => i.Quantidade));
+        }
+
+        // Produtos com estoque baixo
+        public List<ProdutoAlimento> ProdutosEstoqueBaixo()
+        {
+            return _produtoServico.ListarProdutosEstoqueBaixo();
+        }
+
+        // Receita total geral (ingressos + pedidos)
+        public float ReceitaTotalGeral()
+        {
+            return ReceitaTotalIngressos() + ReceitaTotalPedidos();
+        }
+
+        // Relatório de vendas por período
+        public (int ingressos, float receitaIngressos, int pedidos, float receitaPedidos) VendasPorPeriodo(DateTime inicio, DateTime fim)
+        {
+            var ingressos = _ingressoServico.ListarIngressos()
+                .Where(i => i.DataCompra >= inicio && i.DataCompra <= fim)
+                .ToList();
+
+            var pedidos = _pedidoServico.ListarPedidos()
+                .Where(p => p.DataPedido >= inicio && p.DataPedido <= fim)
+                .ToList();
+
+            return (
+                ingressos: ingressos.Count,
+                receitaIngressos: ingressos.Sum(i => i.CalcularPreco(i.Sessao?.PrecoFinal ?? 0)),
+                pedidos: pedidos.Count,
+                receitaPedidos: pedidos.Sum(p => p.ValorTotal)
+            );
+        }
+
+        // Taxa de ocupação média das sessões
+        public float TaxaOcupacaoMedia()
+        {
+            var sessoes = _sessaoServico.ListarSessoes();
+            if (sessoes.Count == 0)
+            {
+                return 0;
+            }
+
+            var ocupacoes = sessoes
+                .Where(s => s.Sala != null && s.Sala.Capacidade > 0)
+                .Select(s => (float)s.Ingressos.Count / s.Sala!.Capacidade * 100);
+
+            return ocupacoes.Any() ? ocupacoes.Average() : 0;
+        }
+    }
+}

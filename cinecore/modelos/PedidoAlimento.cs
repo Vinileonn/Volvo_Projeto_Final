@@ -32,6 +32,8 @@ namespace cinecore.modelos
         [Range(0, double.MaxValue, ErrorMessage = "O valor do troco não pode ser negativo")]
         public decimal ValorTroco { get; set; } = 0;
 
+        public Dictionary<decimal, int> TrocoDetalhado { get; set; } = new Dictionary<decimal, int>();
+
         [Range(0, int.MaxValue, ErrorMessage = "Os pontos usados não podem ser negativos")]
         public int PontosUsados { get; set; } = 0;
 
@@ -58,6 +60,17 @@ namespace cinecore.modelos
             ValorTotal = valorTotal;
             Itens = new List<ItemPedidoAlimento>();
             DataCriacao = DateTime.Now;
+        }
+
+        public void AdicionarItem(ItemPedidoAlimento item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            Itens.Add(item);
+            ValorTotal += item.Preco * item.Quantidade;
         }
     }
 }

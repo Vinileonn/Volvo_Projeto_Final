@@ -1,6 +1,34 @@
 @cinecore_HostAddress = http://localhost:5211
 
-GET {{cinecore_HostAddress}}/weatherforecast/
+### Criar um novo Cinema
+POST {{cinecore_HostAddress}}/api/cinema/criar
+Content-Type: application/json
+
+{
+  "nome": "Cinemark",
+  "endereco": "Rua Principal, 123"
+}
+
+### Listar todos os Cinemas
+GET {{cinecore_HostAddress}}/api/cinema
 Accept: application/json
 
-###
+### Obter um Cinema por ID
+GET {{cinecore_HostAddress}}/api/cinema/obter/1
+Accept: application/json
+
+### Buscar Cinemas por nome
+GET {{cinecore_HostAddress}}/api/cinema/buscar?nome=Cinemark
+Accept: application/json
+
+### Atualizar um Cinema
+PUT {{cinecore_HostAddress}}/api/cinema/atualizar/1
+Content-Type: application/json
+
+{
+  "nome": "Cinemark Atualizado",
+  "endereco": "Rua Nova, 456"
+}
+
+### Deletar um Cinema
+DELETE {{cinecore_HostAddress}}/api/cinema/deletar/1

@@ -130,3 +130,36 @@ Arquivos modificados:
 [ ] Separar pastas: Controllers, Models, Services, Data, DTOs
 [ ] Injecao de dependencia no Program.cs
 [ ] Padronizar nomenclatura e tratar erros com respostas claras
+10) MIGRACAO CINEMASERVICO DE CINEFLOW PARA CINECORE
+Data: 08/02/2026
+[✓] Criado CinemaServico em cinecore/servicos adaptando logica de cineflow
+    - Usa padrão de exceções padrão (.NET) em vez de exceções customizadas
+    - Implementa métodos: CriarCinema, ObterCinema, ListarCinemas, BuscarPorNome, AtualizarCinema, DeletarCinema
+    - Adicionados métodos complementares: ObterSalasDoCinema, ObterFuncionariosDoCinema
+    - Validações robustas com métodos privados de validação
+[✓] DTOs já existentes e configurados:
+    - cinecore/DTOs/Cinema/CinemaDto.cs
+    - cinecore/DTOs/Cinema/CriarCinemaDto.cs
+    - cinecore/DTOs/Cinema/AtualizarCinemaDto.cs
+[✓] Mapeamento AutoMapper já existente:
+    - cinecore/Mappings/CinemaMappingProfile.cs
+[✓] Criado CinemaControlador em cinecore/controladores seguindo padrão REST
+    - Endpoints: POST /criar, GET, GET /obter/{id}, GET /buscar, PUT /atualizar/{id}, DELETE /deletar/{id}
+    - Endpoints adicionais: GET /{id}/salas, GET /{id}/funcionarios
+    - Tratamento de exceções e status codes apropriados (201, 400, 404, 409)
+[✓] Registrado CinemaServico no Program.cs como Singleton
+[✓] Adicionados endpoints de teste em cinecore.cinecore.http para validação
+
+Arquivos criados:
+- cinecore/servicos/CinemaServico.cs
+- cinecore/controladores/CinemaControlador.cs
+
+Arquivos modificados:
+- cinecore/Program.cs (registrado CinemaServico)
+- cinecore/cinecore.http (adicionados testes para Cinema endpoints)
+
+Proximos passos (opcional):
+[ ] Remover CinemaServico de cineflow se não for mais necessário
+[ ] Migrar CinemaControlador de cineflow para cinecore se houver dependências
+[ ] Integrar banco de dados Entity Framework quando disponível
+[ ] Adicionar autenticação/autorização aos endpoints de Cinema

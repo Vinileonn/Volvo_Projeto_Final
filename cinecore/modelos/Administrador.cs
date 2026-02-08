@@ -5,14 +5,27 @@ namespace cinecore.modelos
     /// </summary>
     public class Administrador : Usuario
     {
-        private const string EmailAdministrador = "Administrador@cinema.com";
-        private const string SenhaAdministrador = "administrador123";
-
         public Administrador() : base() { }
 
-        public Administrador(int id, string nome)
-            : base(id, nome, EmailAdministrador, SenhaAdministrador, DateTime.Now)
+        public Administrador(int id, string nome, string email, string senha)
+            : base(id, nome, email, senha, DateTime.Now)
         {
+        }
+
+        /// <summary>
+        /// Factory method para criar administrador com credenciais personalizadas
+        /// </summary>
+        public static Administrador Criar(int id, string nome, string email, string senha)
+        {
+            return new Administrador 
+            { 
+                Id = id, 
+                Nome = nome,
+                Email = email,
+                Senha = senha,
+                DataCadastro = DateTime.Now,
+                DataCriacao = DateTime.Now
+            };
         }
     }
 }
