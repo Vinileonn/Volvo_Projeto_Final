@@ -164,33 +164,23 @@ namespace cinecore.controladores
         }
 
         /// <summary>
-        /// Gera assentos para uma sala (utilitário)
+        /// Visualiza a sala com os assentos disponíveis e ocupados
         /// </summary>
-        [HttpPost("{id}/gerar-assentos")]
+        [HttpGet("Visualizar/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<object> GerarAssentosParaSala(int id)
+        public ActionResult<Dictionary<string, List<string>>> VisualizarSala(int id)
         {
             try
             {
-                _salaServico.GerarAssentosParaSala(id);
-                var sala = _salaServico.ObterSala(id);
-                return Ok(new 
-                { 
-                    mensagem = "Assentos gerados com sucesso",
-                    quantidadeAssentos = sala.Assentos.Count,
-                    sala = _mapper.Map<SalaDto>(sala)
-                });
+                var visualizacao = _salaServico.VisualizarSala(id);
+                return Ok(visualizacao);
             }
             catch (RecursoNaoEncontradoExcecao ex)
             {
                 return NotFound(new { mensagem = ex.Message });
             }
-            catch (DadosInvalidosExcecao ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
         }
+
     }
 }

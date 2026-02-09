@@ -29,9 +29,10 @@ namespace cinecore.servicos
         // Método interno para obter usuário por email e senha
         internal Usuario? ObterUsuarioPorCredenciais(string email, string senha)
         {
+            var emailLower = email.ToLower();
             return _context.Usuarios.FirstOrDefault(u =>
                 u != null &&
-                u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) &&
+                u.Email.ToLower().Equals(emailLower) &&
                 u.Senha == senha);
         }
 
@@ -70,7 +71,7 @@ namespace cinecore.servicos
             }
 
             // Verifica duplicidade de email e CPF
-            if (_context.Usuarios.Any(u => u != null && u.Email.Equals(cliente.Email, StringComparison.OrdinalIgnoreCase)))
+            if (_context.Usuarios.Any(u => u != null && u.Email.ToLower() == cliente.Email.ToLower()))
             {
                 throw new OperacaoNaoPermitidaExcecao($"Email '{cliente.Email}' já cadastrado.");
             }
@@ -128,7 +129,7 @@ namespace cinecore.servicos
                 .Include(c => c.Ingressos)
                 .Include(c => c.Pedidos)
                 .Include(c => c.Cortesias)
-                .FirstOrDefault(c => c.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(c => c.Email.ToLower() == email.ToLower());
 
             if (cliente != null)
             {
@@ -137,7 +138,7 @@ namespace cinecore.servicos
 
             var admin = _context.Usuarios
                 .OfType<Administrador>()
-                .FirstOrDefault(a => a.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(a => a.Email.ToLower() == email.ToLower());
 
             if (admin == null)
             {
@@ -178,7 +179,7 @@ namespace cinecore.servicos
             {
                 // Verifica se o novo email já está em uso por outro usuário
                 if (_context.Usuarios.Any(u => u != null && u.Id != id &&
-                    u.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
+                    u.Email.ToLower() == email.ToLower()))
                 {
                     throw new OperacaoNaoPermitidaExcecao($"Email '{email}' já está em uso por outro usuário.");
                 }

@@ -44,7 +44,7 @@ namespace cinecore.utilitarios
                     }
 
                     bool preferencial = filaAtual == 'A';
-                    Assento assento = new Assento(assentos.Count + 1, filaAtual, assentoNumero, sala, null, tipo, lugares, preferencial);
+                    Assento assento = new Assento(filaAtual, assentoNumero, sala, null, tipo, lugares, preferencial);
                     assentos.Add(assento);
                     assentoNumero++;
                     lugaresGerados += lugares;

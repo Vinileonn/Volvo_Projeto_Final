@@ -73,9 +73,10 @@ namespace cinecore.servicos
             if (string.IsNullOrWhiteSpace(titulo))
                 return new List<Filme>();
 
+            var tituloLower = titulo.ToLower();
             return _context.Filmes
                 .Include(f => f.Sessoes)
-                .Where(f => f.Titulo.Contains(titulo, StringComparison.OrdinalIgnoreCase))
+                .Where(f => f.Titulo.ToLower().Contains(tituloLower))
                 .ToList();
         }
 
@@ -88,7 +89,7 @@ namespace cinecore.servicos
 
             // Valida título duplicado se estiver sendo alterado
             if (!string.IsNullOrWhiteSpace(filmeAtualizado.Titulo) &&
-                !filme.Titulo.Equals(filmeAtualizado.Titulo, StringComparison.OrdinalIgnoreCase))
+                !filme.Titulo.ToLower().Equals(filmeAtualizado.Titulo.ToLower()))
             {
                 var anoParaValidar = filmeAtualizado.AnoLancamento != default 
                     ? filmeAtualizado.AnoLancamento 
@@ -180,9 +181,10 @@ namespace cinecore.servicos
 
         private void ValidarDuplicidade(string titulo, DateTime anoLancamento, int? idParaIgnorar = null)
         {
+            var tituloLower = titulo.ToLower();
             var jaExiste = _context.Filmes.Any(f =>
                 (!idParaIgnorar.HasValue || f.Id != idParaIgnorar.Value) &&
-                f.Titulo.Equals(titulo, StringComparison.OrdinalIgnoreCase) &&
+                f.Titulo.ToLower().Equals(tituloLower) &&
                 f.AnoLancamento.Year == anoLancamento.Year);
 
             if (jaExiste)

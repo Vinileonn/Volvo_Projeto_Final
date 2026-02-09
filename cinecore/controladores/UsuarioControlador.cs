@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using cinecore.modelos;
 using cinecore.servicos;
 using cinecore.excecoes;
+using cinecore.DTOs.Usuario;
+using AutoMapper;
 
 namespace cinecore.controladores
 {
@@ -13,32 +15,45 @@ namespace cinecore.controladores
     public class UsuarioControlador : ControllerBase
     {
         private readonly UsuarioServico _usuarioServico;
+        private readonly IMapper _mapper;
 
-        public UsuarioControlador(UsuarioServico usuarioServico)
+        public UsuarioControlador(UsuarioServico usuarioServico, IMapper mapper)
         {
             _usuarioServico = usuarioServico;
+            _mapper = mapper;
         }
 
         /// <summary>
-        /// Adiciona um novo usuário
+        /// NOTA: Este controlador também permite criar um novo usuário (Cliente).
         /// </summary>
-        [HttpPost("Adicionar")]
+
+        /// <summary>
+        /// Cadastra um novo cliente
+        /// </summary>
+        [HttpPost("Registrar")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Usuario> AdicionarUsuario([FromBody] Usuario usuario)
+        public ActionResult<ClienteDto> RegistrarCliente([FromBody] CriarUsuarioDto criarUsuarioDto)
         {
             try
             {
-                _usuarioServico.AdicionarUsuario(usuario);
-                return CreatedAtAction(nameof(ObterUsuario), new { id = usuario.Id }, usuario);
+                var cliente = _mapper.Map<Cliente>(criarUsuarioDto);
+                _usuarioServico.RegistrarCliente(cliente);
+
+                var clienteDto = _mapper.Map<ClienteDto>(cliente);
+                return CreatedAtAction(nameof(ObterUsuario), new { id = clienteDto.Id }, clienteDto);
             }
             catch (DadosInvalidosExcecao ex)
             {
-                return BadRequest(new { mensagem = ex.Message });
+                return BadRequest(new { sucesso = false, mensagem = $"Dados inválidos: {ex.Message}" });
             }
             catch (OperacaoNaoPermitidaExcecao ex)
             {
-                return BadRequest(new { mensagem = ex.Message });
+                return BadRequest(new { sucesso = false, mensagem = $"Operação não permitida: {ex.Message}" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { sucesso = false, mensagem = "Erro inesperado ao cadastrar cliente.", erro = ex.Message });
             }
         }
 
@@ -114,7 +129,7 @@ namespace cinecore.controladores
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult AtualizarUsuario(int id, [FromBody] AtualizarUsuarioRequest request)
+        public ActionResult AtualizarUsuario(int id, [FromBody] AtualizarUsuarioDto request)
         {
             try
             {
@@ -154,13 +169,5 @@ namespace cinecore.controladores
                 return BadRequest(new { mensagem = ex.Message });
             }
         }
-    }
-
-    public class AtualizarUsuarioRequest
-    {
-        public string? Nome { get; set; }
-        public string? Email { get; set; }
-        public string? Telefone { get; set; }
-        public string? Endereco { get; set; }
     }
 }

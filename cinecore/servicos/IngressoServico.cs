@@ -90,14 +90,14 @@ namespace cinecore.servicos
         public Ingresso ObterIngresso(int id)
         {
             var ingresso = _context.Ingressos
-                .Include(i => i.Sessao)
-                    .ThenInclude(s => s.Sala)
-                .Include(i => i.Sessao)
-                    .ThenInclude(s => s.Filme)
-                .Include(i => i.Sessao)
-                    .ThenInclude(s => s.Ingressos)
-                .Include(i => i.Cliente)
-                    .ThenInclude(c => c.Ingressos)
+                .Include(i => i.Sessao!)
+                    .ThenInclude(s => s.Sala!)
+                .Include(i => i.Sessao!)
+                    .ThenInclude(s => s.Filme!)
+                .Include(i => i.Sessao!)
+                    .ThenInclude(s => s.Ingressos!)
+                .Include(i => i.Cliente!)
+                    .ThenInclude(c => c.Ingressos!)
                 .Include(i => i.Assento)
                 .FirstOrDefault(i => i.Id == id);
             if (ingresso == null)
@@ -110,12 +110,12 @@ namespace cinecore.servicos
         public List<Ingresso> ListarIngressos()
         {
             return _context.Ingressos
-                .Include(i => i.Sessao)
-                    .ThenInclude(s => s.Filme)
-                .Include(i => i.Sessao)
-                    .ThenInclude(s => s.Sala)
-                .Include(i => i.Cliente)
-                    .ThenInclude(c => c.Ingressos)
+                .Include(i => i.Sessao!)
+                    .ThenInclude(s => s.Filme!)
+                .Include(i => i.Sessao!)
+                    .ThenInclude(s => s.Sala!)
+                .Include(i => i.Cliente!)
+                    .ThenInclude(c => c.Ingressos!)
                 .Include(i => i.Assento)
                 .ToList();
         }

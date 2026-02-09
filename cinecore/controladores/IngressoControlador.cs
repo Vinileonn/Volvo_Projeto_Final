@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using cinecore.modelos;
 using cinecore.servicos;
 using cinecore.enums;
 using cinecore.excecoes;
+using cinecore.DTOs.Ingresso;
 
 namespace cinecore.controladores
 {
@@ -16,12 +18,14 @@ namespace cinecore.controladores
         private readonly IngressoServico _ingressoServico;
         private readonly SessaoServico _sessaoServico;
         private readonly UsuarioServico _usuarioServico;
+        private readonly IMapper _mapper;
 
-        public IngressoControlador(IngressoServico ingressoServico, SessaoServico sessaoServico, UsuarioServico usuarioServico)
+        public IngressoControlador(IngressoServico ingressoServico, SessaoServico sessaoServico, UsuarioServico usuarioServico, IMapper mapper)
         {
             _ingressoServico = ingressoServico;
             _sessaoServico = sessaoServico;
             _usuarioServico = usuarioServico;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -31,7 +35,7 @@ namespace cinecore.controladores
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Ingresso> VenderInteira([FromBody] VenderIngressoInteiraRequest request)
+        public ActionResult<IngressoDto> VenderInteira([FromBody] VenderIngressoInteiraRequest request)
         {
             try
             {
@@ -55,7 +59,8 @@ namespace cinecore.controladores
                     request.PontosUsados
                 );
 
-                return CreatedAtAction(nameof(ObterIngresso), new { id = ingresso.Id }, ingresso);
+                var ingressoDto = _mapper.Map<IngressoDto>(ingresso);
+                return CreatedAtAction(nameof(ObterIngresso), new { id = ingresso.Id }, ingressoDto);
             }
             catch (DadosInvalidosExcecao ex)
             {
@@ -82,7 +87,7 @@ namespace cinecore.controladores
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Ingresso> VenderMeia([FromBody] VenderIngressoMeiaRequest request)
+        public ActionResult<IngressoDto> VenderMeia([FromBody] VenderIngressoMeiaRequest request)
         {
             try
             {
@@ -107,7 +112,8 @@ namespace cinecore.controladores
                     request.PontosUsados
                 );
 
-                return CreatedAtAction(nameof(ObterIngresso), new { id = ingresso.Id }, ingresso);
+                var ingressoDto = _mapper.Map<IngressoDto>(ingresso);
+                return CreatedAtAction(nameof(ObterIngresso), new { id = ingresso.Id }, ingressoDto);
             }
             catch (DadosInvalidosExcecao ex)
             {
@@ -133,12 +139,13 @@ namespace cinecore.controladores
         [HttpGet("Obter/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<Ingresso> ObterIngresso(int id)
+        public ActionResult<IngressoDto> ObterIngresso(int id)
         {
             try
             {
                 var ingresso = _ingressoServico.ObterIngresso(id);
-                return Ok(ingresso);
+                var ingressoDto = _mapper.Map<IngressoDto>(ingresso);
+                return Ok(ingressoDto);
             }
             catch (RecursoNaoEncontradoExcecao ex)
             {
@@ -151,10 +158,11 @@ namespace cinecore.controladores
         /// </summary>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Ingresso>> ListarIngressos()
+        public ActionResult<IEnumerable<IngressoDto>> ListarIngressos()
         {
             var ingressos = _ingressoServico.ListarIngressos();
-            return Ok(ingressos);
+            var ingressosDto = _mapper.Map<List<IngressoDto>>(ingressos);
+            return Ok(ingressosDto);
         }
 
         /// <summary>

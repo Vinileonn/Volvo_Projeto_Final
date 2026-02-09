@@ -46,7 +46,7 @@ namespace cinecore.servicos
             if (sala.Cinema != null && _context.Salas.Any(s =>
                 s.Cinema != null &&
                 s.Cinema.Id == sala.Cinema.Id &&
-                s.Nome.Equals(sala.Nome, StringComparison.OrdinalIgnoreCase)))
+                s.Nome.ToLower().Equals(sala.Nome.ToLower())))
             {
                 throw new OperacaoNaoPermitidaExcecao($"Sala '{sala.Nome}' ja existe neste cinema.");
             }
@@ -66,6 +66,7 @@ namespace cinecore.servicos
         {
             var sala = _context.Salas
                 .Include(s => s.Cinema)
+                    .ThenInclude(c => c!.Funcionarios)
                 .Include(s => s.Assentos)
                 .FirstOrDefault(s => s.Id == id);
             if (sala == null)
@@ -99,12 +100,13 @@ namespace cinecore.servicos
 
             if (!string.IsNullOrWhiteSpace(nome))
             {
+                var nomeLower = nome.ToLower();
                 if (_context.Salas.Any(s =>
                     s.Id != id &&
                     s.Cinema != null &&
                     sala.Cinema != null &&
                     s.Cinema.Id == sala.Cinema.Id &&
-                    s.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase)))
+                    s.Nome.ToLower().Equals(nomeLower)))
                 {
                     throw new OperacaoNaoPermitidaExcecao($"Ja existe uma sala com o nome '{nome}' neste cinema.");
                 }
@@ -165,32 +167,6 @@ namespace cinecore.servicos
             _context.SaveChanges();
         }
 
-        /// <summary>
-        /// Geração manual de assentos para uma sala
-        /// </summary>
-        public void GerarAssentosParaSala(int id)
-        {
-            var sala = ObterSala(id);
-            
-            if (sala.Capacidade <= 0)
-            {
-                throw new DadosInvalidosExcecao("Capacidade da sala deve ser maior que zero.");
-            }
-
-            if (sala.Assentos.Count > 0)
-            {
-                _context.Assentos.RemoveRange(sala.Assentos);
-            }
-
-            sala.Assentos = GeradorDeLugares.GerarAssentos(
-                sala.Capacidade,
-                sala,
-                sala.QuantidadeAssentosCasal,
-                sala.QuantidadeAssentosPCD);
-
-            _context.SaveChanges();
-        }
-
         public void DeletarSala(int id)
         {
             var sala = ObterSala(id);
@@ -207,6 +183,33 @@ namespace cinecore.servicos
             {
                 assento.Liberar();
             }
+        }
+
+        /// <summary>
+        /// Retorna a visualização da sala com assentos organizados por fila
+        /// </summary>
+        public Dictionary<string, List<string>> VisualizarSala(int id)
+        {
+            var sala = ObterSala(id);
+            var visualizacao = new Dictionary<string, List<string>>();
+
+            // Agrupa assentos por fila e ordena
+            var assentosPorFila = sala.Assentos
+                .GroupBy(a => a.Fila)
+                .OrderBy(g => g.Key);
+
+            foreach (var grupo in assentosPorFila)
+            {
+                var fila = grupo.Key.ToString();
+                var assentosNaFila = grupo
+                    .OrderBy(a => a.Numero)
+                    .Select(a => a.Disponivel ? $"{a.Fila}{a.Numero}" : "X")
+                    .ToList();
+
+                visualizacao[fila] = assentosNaFila;
+            }
+
+            return visualizacao;
         }
     }
 }

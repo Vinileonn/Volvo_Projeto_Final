@@ -29,7 +29,7 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Dados do produto inválidos.");
             }
 
-            if (_context.ProdutosAlimento.Any(p => p.Nome.Equals(produto.Nome, StringComparison.OrdinalIgnoreCase)))
+            if (_context.ProdutosAlimento.Any(p => p.Nome.ToLower().Equals(produto.Nome.ToLower())))
             {
                 throw new DadosInvalidosExcecao("Produto com o mesmo nome já existe.");
             }
@@ -76,8 +76,9 @@ namespace cinecore.servicos
                 return new List<ProdutoAlimento>();
             }
 
+            var nomeLower = nome.ToLower();
             return _context.ProdutosAlimento
-                .Where(p => p.Nome.Contains(nome, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Nome.ToLower().Contains(nomeLower))
                 .ToList();
         }
 
@@ -106,8 +107,9 @@ namespace cinecore.servicos
 
             if (!string.IsNullOrWhiteSpace(nome))
             {
+                var nomeLower = nome.ToLower();
                 if (_context.ProdutosAlimento.Any(p => p.Id != id && 
-                    p.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase)))
+                    p.Nome.ToLower().Equals(nomeLower)))
                 {
                     throw new DadosInvalidosExcecao("Produto com o mesmo nome já existe.");
                 }

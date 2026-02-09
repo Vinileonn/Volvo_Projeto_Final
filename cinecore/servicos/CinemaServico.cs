@@ -76,10 +76,11 @@ namespace cinecore.servicos
             if (string.IsNullOrWhiteSpace(nome))
                 return new List<Cinema>();
 
+            var nomeLower = nome.ToLower();
             return _context.Cinemas
                 .Include(c => c.Salas)
                 .Include(c => c.Funcionarios)
-                .Where(c => c.Nome.Contains(nome, StringComparison.OrdinalIgnoreCase))
+                .Where(c => c.Nome.ToLower().Contains(nomeLower))
                 .ToList();
         }
 
@@ -92,7 +93,7 @@ namespace cinecore.servicos
 
             // Valida nome duplicado se estiver sendo alterado
             if (!string.IsNullOrWhiteSpace(cinemaAtualizado.Nome) &&
-                !cinema.Nome.Equals(cinemaAtualizado.Nome, StringComparison.OrdinalIgnoreCase))
+                !cinema.Nome.ToLower().Equals(cinemaAtualizado.Nome.ToLower()))
             {
                 ValidarDuplicidadeNome(cinemaAtualizado.Nome, id);
             }
@@ -165,9 +166,10 @@ namespace cinecore.servicos
 
         private void ValidarDuplicidadeNome(string nome, int? idParaIgnorar = null)
         {
+            var nomeLower = nome.ToLower();
             var jaExiste = _context.Cinemas.Any(c =>
                 (!idParaIgnorar.HasValue || c.Id != idParaIgnorar.Value) &&
-                c.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
+                c.Nome.ToLower().Equals(nomeLower));
 
             if (jaExiste)
             {

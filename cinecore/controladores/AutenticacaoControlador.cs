@@ -1,6 +1,6 @@
-using cinecore.modelos;
 using cinecore.servicos;
 using cinecore.excecoes;
+using cinecore.DTOs.Usuario;
 using Microsoft.AspNetCore.Mvc;
 
 namespace cinecore.controladores
@@ -37,28 +37,6 @@ namespace cinecore.controladores
             catch (Exception)
             {
                 return StatusCode(500, new { mensagem = "Erro inesperado ao autenticar." });
-            }
-        }
-
-        [HttpPost("registrar")]
-        public IActionResult RegistrarCliente([FromBody] Cliente cliente)
-        {
-            try
-            {
-                UsuarioServico.RegistrarCliente(cliente);
-                return Ok(new { sucesso = true, mensagem = "Cadastro realizado com sucesso." });
-            }
-            catch (DadosInvalidosExcecao ex)
-            {
-                return BadRequest(new { sucesso = false, mensagem = $"Dados inválidos: {ex.Message}" });
-            }
-            catch (OperacaoNaoPermitidaExcecao ex)
-            {
-                return BadRequest(new { sucesso = false, mensagem = $"Operação não permitida: {ex.Message}" });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { sucesso = false, mensagem = "Erro inesperado ao cadastrar cliente." });
             }
         }
 

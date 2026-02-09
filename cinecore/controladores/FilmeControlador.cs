@@ -3,6 +3,7 @@ using AutoMapper;
 using cinecore.modelos;
 using cinecore.servicos;
 using cinecore.DTOs.Filme;
+using cinecore.DTOs.Sessao;
 
 namespace cinecore.controladores
 {
@@ -158,7 +159,8 @@ namespace cinecore.controladores
             try
             {
                 var sessoes = _filmeServico.ObterSessoesDoFilme(id);
-                return Ok(new { quantidade = sessoes.Count, sessoes });
+                var sessoesDto = _mapper.Map<List<SessaoDto>>(sessoes);
+                return Ok(new { quantidade = sessoesDto.Count, sessoes = sessoesDto });
             }
             catch (KeyNotFoundException ex)
             {

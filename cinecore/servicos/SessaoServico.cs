@@ -77,10 +77,10 @@ namespace cinecore.servicos
         public Sessao ObterSessao(int id)
         {
             var sessao = _context.Sessoes
-                .Include(s => s.Filme)
-                .Include(s => s.Sala)
-                    .ThenInclude(sala => sala.Assentos)
-                .Include(s => s.Ingressos)
+                .Include(s => s.Filme!)
+                .Include(s => s.Sala!)
+                    .ThenInclude(sala => sala.Assentos!)
+                .Include(s => s.Ingressos!)
                 .FirstOrDefault(s => s.Id == id);
             if (sessao == null)
             {

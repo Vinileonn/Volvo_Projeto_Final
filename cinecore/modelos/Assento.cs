@@ -39,10 +39,9 @@ namespace cinecore.modelos
 
         public Assento() { }
 
-        public Assento(int id, char fila, int numero, Sala? sala = null, Ingresso? ingresso = null,
+        public Assento(char fila, int numero, Sala? sala = null, Ingresso? ingresso = null,
             TipoAssento tipo = TipoAssento.Normal, int quantidadeLugares = 1, bool preferencial = false)
         {
-            Id = id;
             Fila = fila;
             Numero = numero;
             Disponivel = true;
