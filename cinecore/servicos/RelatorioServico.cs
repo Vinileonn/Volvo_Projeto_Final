@@ -8,6 +8,7 @@ namespace cinecore.servicos
         private readonly SessaoServico _sessaoServico;
         private readonly ProdutoAlimentoServico _produtoServico;
         private readonly PedidoAlimentoServico _pedidoServico;
+        private const int DiasCartazPadrao = 7;
 
         public RelatorioServico(IngressoServico ingressoServico, SessaoServico sessaoServico,
                                 ProdutoAlimentoServico produtoServico, PedidoAlimentoServico pedidoServico)
@@ -120,6 +121,63 @@ namespace cinecore.servicos
                 .Select(s => (float)s.Ingressos.Count / s.Sala!.Capacidade * 100);
 
             return ocupacoes.Any() ? ocupacoes.Average() : 0;
+        }
+
+        // Filmes com sessoes no periodo (cartaz)
+        public List<(Filme filme, List<Sessao> sessoes)> FilmesEmCartaz(DateTime? inicio = null, DateTime? fim = null, bool? somenteDisponiveis = null)
+        {
+            var dataInicio = inicio ?? DateTime.Now;
+            var dataFim = fim ?? dataInicio.AddDays(DiasCartazPadrao);
+
+            if (dataFim < dataInicio)
+            {
+                return new List<(Filme filme, List<Sessao> sessoes)>();
+            }
+
+            var sessoesNoPeriodo = _sessaoServico.ListarSessoes()
+                .Where(s => s.Filme != null && s.DataHorario >= dataInicio && s.DataHorario <= dataFim)
+                .ToList();
+
+            if (somenteDisponiveis.HasValue)
+            {
+                var filtrarDisponiveis = somenteDisponiveis.Value;
+                sessoesNoPeriodo = sessoesNoPeriodo
+                    .Where(s => s.Sala != null && ((s.Sala.Capacidade - s.Ingressos.Count) > 0) == filtrarDisponiveis)
+                    .ToList();
+            }
+
+            return sessoesNoPeriodo
+                .GroupBy(s => s.Filme!)
+                .Select(g => (filme: g.Key, sessoes: g.OrderBy(s => s.DataHorario).ToList()))
+                .ToList();
+        }
+
+        // Taxa de ocupacao por sala no periodo
+        public List<(Sala sala, int ingressosVendidos, int capacidadeTotal, float taxaOcupacao)> OcupacaoPorSala(DateTime? inicio = null, DateTime? fim = null)
+        {
+            var dataInicio = inicio ?? DateTime.Now;
+            var dataFim = fim ?? dataInicio.AddDays(DiasCartazPadrao);
+
+            if (dataFim < dataInicio)
+            {
+                return new List<(Sala sala, int ingressosVendidos, int capacidadeTotal, float taxaOcupacao)>();
+            }
+
+            var sessoesNoPeriodo = _sessaoServico.ListarSessoes()
+                .Where(s => s.Sala != null && s.DataHorario >= dataInicio && s.DataHorario <= dataFim)
+                .ToList();
+
+            return sessoesNoPeriodo
+                .GroupBy(s => s.Sala!)
+                .Select(g =>
+                {
+                    var ingressos = g.Sum(s => s.Ingressos.Count);
+                    var capacidadeTotal = g.Sum(s => s.Sala!.Capacidade);
+                    var taxa = capacidadeTotal > 0 ? (float)ingressos / capacidadeTotal * 100 : 0f;
+                    return (sala: g.Key, ingressosVendidos: ingressos, capacidadeTotal, taxaOcupacao: taxa);
+                })
+                .OrderByDescending(r => r.taxaOcupacao)
+                .ToList();
         }
     }
 }

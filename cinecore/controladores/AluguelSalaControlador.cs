@@ -17,12 +17,14 @@ namespace cinecore.controladores
     {
         private readonly AluguelSalaServico _aluguelSalaServico;
         private readonly SalaServico _salaServico;
+        private readonly UsuarioServico _usuarioServico;
         private readonly IMapper _mapper;
 
-        public AluguelSalaControlador(AluguelSalaServico aluguelSalaServico, SalaServico salaServico, IMapper mapper)
+        public AluguelSalaControlador(AluguelSalaServico aluguelSalaServico, SalaServico salaServico, UsuarioServico usuarioServico, IMapper mapper)
         {
             _aluguelSalaServico = aluguelSalaServico;
             _salaServico = salaServico;
+            _usuarioServico = usuarioServico;
             _mapper = mapper;
         }
 
@@ -41,6 +43,16 @@ namespace cinecore.controladores
                 var sala = _salaServico.ObterSala(criarAluguelDto.SalaId);
                 var aluguel = _mapper.Map<AluguelSala>(criarAluguelDto);
                 aluguel.Sala = sala;
+
+                if (criarAluguelDto.ClienteId.HasValue)
+                {
+                    var cliente = _usuarioServico.ObterUsuario(criarAluguelDto.ClienteId.Value) as Cliente;
+                    if (cliente == null)
+                    {
+                        return BadRequest(new { mensagem = "Usuário informado não é um cliente." });
+                    }
+                    aluguel.Cliente = cliente;
+                }
 
                 _aluguelSalaServico.SolicitarAluguel(aluguel);
                 var aluguelDto = _mapper.Map<AluguelSalaDto>(aluguel);

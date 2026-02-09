@@ -1,16 +1,18 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.enums;
 using cinecore.excecoes;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
     public class FuncionarioServico
     {
-        private readonly List<Funcionario> funcionarios;
+        private readonly CineFlowContext _context;
 
-        public FuncionarioServico()
+        public FuncionarioServico(CineFlowContext context)
         {
-            funcionarios = new List<Funcionario>();
+            _context = context;
         }
 
         public void CriarFuncionario(Funcionario funcionario)
@@ -29,21 +31,16 @@ namespace cinecore.servicos
             {
                 throw new DadosInvalidosExcecao("Cinema do funcionario e obrigatorio.");
             }
-
-            funcionario.Id = funcionarios.Count > 0 ? funcionarios.Max(f => f.Id) + 1 : 1;
             funcionario.DataCriacao = DateTime.Now;
-            funcionarios.Add(funcionario);
-
-            // Mantem uma lista por cinema para consultas rapidas.
-            if (!funcionario.Cinema.Funcionarios.Contains(funcionario))
-            {
-                funcionario.Cinema.Funcionarios.Add(funcionario);
-            }
+            _context.Funcionarios.Add(funcionario);
+            _context.SaveChanges();
         }
 
         public Funcionario ObterFuncionario(int id)
         {
-            var funcionario = funcionarios.FirstOrDefault(f => f.Id == id);
+            var funcionario = _context.Funcionarios
+                .Include(f => f.Cinema)
+                .FirstOrDefault(f => f.Id == id);
             if (funcionario == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Funcionario com ID {id} nao encontrado.");
@@ -53,17 +50,25 @@ namespace cinecore.servicos
 
         public List<Funcionario> ListarFuncionarios()
         {
-            return new List<Funcionario>(funcionarios);
+            return _context.Funcionarios
+                .Include(f => f.Cinema)
+                .ToList();
         }
 
         public List<Funcionario> ListarPorCargo(CargoFuncionario cargo)
         {
-            return funcionarios.Where(f => f.Cargo == cargo).ToList();
+            return _context.Funcionarios
+                .Include(f => f.Cinema)
+                .Where(f => f.Cargo == cargo)
+                .ToList();
         }
 
         public List<Funcionario> ListarPorCinema(int cinemaId)
         {
-            return funcionarios.Where(f => f.Cinema != null && f.Cinema.Id == cinemaId).ToList();
+            return _context.Funcionarios
+                .Include(f => f.Cinema)
+                .Where(f => f.Cinema != null && f.Cinema.Id == cinemaId)
+                .ToList();
         }
 
         public void AtualizarFuncionario(int id, string? nome = null, CargoFuncionario? cargo = null, Cinema? cinema = null)
@@ -82,30 +87,19 @@ namespace cinecore.servicos
 
             if (cinema != null && funcionario.Cinema?.Id != cinema.Id)
             {
-                // Remove da lista antiga e adiciona na nova para manter coerencia.
-                if (funcionario.Cinema != null)
-                {
-                    funcionario.Cinema.Funcionarios.Remove(funcionario);
-                }
                 funcionario.Cinema = cinema;
-                if (!cinema.Funcionarios.Contains(funcionario))
-                {
-                    cinema.Funcionarios.Add(funcionario);
-                }
             }
 
             funcionario.DataAtualizacao = DateTime.Now;
+
+            _context.SaveChanges();
         }
 
         public void DeletarFuncionario(int id)
         {
             var funcionario = ObterFuncionario(id);
-            funcionarios.Remove(funcionario);
-
-            if (funcionario.Cinema != null)
-            {
-                funcionario.Cinema.Funcionarios.Remove(funcionario);
-            }
+            _context.Funcionarios.Remove(funcionario);
+            _context.SaveChanges();
         }
     }
 }

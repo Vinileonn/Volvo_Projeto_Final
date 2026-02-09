@@ -116,19 +116,19 @@ void CriarDadosDeTeste()
     salaControlador.GerarAssentosParaSala(4);
 
     // 4. CRIAR FILMES
-    var filme1 = new Filme(1, "Avatar: O Caminho da Agua", 192, "Ficcao Cientifica", new DateTime(2022, 12, 16), true, ClassificacaoIndicativa.Doze);
+    var filme1 = new Filme(1, "Avatar: O Caminho da Água", 192, "Ficção Científica", new DateTime(2022, 12, 16), true);
     filmeControlador.CriarFilme(filme1);
 
-    var filme2 = new Filme(2, "Vingadores: Ultimato", 181, "Acao/Aventura", new DateTime(2019, 4, 26), false, ClassificacaoIndicativa.Doze);
+    var filme2 = new Filme(2, "Vingadores: Ultimato", 181, "Ação/Aventura", new DateTime(2019, 4, 26), false);
     filmeControlador.CriarFilme(filme2);
 
-    var filme3 = new Filme(3, "Interestelar", 169, "Ficcao Cientifica", new DateTime(2014, 11, 7), false, ClassificacaoIndicativa.Dez);
+    var filme3 = new Filme(3, "Interestelar", 169, "Ficção Científica", new DateTime(2014, 11, 7), false);
     filmeControlador.CriarFilme(filme3);
 
-    var filme4 = new Filme(4, "O Poderoso Chefao", 175, "Drama/Crime", new DateTime(1972, 3, 24), false, ClassificacaoIndicativa.Dezesseis);
+    var filme4 = new Filme(4, "O Poderoso Chefão", 175, "Drama/Crime", new DateTime(1972, 3, 24), false);
     filmeControlador.CriarFilme(filme4);
 
-    var filme5 = new Filme(5, "Homem-Aranha: Atraves do Aranhaverso", 140, "Animacao/Acao", new DateTime(2023, 6, 1), true, ClassificacaoIndicativa.Livre);
+    var filme5 = new Filme(5, "Homem-Aranha: Através do Aranhaverso", 140, "Animação/Ação", new DateTime(2023, 6, 1), true);
     filmeControlador.CriarFilme(filme5);
 
     // 5. CRIAR PRODUTOS
@@ -162,30 +162,30 @@ void CriarDadosDeTeste()
         DateTime data = dataBase.AddDays(dia);
         
         // Avatar (Sala 3) - 14h e 20h
-        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 14, 0, 0), 25.00f, filme1, sala3, TipoSessao.Regular, null, null, IdiomaSessao.Dublado));
-        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 20, 0, 0), 30.00f, filme1, sala3, TipoSessao.Regular, null, null, IdiomaSessao.Legendado));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 14, 0, 0), 25.00f, filme1, sala3));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 20, 0, 0), 30.00f, filme1, sala3));
         
         // Vingadores (Sala 2) - 15h e 21h
-        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 15, 0, 0), 22.00f, filme2, sala2, TipoSessao.Regular, null, null, IdiomaSessao.Dublado));
-        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 21, 0, 0), 25.00f, filme2, sala2, TipoSessao.Regular, null, null, IdiomaSessao.Legendado));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 15, 0, 0), 22.00f, filme2, sala2));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 21, 0, 0), 25.00f, filme2, sala2));
         
         // Interestelar (Sala 1) - 16h
-        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 16, 0, 0), 18.00f, filme3, sala1, TipoSessao.Regular, null, null, IdiomaSessao.Dublado));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 16, 0, 0), 18.00f, filme3, sala1));
         
         // O Poderoso Chefão (Sala 1) - 19h
-        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 19, 0, 0), 20.00f, filme4, sala1, TipoSessao.Regular, null, null, IdiomaSessao.Legendado));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 19, 0, 0), 20.00f, filme4, sala1));
         
         // Homem-Aranha (Sala 2) - 13h e 18h
-        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 13, 0, 0), 24.00f, filme5, sala2, TipoSessao.Regular, null, null, IdiomaSessao.Dublado));
-        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 18, 0, 0), 26.00f, filme5, sala2, TipoSessao.Regular, null, null, IdiomaSessao.Legendado));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 13, 0, 0), 24.00f, filme5, sala2));
+        sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(data.Year, data.Month, data.Day, 18, 0, 0), 26.00f, filme5, sala2));
     }
 
     // Sessoes especiais
-    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 10, 0, 0), 35.00f, filme1, sala3, TipoSessao.PreEstreia, null, null, IdiomaSessao.Legendado));
-    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 9, 0, 0), 18.00f, filme3, sala1, TipoSessao.EspecialBebe, null, null, IdiomaSessao.Dublado));
-    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 11, 0, 0), 20.00f, filme4, sala4, TipoSessao.EspecialPet, null, null, IdiomaSessao.Legendado));
-    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 8, 30, 0), 16.00f, filme5, sala1, TipoSessao.Matine, null, null, IdiomaSessao.Dublado));
-    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 22, 0, 0), 28.00f, filme2, sala2, TipoSessao.Evento, "Maratona Vingadores", "Parceiro Geek Club", IdiomaSessao.Legendado));
+    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 10, 0, 0), 35.00f, filme1, sala3, TipoSessao.PreEstreia));
+    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 9, 0, 0), 18.00f, filme3, sala1, TipoSessao.EspecialBebe));
+    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 11, 0, 0), 20.00f, filme4, sala4, TipoSessao.EspecialPet));
+    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 8, 30, 0), 16.00f, filme5, sala1, TipoSessao.Matine));
+    sessaoControlador.CriarSessao(new Sessao(sessaoId++, new DateTime(dataBase.Year, dataBase.Month, dataBase.Day, 22, 0, 0), 28.00f, filme2, sala2, TipoSessao.Evento, "Maratona Vingadores", "Parceiro Geek Club"));
 
     Console.WriteLine("✓ Dados de teste criados com sucesso!");
     Console.WriteLine($"  • Admin: Administrador@cinema.com / administrador123");

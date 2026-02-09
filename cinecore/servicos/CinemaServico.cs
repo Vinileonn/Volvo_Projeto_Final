@@ -1,4 +1,6 @@
+using cinecore.dados;
 using cinecore.modelos;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
@@ -7,11 +9,11 @@ namespace cinecore.servicos
     /// </summary>
     public class CinemaServico
     {
-        private readonly List<Cinema> _cinemas;
+        private readonly CineFlowContext _context;
 
-        public CinemaServico()
+        public CinemaServico(CineFlowContext context)
         {
-            _cinemas = new List<Cinema>();
+            _context = context;
         }
 
         /// <summary>
@@ -25,7 +27,6 @@ namespace cinecore.servicos
             ValidarCamposObrigatorios(cinema);
             ValidarDuplicidade(cinema);
 
-            cinema.Id = _cinemas.Count > 0 ? _cinemas.Max(c => c.Id) + 1 : 1;
             cinema.DataCriacao = DateTime.Now;
             
             // Inicializa as listas se ainda não foram inicializadas
@@ -35,7 +36,8 @@ namespace cinecore.servicos
             if (cinema.Funcionarios == null)
                 cinema.Funcionarios = new List<Funcionario>();
             
-            _cinemas.Add(cinema);
+            _context.Cinemas.Add(cinema);
+            _context.SaveChanges();
 
             return cinema;
         }
@@ -45,7 +47,10 @@ namespace cinecore.servicos
         /// </summary>
         public Cinema ObterCinema(int id)
         {
-            var cinema = _cinemas.FirstOrDefault(c => c.Id == id);
+            var cinema = _context.Cinemas
+                .Include(c => c.Salas)
+                .Include(c => c.Funcionarios)
+                .FirstOrDefault(c => c.Id == id);
             if (cinema == null)
                 throw new KeyNotFoundException($"Cinema com ID {id} não encontrado.");
 
@@ -57,7 +62,10 @@ namespace cinecore.servicos
         /// </summary>
         public List<Cinema> ListarCinemas()
         {
-            return new List<Cinema>(_cinemas);
+            return _context.Cinemas
+                .Include(c => c.Salas)
+                .Include(c => c.Funcionarios)
+                .ToList();
         }
 
         /// <summary>
@@ -68,7 +76,9 @@ namespace cinecore.servicos
             if (string.IsNullOrWhiteSpace(nome))
                 return new List<Cinema>();
 
-            return _cinemas
+            return _context.Cinemas
+                .Include(c => c.Salas)
+                .Include(c => c.Funcionarios)
                 .Where(c => c.Nome.Contains(nome, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
@@ -96,6 +106,8 @@ namespace cinecore.servicos
 
             cinema.DataAtualizacao = DateTime.Now;
 
+            _context.SaveChanges();
+
             return cinema;
         }
 
@@ -105,7 +117,8 @@ namespace cinecore.servicos
         public void DeletarCinema(int id)
         {
             var cinema = ObterCinema(id);
-            _cinemas.Remove(cinema);
+            _context.Cinemas.Remove(cinema);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -152,7 +165,7 @@ namespace cinecore.servicos
 
         private void ValidarDuplicidadeNome(string nome, int? idParaIgnorar = null)
         {
-            var jaExiste = _cinemas.Any(c =>
+            var jaExiste = _context.Cinemas.Any(c =>
                 (!idParaIgnorar.HasValue || c.Id != idParaIgnorar.Value) &&
                 c.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase));
 

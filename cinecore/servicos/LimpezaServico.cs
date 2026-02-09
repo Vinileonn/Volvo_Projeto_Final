@@ -1,16 +1,18 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.enums;
 using cinecore.excecoes;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
     public class LimpezaServico
     {
-        private readonly List<EscalaLimpeza> escalas;
+        private readonly CineFlowContext _context;
 
-        public LimpezaServico()
+        public LimpezaServico(CineFlowContext context)
         {
-            escalas = new List<EscalaLimpeza>();
+            _context = context;
         }
 
         public void CriarEscala(Sala sala, Funcionario funcionario, DateTime inicio, DateTime fim)
@@ -31,7 +33,7 @@ namespace cinecore.servicos
             }
 
             // Evita conflito de horarios na mesma sala ou para o mesmo funcionario.
-            if (escalas.Any(e =>
+            if (_context.EscalasLimpeza.Any(e =>
                 e.Sala != null && e.Funcionario != null &&
                 (e.Sala.Id == sala.Id || e.Funcionario.Id == funcionario.Id) &&
                 inicio < e.Fim && fim > e.Inicio))
@@ -39,39 +41,47 @@ namespace cinecore.servicos
                 throw new OperacaoNaoPermitidaExcecao("Conflito de horario na escala de limpeza.");
             }
 
-            var escala = new EscalaLimpeza(ProximoId(), inicio, fim, sala, funcionario);
-            escalas.Add(escala);
+            var escala = new EscalaLimpeza(0, inicio, fim, sala, funcionario);
+            _context.EscalasLimpeza.Add(escala);
+            _context.SaveChanges();
         }
 
         public List<EscalaLimpeza> ListarEscalas()
         {
-            return new List<EscalaLimpeza>(escalas);
+            return _context.EscalasLimpeza
+                .Include(e => e.Sala)
+                .Include(e => e.Funcionario)
+                .ToList();
         }
 
         public List<EscalaLimpeza> ListarPorSala(int salaId)
         {
-            return escalas.Where(e => e.Sala != null && e.Sala.Id == salaId).ToList();
+            return _context.EscalasLimpeza
+                .Include(e => e.Sala)
+                .Include(e => e.Funcionario)
+                .Where(e => e.Sala != null && e.Sala.Id == salaId)
+                .ToList();
         }
 
         public List<EscalaLimpeza> ListarPorFuncionario(int funcionarioId)
         {
-            return escalas.Where(e => e.Funcionario != null && e.Funcionario.Id == funcionarioId).ToList();
+            return _context.EscalasLimpeza
+                .Include(e => e.Sala)
+                .Include(e => e.Funcionario)
+                .Where(e => e.Funcionario != null && e.Funcionario.Id == funcionarioId)
+                .ToList();
         }
 
         public void DeletarEscala(int id)
         {
-            var escala = escalas.FirstOrDefault(e => e.Id == id);
+            var escala = _context.EscalasLimpeza.FirstOrDefault(e => e.Id == id);
             if (escala == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Escala com ID {id} nao encontrada.");
             }
 
-            escalas.Remove(escala);
-        }
-
-        private int ProximoId()
-        {
-            return escalas.Count > 0 ? escalas.Max(e => e.Id) + 1 : 1;
+            _context.EscalasLimpeza.Remove(escala);
+            _context.SaveChanges();
         }
     }
 }

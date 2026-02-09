@@ -1,5 +1,7 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
@@ -8,11 +10,11 @@ namespace cinecore.servicos
     /// </summary>
     public class FilmeServico
     {
-        private readonly List<Filme> _filmes;
+        private readonly CineFlowContext _context;
 
-        public FilmeServico()
+        public FilmeServico(CineFlowContext context)
         {
-            _filmes = new List<Filme>();
+            _context = context;
         }
 
         /// <summary>
@@ -27,14 +29,14 @@ namespace cinecore.servicos
             ValidarDuracao(filme.Duracao);
             ValidarDuplicidade(filme);
 
-            filme.Id = _filmes.Count > 0 ? _filmes.Max(f => f.Id) + 1 : 1;
             filme.DataCriacao = DateTime.Now;
             
             // Inicializa a lista de sessões se ainda não foi inicializada
             if (filme.Sessoes == null)
                 filme.Sessoes = new List<Sessao>();
             
-            _filmes.Add(filme);
+            _context.Filmes.Add(filme);
+            _context.SaveChanges();
 
             return filme;
         }
@@ -44,7 +46,9 @@ namespace cinecore.servicos
         /// </summary>
         public Filme ObterFilme(int id)
         {
-            var filme = _filmes.FirstOrDefault(f => f.Id == id);
+            var filme = _context.Filmes
+                .Include(f => f.Sessoes)
+                .FirstOrDefault(f => f.Id == id);
             if (filme == null)
                 throw new KeyNotFoundException($"Filme com ID {id} não encontrado.");
 
@@ -56,7 +60,9 @@ namespace cinecore.servicos
         /// </summary>
         public List<Filme> ListarFilmes()
         {
-            return new List<Filme>(_filmes);
+            return _context.Filmes
+                .Include(f => f.Sessoes)
+                .ToList();
         }
 
         /// <summary>
@@ -67,7 +73,8 @@ namespace cinecore.servicos
             if (string.IsNullOrWhiteSpace(titulo))
                 return new List<Filme>();
 
-            return _filmes
+            return _context.Filmes
+                .Include(f => f.Sessoes)
                 .Where(f => f.Titulo.Contains(titulo, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
@@ -114,6 +121,8 @@ namespace cinecore.servicos
             filme.Classificacao = filmeAtualizado.Classificacao;
             filme.DataAtualizacao = DateTime.Now;
 
+            _context.SaveChanges();
+
             return filme;
         }
 
@@ -123,7 +132,8 @@ namespace cinecore.servicos
         public void DeletarFilme(int id)
         {
             var filme = ObterFilme(id);
-            _filmes.Remove(filme);
+            _context.Filmes.Remove(filme);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -170,7 +180,7 @@ namespace cinecore.servicos
 
         private void ValidarDuplicidade(string titulo, DateTime anoLancamento, int? idParaIgnorar = null)
         {
-            var jaExiste = _filmes.Any(f =>
+            var jaExiste = _context.Filmes.Any(f =>
                 (!idParaIgnorar.HasValue || f.Id != idParaIgnorar.Value) &&
                 f.Titulo.Equals(titulo, StringComparison.OrdinalIgnoreCase) &&
                 f.AnoLancamento.Year == anoLancamento.Year);

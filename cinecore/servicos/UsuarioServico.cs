@@ -1,31 +1,35 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.excecoes;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
     public class UsuarioServico
     {
-        private List<Usuario> usuarios;
+        private readonly CineFlowContext _context;
 
-        public UsuarioServico()
+        public UsuarioServico(CineFlowContext context)
         {
-            usuarios = new List<Usuario>();
+            _context = context;
         }
 
         // Método para inicializar com administrador padrão
         public void InicializarAdministrador(string email, string senha)
         {
             // Verifica se já existe um administrador
-            if (!usuarios.OfType<Administrador>().Any())
+            if (!_context.Administradores.Any())
             {
-                usuarios.Add(Administrador.Criar(1, "Administrador", email, senha));
+                var admin = Administrador.Criar(0, "Administrador", email, senha);
+                _context.Administradores.Add(admin);
+                _context.SaveChanges();
             }
         }
 
         // Método interno para obter usuário por email e senha
         internal Usuario? ObterUsuarioPorCredenciais(string email, string senha)
         {
-            return usuarios.FirstOrDefault(u =>
+            return _context.Usuarios.FirstOrDefault(u =>
                 u != null &&
                 u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) &&
                 u.Senha == senha);
@@ -37,7 +41,8 @@ namespace cinecore.servicos
             {
                 throw new DadosInvalidosExcecao("Usuário nulo.");
             }
-            usuarios.Add(usuario);
+            _context.Usuarios.Add(usuario);
+            _context.SaveChanges();
         }
 
         // Método para registrar um novo cliente
@@ -65,35 +70,49 @@ namespace cinecore.servicos
             }
 
             // Verifica duplicidade de email e CPF
-            if (usuarios.Any(u => u != null && u.Email.Equals(cliente.Email, StringComparison.OrdinalIgnoreCase)))
+            if (_context.Usuarios.Any(u => u != null && u.Email.Equals(cliente.Email, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new OperacaoNaoPermitidaExcecao($"Email '{cliente.Email}' já cadastrado.");
             }
 
-            if (usuarios.OfType<Cliente>().Any(c => c.CPF == cliente.CPF))
+            if (_context.Usuarios.OfType<Cliente>().Any(c => c.CPF == cliente.CPF))
             {
                 throw new OperacaoNaoPermitidaExcecao($"CPF '{cliente.CPF}' já cadastrado.");
             }
 
-            // Gera um novo ID para o cliente
-            cliente.Id = usuarios.Count > 0 ? usuarios.Max(u => u.Id) + 1 : 1;
-            
             // Define a data de cadastro como a data atual
             cliente.DataCadastro = DateTime.Now;
 
             // Adiciona o cliente à lista
-            usuarios.Add(cliente);
+            _context.Usuarios.Add(cliente);
+            _context.SaveChanges();
         }
 
         // Método para obter usuário por ID
         public Usuario ObterUsuario(int id)
         {
-            var usuario = usuarios.FirstOrDefault(u => u != null && u.Id == id);
-            if (usuario == null)
+            var cliente = _context.Usuarios
+                .OfType<Cliente>()
+                .Include(c => c.Ingressos)
+                .Include(c => c.Pedidos)
+                .Include(c => c.Cortesias)
+                .FirstOrDefault(c => c.Id == id);
+
+            if (cliente != null)
+            {
+                return cliente;
+            }
+
+            var admin = _context.Usuarios
+                .OfType<Administrador>()
+                .FirstOrDefault(a => a.Id == id);
+
+            if (admin == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Usuário com ID {id} não encontrado.");
             }
-            return usuario;
+
+            return admin;
         }
 
         // Método para obter usuário por email
@@ -104,25 +123,45 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Email não informado.");
             }
 
-            var usuario = usuarios.FirstOrDefault(u =>
-                u != null && u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
-            if (usuario == null)
+            var cliente = _context.Usuarios
+                .OfType<Cliente>()
+                .Include(c => c.Ingressos)
+                .Include(c => c.Pedidos)
+                .Include(c => c.Cortesias)
+                .FirstOrDefault(c => c.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+            if (cliente != null)
+            {
+                return cliente;
+            }
+
+            var admin = _context.Usuarios
+                .OfType<Administrador>()
+                .FirstOrDefault(a => a.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+            if (admin == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Usuário com email {email} não encontrado.");
             }
-            return usuario;
+
+            return admin;
         }
 
         // Método para listar todos os usuários
         public List<Usuario> ListarUsuarios()
         {
-            return new List<Usuario>(usuarios);
+            return _context.Usuarios.ToList();
         }
 
         // Método para listar apenas clientes
         public List<Cliente> ListarClientes()
         {
-            return usuarios.OfType<Cliente>().ToList();
+            return _context.Usuarios
+                .OfType<Cliente>()
+                .Include(c => c.Ingressos)
+                .Include(c => c.Pedidos)
+                .Include(c => c.Cortesias)
+                .ToList();
         }
 
         // Método para atualizar dados do usuário
@@ -138,7 +177,7 @@ namespace cinecore.servicos
             if (!string.IsNullOrWhiteSpace(email))
             {
                 // Verifica se o novo email já está em uso por outro usuário
-                if (usuarios.Any(u => u != null && u.Id != id &&
+                if (_context.Usuarios.Any(u => u != null && u.Id != id &&
                     u.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
                 {
                     throw new OperacaoNaoPermitidaExcecao($"Email '{email}' já está em uso por outro usuário.");
@@ -155,6 +194,7 @@ namespace cinecore.servicos
                 if (!string.IsNullOrWhiteSpace(endereco))
                     cliente.Endereco = endereco;
             }
+            _context.SaveChanges();
         }
 
         // Método para deletar usuário
@@ -168,7 +208,8 @@ namespace cinecore.servicos
                 throw new OperacaoNaoPermitidaExcecao("Não é permitido deletar o usuário Administrador.");
             }
 
-            usuarios.Remove(usuario);
+            _context.Usuarios.Remove(usuario);
+            _context.SaveChanges();
         }
 
         // Método para alterar senha
@@ -189,6 +230,7 @@ namespace cinecore.servicos
             }
 
             usuario.Senha = senhaNova;
+            _context.SaveChanges();
         }
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using cinecore.servicos;
-using cinecore.modelos;
+using cinecore.DTOs.Relatorio;
+using cinecore.DTOs.Filme;
 
 namespace cinecore.controladores
 {
@@ -12,10 +14,12 @@ namespace cinecore.controladores
     public class RelatorioControlador : ControllerBase
     {
         private readonly RelatorioServico _relatorioServico;
+        private readonly IMapper _mapper;
 
-        public RelatorioControlador(RelatorioServico relatorioServico)
+        public RelatorioControlador(RelatorioServico relatorioServico, IMapper mapper)
         {
             _relatorioServico = relatorioServico;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -239,6 +243,80 @@ namespace cinecore.controladores
             catch (Exception ex)
             {
                 return StatusCode(500, new { mensagem = "Erro inesperado ao calcular taxa de ocupação média.", erro = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Lista filmes com sessoes disponiveis no periodo (cartaz)
+        /// </summary>
+        [HttpGet("cartaz")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<object> FilmesEmCartaz([FromQuery] DateTime? inicio = null, [FromQuery] DateTime? fim = null, [FromQuery] bool? disponiveis = null)
+        {
+            try
+            {
+                var dados = _relatorioServico.FilmesEmCartaz(inicio, fim, disponiveis);
+                var resultado = dados.Select(item => new CartazFilmeDto
+                {
+                    Filme = _mapper.Map<FilmeDto>(item.filme),
+                    Sessoes = item.sessoes.Select(s => new CartazSessaoDto
+                    {
+                        Id = s.Id,
+                        DataHorario = s.DataHorario,
+                        PrecoFinal = s.PrecoFinal,
+                        Tipo = s.Tipo,
+                        Idioma = s.Idioma,
+                        SalaId = s.Sala?.Id ?? 0,
+                        SalaNome = s.Sala?.Nome ?? ""
+                    }).ToList()
+                }).ToList();
+
+                return Ok(new
+                {
+                    inicio = inicio ?? DateTime.Now,
+                    fim = fim ?? (inicio ?? DateTime.Now).AddDays(7),
+                    disponiveis,
+                    quantidade = resultado.Count,
+                    filmes = resultado
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = "Erro inesperado ao gerar cartaz.", erro = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Lista salas e taxa de ocupacao no periodo
+        /// </summary>
+        [HttpGet("salas/ocupacao")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<object> OcupacaoPorSala([FromQuery] DateTime? inicio = null, [FromQuery] DateTime? fim = null)
+        {
+            try
+            {
+                var dados = _relatorioServico.OcupacaoPorSala(inicio, fim)
+                    .Select(r => new OcupacaoSalaDto
+                    {
+                        SalaId = r.sala.Id,
+                        SalaNome = r.sala.Nome,
+                        CapacidadeTotal = r.capacidadeTotal,
+                        IngressosVendidos = r.ingressosVendidos,
+                        TaxaOcupacao = r.taxaOcupacao
+                    })
+                    .ToList();
+
+                return Ok(new
+                {
+                    inicio = inicio ?? DateTime.Now,
+                    fim = fim ?? (inicio ?? DateTime.Now).AddDays(7),
+                    quantidade = dados.Count,
+                    salas = dados
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensagem = "Erro inesperado ao gerar ocupacao por sala.", erro = ex.Message });
             }
         }
     }

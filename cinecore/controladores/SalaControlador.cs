@@ -15,11 +15,13 @@ namespace cinecore.controladores
     public class SalaControlador : ControllerBase
     {
         private readonly SalaServico _salaServico;
+        private readonly CinemaServico _cinemaServico;
         private readonly IMapper _mapper;
 
-        public SalaControlador(SalaServico salaServico, IMapper mapper)
+        public SalaControlador(SalaServico salaServico, CinemaServico cinemaServico, IMapper mapper)
         {
             _salaServico = salaServico;
+            _cinemaServico = cinemaServico;
             _mapper = mapper;
         }
 
@@ -34,7 +36,9 @@ namespace cinecore.controladores
         {
             try
             {
+                var cinema = _cinemaServico.ObterCinema(criarSalaDto.CinemaId);
                 var sala = _mapper.Map<Sala>(criarSalaDto);
+                sala.Cinema = cinema;
                 _salaServico.CriarSala(sala);
                 
                 // Após criar, mapear para DTO para retornar

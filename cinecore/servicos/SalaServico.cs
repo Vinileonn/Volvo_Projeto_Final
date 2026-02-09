@@ -1,16 +1,18 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.utilitarios;
 using cinecore.excecoes;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
     public class SalaServico
     {
-        private readonly List<Sala> salas;
+        private readonly CineFlowContext _context;
 
-        public SalaServico()
+        public SalaServico(CineFlowContext context)
         {
-            salas = new List<Sala>();
+            _context = context;
         }
 
         public void CriarSala(Sala sala)
@@ -41,15 +43,13 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Quantidade de assentos especiais excede a capacidade.");
             }
 
-            if (sala.Cinema != null && salas.Any(s =>
+            if (sala.Cinema != null && _context.Salas.Any(s =>
                 s.Cinema != null &&
                 s.Cinema.Id == sala.Cinema.Id &&
                 s.Nome.Equals(sala.Nome, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new OperacaoNaoPermitidaExcecao($"Sala '{sala.Nome}' ja existe neste cinema.");
             }
-
-            sala.Id = salas.Count > 0 ? salas.Max(s => s.Id) + 1 : 1;
             
             // Gera assentos especiais com base nas quantidades da sala
             sala.Assentos = GeradorDeLugares.GerarAssentos(
@@ -58,17 +58,16 @@ namespace cinecore.servicos
                 sala.QuantidadeAssentosCasal,
                 sala.QuantidadeAssentosPCD);
             
-            salas.Add(sala);
-
-            if (sala.Cinema != null && !sala.Cinema.Salas.Contains(sala))
-            {
-                sala.Cinema.Salas.Add(sala);
-            }
+            _context.Salas.Add(sala);
+            _context.SaveChanges();
         }
 
         public Sala ObterSala(int id)
         {
-            var sala = salas.FirstOrDefault(s => s.Id == id);
+            var sala = _context.Salas
+                .Include(s => s.Cinema)
+                .Include(s => s.Assentos)
+                .FirstOrDefault(s => s.Id == id);
             if (sala == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Sala com ID {id} não encontrada.");
@@ -78,12 +77,19 @@ namespace cinecore.servicos
 
         public List<Sala> ListarSalas()
         {
-            return new List<Sala>(salas);
+            return _context.Salas
+                .Include(s => s.Cinema)
+                .Include(s => s.Assentos)
+                .ToList();
         }
 
         public List<Sala> ListarSalasPorCinema(int cinemaId)
         {
-            return salas.Where(s => s.Cinema != null && s.Cinema.Id == cinemaId).ToList();
+            return _context.Salas
+                .Include(s => s.Cinema)
+                .Include(s => s.Assentos)
+                .Where(s => s.Cinema != null && s.Cinema.Id == cinemaId)
+                .ToList();
         }
 
         public void AtualizarSala(int id, string? nome = null, int? capacidade = null,
@@ -93,7 +99,7 @@ namespace cinecore.servicos
 
             if (!string.IsNullOrWhiteSpace(nome))
             {
-                if (salas.Any(s =>
+                if (_context.Salas.Any(s =>
                     s.Id != id &&
                     s.Cinema != null &&
                     sala.Cinema != null &&
@@ -134,6 +140,11 @@ namespace cinecore.servicos
 
                 if (capacidadeMudou)
                 {
+                    if (sala.Assentos.Count > 0)
+                    {
+                        _context.Assentos.RemoveRange(sala.Assentos);
+                    }
+
                     sala.Assentos = GeradorDeLugares.GerarAssentos(
                         sala.Capacidade,
                         sala,
@@ -150,6 +161,8 @@ namespace cinecore.servicos
 
             ResetarAssentosDisponiveis(sala);
             sala.DataAtualizacao = DateTime.Now;
+
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -164,22 +177,25 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Capacidade da sala deve ser maior que zero.");
             }
 
+            if (sala.Assentos.Count > 0)
+            {
+                _context.Assentos.RemoveRange(sala.Assentos);
+            }
+
             sala.Assentos = GeradorDeLugares.GerarAssentos(
                 sala.Capacidade,
                 sala,
                 sala.QuantidadeAssentosCasal,
                 sala.QuantidadeAssentosPCD);
+
+            _context.SaveChanges();
         }
 
         public void DeletarSala(int id)
         {
             var sala = ObterSala(id);
-            salas.Remove(sala);
-
-            if (sala.Cinema != null)
-            {
-                sala.Cinema.Salas.Remove(sala);
-            }
+            _context.Salas.Remove(sala);
+            _context.SaveChanges();
         }
 
         /// <summary>

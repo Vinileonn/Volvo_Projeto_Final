@@ -1,3 +1,4 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.excecoes;
 using cinecore.enums;
@@ -6,12 +7,12 @@ namespace cinecore.servicos
 {
     public class ProdutoAlimentoServico
     {
-        private readonly List<ProdutoAlimento> produtos;
+        private readonly CineFlowContext _context;
         private readonly List<string> alertasEstoque;
 
-        public ProdutoAlimentoServico()
+        public ProdutoAlimentoServico(CineFlowContext context)
         {
-            produtos = new List<ProdutoAlimento>();
+            _context = context;
             alertasEstoque = new List<string>();
         }
 
@@ -28,7 +29,7 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Dados do produto inválidos.");
             }
 
-            if (produtos.Any(p => p.Nome.Equals(produto.Nome, StringComparison.OrdinalIgnoreCase)))
+            if (_context.ProdutosAlimento.Any(p => p.Nome.Equals(produto.Nome, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new DadosInvalidosExcecao("Produto com o mesmo nome já existe.");
             }
@@ -48,23 +49,24 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Produto temático precisa de tema do filme.");
             }
 
-            produto.Id = produtos.Count > 0 ? produtos.Max(p => p.Id) + 1 : 1;
-            produtos.Add(produto);
+            _context.ProdutosAlimento.Add(produto);
+            _context.SaveChanges();
         }
 
         public ProdutoAlimento? ObterProduto(int id)
         {
-            return produtos.FirstOrDefault(p => p.Id == id);
+            return _context.ProdutosAlimento.FirstOrDefault(p => p.Id == id);
         }
 
         public ProdutoAlimento? ObterCortesiaPreEstreiaDisponivel()
         {
-            return produtos.FirstOrDefault(p => p.EhCortesia && p.ExclusivoPreEstreia && p.EstoqueAtual > 0);
+            return _context.ProdutosAlimento
+                .FirstOrDefault(p => p.EhCortesia && p.ExclusivoPreEstreia && p.EstoqueAtual > 0);
         }
 
         public List<ProdutoAlimento> ListarProdutos()
         {
-            return new List<ProdutoAlimento>(produtos);
+            return _context.ProdutosAlimento.ToList();
         }
 
         public List<ProdutoAlimento> BuscarPorNome(string nome)
@@ -74,14 +76,16 @@ namespace cinecore.servicos
                 return new List<ProdutoAlimento>();
             }
 
-            return produtos
+            return _context.ProdutosAlimento
                 .Where(p => p.Nome.Contains(nome, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 
         public List<ProdutoAlimento> ListarProdutosEstoqueBaixo()
         {
-            return produtos.Where(p => p.EstoqueAtual <= p.EstoqueMinimo).ToList();
+            return _context.ProdutosAlimento
+                .Where(p => p.EstoqueAtual <= p.EstoqueMinimo)
+                .ToList();
         }
 
         public List<string> ListarAlertasEstoque()
@@ -94,7 +98,7 @@ namespace cinecore.servicos
                                      string? temaFilme = null, bool? ehCortesia = null, bool? exclusivoPreEstreia = null,
                                      CategoriaProduto? categoria = null)
         {
-            var produto = produtos.FirstOrDefault(p => p.Id == id);
+            var produto = _context.ProdutosAlimento.FirstOrDefault(p => p.Id == id);
             if (produto == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Produto com ID {id} não encontrado.");
@@ -102,7 +106,7 @@ namespace cinecore.servicos
 
             if (!string.IsNullOrWhiteSpace(nome))
             {
-                if (produtos.Any(p => p.Id != id && 
+                if (_context.ProdutosAlimento.Any(p => p.Id != id && 
                     p.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase)))
                 {
                     throw new DadosInvalidosExcecao("Produto com o mesmo nome já existe.");
@@ -171,17 +175,20 @@ namespace cinecore.servicos
             {
                 throw new DadosInvalidosExcecao("Produto temático precisa de tema do filme.");
             }
+
+            _context.SaveChanges();
         }
 
         public void DeletarProduto(int id)
         {
-            var produto = produtos.FirstOrDefault(p => p.Id == id);
+            var produto = _context.ProdutosAlimento.FirstOrDefault(p => p.Id == id);
             if (produto == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Produto com ID {id} não encontrado.");
             }
 
-            produtos.Remove(produto);
+            _context.ProdutosAlimento.Remove(produto);
+            _context.SaveChanges();
         }
 
         // ESTOQUE - adicionar quantidade ao estoque
@@ -192,13 +199,14 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Quantidade deve ser maior que zero.");
             }
 
-            var produto = produtos.FirstOrDefault(p => p.Id == id);
+            var produto = _context.ProdutosAlimento.FirstOrDefault(p => p.Id == id);
             if (produto == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Produto com ID {id} não encontrado.");
             }
 
             produto.EstoqueAtual += quantidade;
+            _context.SaveChanges();
         }
 
         // ESTOQUE - reduzir quantidade do estoque (para vendas)
@@ -209,7 +217,7 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Quantidade deve ser maior que zero.");
             }
 
-            var produto = produtos.FirstOrDefault(p => p.Id == id);
+            var produto = _context.ProdutosAlimento.FirstOrDefault(p => p.Id == id);
             if (produto == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Produto com ID {id} não encontrado.");
@@ -226,12 +234,14 @@ namespace cinecore.servicos
             {
                 alertasEstoque.Add($"Estoque baixo: {produto.Nome} ({produto.EstoqueAtual})");
             }
+
+            _context.SaveChanges();
         }
 
         // ESTOQUE - verificar disponibilidade
         public bool VerificarDisponibilidade(int id, int quantidade)
         {
-            var produto = produtos.FirstOrDefault(p => p.Id == id);
+            var produto = _context.ProdutosAlimento.FirstOrDefault(p => p.Id == id);
             if (produto == null)
             {
                 return false;

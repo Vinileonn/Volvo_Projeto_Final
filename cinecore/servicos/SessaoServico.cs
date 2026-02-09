@@ -1,12 +1,14 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.excecoes;
 using cinecore.enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
     public class SessaoServico
     {
-        private readonly List<Sessao> sessoes;
+        private readonly CineFlowContext _context;
         private const float AdicionalSalaXD = 12f;
         private const float AdicionalSalaVIP = 35f;
         private const float AdicionalSala4D = 25f;
@@ -17,9 +19,9 @@ namespace cinecore.servicos
         private const float DescontoEspecialPet = 0.15f;
         private const float DescontoMatine = 0.25f;
 
-        public SessaoServico()
+        public SessaoServico(CineFlowContext context)
         {
-            sessoes = new List<Sessao>();
+            _context = context;
         }
 
         public void CriarSessao(Sessao sessao)
@@ -68,18 +70,18 @@ namespace cinecore.servicos
             sessao.RecalcularPreco(adicionalSala + adicionalTipoSessao, adicional3D);
             sessao.PrecoFinal = AplicarDescontos(sessao.PrecoFinal, sessao);
 
-            sessao.Id = sessoes.Count > 0 ? sessoes.Max(s => s.Id) + 1 : 1;
-            sessoes.Add(sessao);
-
-            if (sessao.Filme.Sessoes != null && !sessao.Filme.Sessoes.Contains(sessao))
-            {
-                sessao.Filme.Sessoes.Add(sessao);
-            }
+            _context.Sessoes.Add(sessao);
+            _context.SaveChanges();
         }
 
         public Sessao ObterSessao(int id)
         {
-            var sessao = sessoes.FirstOrDefault(s => s.Id == id);
+            var sessao = _context.Sessoes
+                .Include(s => s.Filme)
+                .Include(s => s.Sala)
+                    .ThenInclude(sala => sala.Assentos)
+                .Include(s => s.Ingressos)
+                .FirstOrDefault(s => s.Id == id);
             if (sessao == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Sessão com ID {id} não encontrada.");
@@ -89,17 +91,31 @@ namespace cinecore.servicos
 
         public List<Sessao> ListarSessoes()
         {
-            return new List<Sessao>(sessoes);
+            return _context.Sessoes
+                .Include(s => s.Filme)
+                .Include(s => s.Sala)
+                .Include(s => s.Ingressos)
+                .ToList();
         }
 
         public List<Sessao> ListarSessoesPorFilme(int filmeId)
         {
-            return sessoes.Where(s => s.Filme?.Id == filmeId).ToList();
+            return _context.Sessoes
+                .Include(s => s.Filme)
+                .Include(s => s.Sala)
+                .Include(s => s.Ingressos)
+                .Where(s => s.Filme != null && s.Filme.Id == filmeId)
+                .ToList();
         }
 
         public List<Sessao> ListarSessoesPorSala(int salaId)
         {
-            return sessoes.Where(s => s.Sala?.Id == salaId).ToList();
+            return _context.Sessoes
+                .Include(s => s.Filme)
+                .Include(s => s.Sala)
+                .Include(s => s.Ingressos)
+                .Where(s => s.Sala != null && s.Sala.Id == salaId)
+                .ToList();
         }
 
         public void AtualizarSessao(int id, DateTime? dataHorario = null, float? precoBase = null, Filme? filme = null,
@@ -144,28 +160,18 @@ namespace cinecore.servicos
             }
 
             // Validacao de conflito (excluindo a propria sessao)
-            if (sessoes.Any(s =>
+            if (_context.Sessoes.Any(s =>
                 s.Id != sessao.Id &&
-                s.Sala?.Id == novaSala.Id &&
-                novoDataHorario < s.DataHorario.AddMinutes(s.Filme?.Duracao ?? 0) &&
+                s.Sala != null &&
+                s.Filme != null &&
+                s.Sala.Id == novaSala.Id &&
+                novoDataHorario < s.DataHorario.AddMinutes(s.Filme.Duracao) &&
                 novoDataHorario.AddMinutes(novoFilme.Duracao) > s.DataHorario))
             {
                 throw new OperacaoNaoPermitidaExcecao($"Conflito de horario na sala '{novaSala.Nome}'. Ja existe uma sessao neste horario.");
             }
 
             // Se mudou o filme, atualiza relacionamento
-            if (sessao.Filme?.Id != novoFilme.Id)
-            {
-                if (sessao.Filme?.Sessoes != null)
-                {
-                    sessao.Filme.Sessoes.Remove(sessao);
-                }
-                if (novoFilme.Sessoes != null && !novoFilme.Sessoes.Contains(sessao))
-                {
-                    novoFilme.Sessoes.Add(sessao);
-                }
-            }
-
             sessao.DataHorario = novoDataHorario;
             sessao.PrecoBase = novoPrecoBase;
             sessao.Filme = novoFilme;
@@ -182,26 +188,25 @@ namespace cinecore.servicos
             var adicionalTipoSessao = CalcularAdicionalTipoSessao(novoTipo);
             sessao.RecalcularPreco(adicionalSala + adicionalTipoSessao, adicional3D);
             sessao.PrecoFinal = AplicarDescontos(sessao.PrecoFinal, sessao);
+
+            _context.SaveChanges();
         }
 
         public void DeletarSessao(int id)
         {
             var sessao = ObterSessao(id);
-            
-            if (sessao.Filme?.Sessoes != null)
-            {
-                sessao.Filme.Sessoes.Remove(sessao);
-            }
-            
-            sessoes.Remove(sessao);
+            _context.Sessoes.Remove(sessao);
+            _context.SaveChanges();
         }
 
         // Validação de conflito de horários na mesma sala
         private bool ExisteConflito(DateTime inicio, DateTime fim, Sala sala)
         {
-            return sessoes.Any(s =>
-                s.Sala?.Id == sala.Id &&
-                inicio < s.DataHorario.AddMinutes(s.Filme?.Duracao ?? 0) &&
+            return _context.Sessoes.Any(s =>
+                s.Sala != null &&
+                s.Filme != null &&
+                s.Sala.Id == sala.Id &&
+                inicio < s.DataHorario.AddMinutes(s.Filme.Duracao) &&
                 fim > s.DataHorario);
         }
 

@@ -1,6 +1,8 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.enums;
 using cinecore.excecoes;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
@@ -9,7 +11,7 @@ namespace cinecore.servicos
     /// </summary>
     public class AluguelSalaServico
     {
-        private readonly List<AluguelSala> alugueis;
+        private readonly CineFlowContext _context;
         private readonly SessaoServico _sessaoServico;
         
         private const decimal ValorHoraNormal = 200m;
@@ -18,9 +20,9 @@ namespace cinecore.servicos
         private const decimal ValorHora4D = 450m;
         private const decimal ValorPacoteAniversario = 300m;
 
-        public AluguelSalaServico(SessaoServico sessaoServico)
+        public AluguelSalaServico(CineFlowContext context, SessaoServico sessaoServico)
         {
-            alugueis = new List<AluguelSala>();
+            _context = context;
             _sessaoServico = sessaoServico;
         }
 
@@ -64,10 +66,10 @@ namespace cinecore.servicos
                 aluguel.Valor = CalcularValorAluguel(aluguel.Sala, aluguel.Inicio, aluguel.Fim, aluguel.PacoteAniversario);
             }
 
-            aluguel.Id = alugueis.Count > 0 ? alugueis.Max(a => a.Id) + 1 : 1;
             aluguel.Status = StatusAluguel.Solicitado;
             aluguel.DataCriacao = DateTime.Now;
-            alugueis.Add(aluguel);
+            _context.AlugueisSala.Add(aluguel);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -75,7 +77,10 @@ namespace cinecore.servicos
         /// </summary>
         public AluguelSala ObterAluguel(int id)
         {
-            var aluguel = alugueis.FirstOrDefault(a => a.Id == id);
+            var aluguel = _context.AlugueisSala
+                .Include(a => a.Sala)
+                .Include(a => a.Cliente)
+                .FirstOrDefault(a => a.Id == id);
             if (aluguel == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Aluguel com ID {id} nao encontrado.");
@@ -88,7 +93,10 @@ namespace cinecore.servicos
         /// </summary>
         public List<AluguelSala> ListarAlugueis()
         {
-            return new List<AluguelSala>(alugueis);
+            return _context.AlugueisSala
+                .Include(a => a.Sala)
+                .Include(a => a.Cliente)
+                .ToList();
         }
 
         /// <summary>
@@ -96,7 +104,11 @@ namespace cinecore.servicos
         /// </summary>
         public List<AluguelSala> ListarPorStatus(StatusAluguel status)
         {
-            return alugueis.Where(a => a.Status == status).ToList();
+            return _context.AlugueisSala
+                .Include(a => a.Sala)
+                .Include(a => a.Cliente)
+                .Where(a => a.Status == status)
+                .ToList();
         }
 
         /// <summary>
@@ -104,7 +116,11 @@ namespace cinecore.servicos
         /// </summary>
         public List<AluguelSala> ListarPorSala(int salaId)
         {
-            return alugueis.Where(a => a.Sala != null && a.Sala.Id == salaId).ToList();
+            return _context.AlugueisSala
+                .Include(a => a.Sala)
+                .Include(a => a.Cliente)
+                .Where(a => a.Sala != null && a.Sala.Id == salaId)
+                .ToList();
         }
 
         /// <summary>
@@ -137,6 +153,8 @@ namespace cinecore.servicos
             
             aluguel.Status = StatusAluguel.Aprovado;
             aluguel.DataAtualizacao = DateTime.Now;
+
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -153,6 +171,8 @@ namespace cinecore.servicos
             
             aluguel.Status = StatusAluguel.Cancelado;
             aluguel.DataAtualizacao = DateTime.Now;
+
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -205,6 +225,8 @@ namespace cinecore.servicos
             }
 
             aluguel.DataAtualizacao = DateTime.Now;
+
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -213,14 +235,15 @@ namespace cinecore.servicos
         public void DeletarAluguel(int id)
         {
             var aluguel = ObterAluguel(id);
-            alugueis.Remove(aluguel);
+            _context.AlugueisSala.Remove(aluguel);
+            _context.SaveChanges();
         }
 
         // ===== MÉTODOS PRIVADOS =====
 
         private bool ExisteConflitoAluguel(Sala sala, DateTime inicio, DateTime fim, int? idParaIgnorar = null)
         {
-            return alugueis.Any(a => 
+            return _context.AlugueisSala.Any(a => 
                 (!idParaIgnorar.HasValue || a.Id != idParaIgnorar.Value) &&
                 a.Sala != null &&
                 a.Sala.Id == sala.Id &&

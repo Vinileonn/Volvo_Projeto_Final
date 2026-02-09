@@ -1,21 +1,23 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.excecoes;
 using cinecore.enums;
 using cinecore.utilitarios;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
     public class PedidoAlimentoServico
     {
-        private readonly List<PedidoAlimento> pedidos;
+        private readonly CineFlowContext _context;
         private readonly ProdutoAlimentoServico produtoService;
         private const decimal DescontoAniversarioPedidos = 0.10m;
         private const decimal ValorPorPonto = 0.10m;
         private const int PrazoCancelamentoMinutos = 15;
 
-        public PedidoAlimentoServico(ProdutoAlimentoServico produtoService)
+        public PedidoAlimentoServico(CineFlowContext context, ProdutoAlimentoServico produtoService)
         {
-            pedidos = new List<PedidoAlimento>();
+            _context = context;
             this.produtoService = produtoService;
         }
 
@@ -26,21 +28,20 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Cliente não pode ser nulo.");
             }
 
-            var pedido = new PedidoAlimento(pedidos.Count > 0 ? pedidos.Max(p => p.Id) + 1 : 1, 0);
+            var pedido = new PedidoAlimento(0, 0);
             pedido.Cliente = cliente;
-            pedidos.Add(pedido);
-
-            if (!cliente.Pedidos.Contains(pedido))
-            {
-                cliente.Pedidos.Add(pedido);
-            }
+            _context.PedidosAlimento.Add(pedido);
+            _context.SaveChanges();
 
             return pedido;
         }
 
         public void AdicionarItem(int pedidoId, int produtoId, int quantidade, float? precoUnitario = null)
         {
-            var pedido = pedidos.FirstOrDefault(p => p.Id == pedidoId);
+            var pedido = _context.PedidosAlimento
+                .Include(p => p.Itens)
+                .Include(p => p.Cliente)
+                .FirstOrDefault(p => p.Id == pedidoId);
             var produto = produtoService.ObterProduto(produtoId);
 
             if (pedido == null || produto == null)
@@ -60,15 +61,20 @@ namespace cinecore.servicos
 
             produtoService.ReduzirEstoque(produtoId, quantidade);
 
-            var itemId = pedido.Itens.Count > 0 ? pedido.Itens.Max(i => i.Id) + 1 : 1;
             var precoFinal = precoUnitario.HasValue && precoUnitario.Value >= 0 ? precoUnitario.Value : produto.Preco;
-            var item = new ItemPedidoAlimento(itemId, quantidade, precoFinal, produto);
+            var item = new ItemPedidoAlimento(0, quantidade, precoFinal, produto);
             pedido.AdicionarItem(item);
+
+            _context.SaveChanges();
         }
 
         public PedidoAlimento? ObterPedido(int id)
         {
-            var pedido = pedidos.FirstOrDefault(p => p.Id == id);
+            var pedido = _context.PedidosAlimento
+                .Include(p => p.Itens)
+                    .ThenInclude(i => i.Produto)
+                .Include(p => p.Cliente)
+                .FirstOrDefault(p => p.Id == id);
             if (pedido == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Pedido com ID {id} não encontrado.");
@@ -78,7 +84,11 @@ namespace cinecore.servicos
 
         public List<PedidoAlimento> ListarPedidos()
         {
-            return new List<PedidoAlimento>(pedidos);
+            return _context.PedidosAlimento
+                .Include(p => p.Itens)
+                    .ThenInclude(i => i.Produto)
+                .Include(p => p.Cliente)
+                .ToList();
         }
 
         public void RemoverItem(int pedidoId, int itemId)
@@ -99,6 +109,8 @@ namespace cinecore.servicos
             produtoService.AdicionarEstoque(item.Produto.Id, item.Quantidade);
             pedido.ValorTotal -= item.Preco * item.Quantidade;
             pedido.Itens.Remove(item);
+            _context.ItensPedidoAlimento.Remove(item);
+            _context.SaveChanges();
         }
 
         public void CancelarPedido(int id)
@@ -123,7 +135,8 @@ namespace cinecore.servicos
                 }
             }
 
-            pedidos.Remove(pedido);
+            _context.PedidosAlimento.Remove(pedido);
+            _context.SaveChanges();
         }
 
         // Calcular total do pedido
@@ -194,6 +207,7 @@ namespace cinecore.servicos
                 pedido.ValorPago = valorPago;
                 pedido.TrocoDetalhado = CalculadoraTroco.CalcularTroco(total, valorPago, out var troco);
                 pedido.ValorTroco = troco;
+                _context.SaveChanges();
                 return;
             }
 
@@ -205,6 +219,8 @@ namespace cinecore.servicos
                 pedido.PontosGerados = pontosGerados;
                 pedido.Cliente.AdicionarPontos(pontosGerados);
             }
+
+            _context.SaveChanges();
         }
     }
 }

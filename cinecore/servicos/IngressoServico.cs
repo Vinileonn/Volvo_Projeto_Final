@@ -1,13 +1,15 @@
+using cinecore.dados;
 using cinecore.modelos;
 using cinecore.enums;
 using cinecore.excecoes;
 using cinecore.utilitarios;
+using Microsoft.EntityFrameworkCore;
 
 namespace cinecore.servicos
 {
     public class IngressoServico
     {
-        private readonly List<Ingresso> ingressos;
+        private readonly CineFlowContext _context;
         // Casal cobra mais por 2 lugares; PCD sem adicional.
         private const float AdicionalAssentoCasal = 10f;
         private const float AdicionalAssentoPCD = 0f;
@@ -16,9 +18,9 @@ namespace cinecore.servicos
         private const float TaxaReservaAntecipada = 5f;
         private const float ValorPorPonto = 0.10f;
 
-        public IngressoServico()
+        public IngressoServico(CineFlowContext context)
         {
-            ingressos = new List<Ingresso>();
+            _context = context;
         }
 
         // VENDA - inteira com pagamento
@@ -38,12 +40,13 @@ namespace cinecore.servicos
                 taxaReserva = TaxaReservaAntecipada;
                 precoFinalCompra += taxaReserva;
             }
-            var ingresso = new IngressoInteira(precoFinalCompra, ProximoId(), fila, numero, DateTime.Now, 
+            var ingresso = new IngressoInteira(precoFinalCompra, 0, fila, numero, DateTime.Now, 
                 sessao, cliente, assento);
             AtualizarDadosFidelidade(ingresso, cliente, pontosUsados, taxaReserva, reservaAntecipada);
 
             RegistrarPagamento(ingresso, formaPagamento, valorPago);
             RegistrarVenda(ingresso, assento, sessao, cliente);
+            _context.SaveChanges();
             return ingresso;
         }
 
@@ -69,7 +72,7 @@ namespace cinecore.servicos
                 taxaReserva = TaxaReservaAntecipada;
                 precoFinalCompra += taxaReserva;
             }
-            var ingresso = new IngressoMeia(precoFinalCompra, ProximoId(), fila, numero, DateTime.Now, motivo)
+            var ingresso = new IngressoMeia(precoFinalCompra, 0, fila, numero, DateTime.Now, motivo)
             {
                 Motivo = motivo,
                 Sessao = sessao,
@@ -80,12 +83,23 @@ namespace cinecore.servicos
 
             RegistrarPagamento(ingresso, formaPagamento, valorPago);
             RegistrarVenda(ingresso, assento, sessao, cliente);
+            _context.SaveChanges();
             return ingresso;
         }
 
         public Ingresso ObterIngresso(int id)
         {
-            var ingresso = ingressos.FirstOrDefault(i => i.Id == id);
+            var ingresso = _context.Ingressos
+                .Include(i => i.Sessao)
+                    .ThenInclude(s => s.Sala)
+                .Include(i => i.Sessao)
+                    .ThenInclude(s => s.Filme)
+                .Include(i => i.Sessao)
+                    .ThenInclude(s => s.Ingressos)
+                .Include(i => i.Cliente)
+                    .ThenInclude(c => c.Ingressos)
+                .Include(i => i.Assento)
+                .FirstOrDefault(i => i.Id == id);
             if (ingresso == null)
             {
                 throw new RecursoNaoEncontradoExcecao($"Ingresso com ID {id} não encontrado.");
@@ -95,7 +109,15 @@ namespace cinecore.servicos
 
         public List<Ingresso> ListarIngressos()
         {
-            return new List<Ingresso>(ingressos);
+            return _context.Ingressos
+                .Include(i => i.Sessao)
+                    .ThenInclude(s => s.Filme)
+                .Include(i => i.Sessao)
+                    .ThenInclude(s => s.Sala)
+                .Include(i => i.Cliente)
+                    .ThenInclude(c => c.Ingressos)
+                .Include(i => i.Assento)
+                .ToList();
         }
 
         public void CancelarIngresso(int id)
@@ -127,7 +149,8 @@ namespace cinecore.servicos
                 ingresso.Cliente.Ingressos.Remove(ingresso);
             }
 
-            ingressos.Remove(ingresso);
+            _context.Ingressos.Remove(ingresso);
+            _context.SaveChanges();
         }
 
         // CHECK-IN - registrar presenca do cliente
@@ -156,6 +179,8 @@ namespace cinecore.servicos
             {
                 ingresso.Cliente.AdicionarPontos(5);
             }
+
+            _context.SaveChanges();
         }
 
         private Assento ValidarVenda(Sessao sessao, Cliente cliente, char fila, int numero)
@@ -239,12 +264,7 @@ namespace cinecore.servicos
                 cliente.Ingressos.Add(ingresso);
             }
 
-            ingressos.Add(ingresso);
-        }
-
-        private int ProximoId()
-        {
-            return ingressos.Count > 0 ? ingressos.Max(i => i.Id) + 1 : 1;
+            _context.Ingressos.Add(ingresso);
         }
 
         // Registra forma de pagamento e calcula troco para dinheiro.

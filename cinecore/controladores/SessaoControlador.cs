@@ -16,12 +16,14 @@ namespace cinecore.controladores
     {
         private readonly SessaoServico _sessaoServico;
         private readonly FilmeServico _filmeServico;
+        private readonly SalaServico _salaServico;
         private readonly IMapper _mapper;
 
-        public SessaoControlador(SessaoServico sessaoServico, FilmeServico filmeServico, IMapper mapper)
+        public SessaoControlador(SessaoServico sessaoServico, FilmeServico filmeServico, SalaServico salaServico, IMapper mapper)
         {
             _sessaoServico = sessaoServico;
             _filmeServico = filmeServico;
+            _salaServico = salaServico;
             _mapper = mapper;
         }
 
@@ -38,8 +40,10 @@ namespace cinecore.controladores
             try
             {
                 var filme = _filmeServico.ObterFilme(criarSessaoDto.FilmeId);
+                var sala = _salaServico.ObterSala(criarSessaoDto.SalaId);
                 var sessao = _mapper.Map<Sessao>(criarSessaoDto);
                 sessao.Filme = filme;
+                sessao.Sala = sala;
 
                 _sessaoServico.CriarSessao(sessao);
                 var sessaoDto = _mapper.Map<SessaoDto>(sessao);
@@ -131,13 +135,14 @@ namespace cinecore.controladores
                 var sessao = _sessaoServico.ObterSessao(id);
                 
                 var filme = atualizarSessaoDto.FilmeId.HasValue ? _filmeServico.ObterFilme(atualizarSessaoDto.FilmeId.Value) : sessao.Filme;
+                var sala = atualizarSessaoDto.SalaId.HasValue ? _salaServico.ObterSala(atualizarSessaoDto.SalaId.Value) : sessao.Sala;
 
                 _sessaoServico.AtualizarSessao(
                     id,
                     atualizarSessaoDto.DataHorario,
                     atualizarSessaoDto.PrecoBase,
                     filme,
-                    sessao.Sala,
+                    sala,
                     atualizarSessaoDto.Tipo,
                     atualizarSessaoDto.NomeEvento,
                     atualizarSessaoDto.Parceiro,
