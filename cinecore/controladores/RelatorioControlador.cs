@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using cinecore.servicos;
@@ -11,6 +12,7 @@ namespace cinecore.controladores
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = "AdministradorOnly")]
     public class RelatorioControlador : ControllerBase
     {
         private readonly RelatorioServico _relatorioServico;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using cinecore.modelos;
@@ -30,6 +31,7 @@ namespace cinecore.controladores
         /// <summary>
         /// Cria uma nova sessão
         /// </summary>
+        [Authorize(Policy = "AdministradorOnly")]
         [HttpPost("Criar")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -123,6 +125,7 @@ namespace cinecore.controladores
         /// <summary>
         /// Atualiza uma sessão existente
         /// </summary>
+        [Authorize(Policy = "AdministradorOnly")]
         [HttpPut("Atualizar/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -174,6 +177,7 @@ namespace cinecore.controladores
         /// <summary>
         /// Deleta uma sessão
         /// </summary>
+        [Authorize(Policy = "AdministradorOnly")]
         [HttpDelete("Deletar/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

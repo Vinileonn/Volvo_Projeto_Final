@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using cinecore.modelos;
 using cinecore.servicos;
@@ -26,6 +27,7 @@ namespace cinecore.controladores
         /// <summary>
         /// Cria uma nova escala de limpeza
         /// </summary>
+        [Authorize(Policy = "AdministradorOnly")]
         [HttpPost("CriarEscala")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -91,6 +93,7 @@ namespace cinecore.controladores
         /// <summary>
         /// Deleta uma escala de limpeza
         /// </summary>
+        [Authorize(Policy = "AdministradorOnly")]
         [HttpDelete("Deletar/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
