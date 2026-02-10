@@ -21,7 +21,8 @@ public class CinemaServicoTests
     #region Testes de Criação
 
     [Fact]
-    public void CriarCinema_ComDadosValidos_DeveAdicionarNoContexto()
+    // Deve adicionar no contexto
+    public void CriarCinema_ComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -45,7 +46,8 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void CriarCinema_ComCinemaNulo_DeveLancarExcecao()
+    // Deve lançar exceção
+    public void CriarCinema_ComCinemaNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -60,7 +62,8 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void CriarCinema_SemNome_DeveLancarExcecao()
+    // Deve lançar exceção
+    public void CriarCinema_SemNome()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -81,7 +84,8 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void CriarCinema_SemEndereco_DeveLancarExcecao()
+    // Deve lançar exceção
+    public void CriarCinema_SemEndereco()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -102,7 +106,8 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void CriarCinema_SemNomeEEndereco_DeveLancarExcecao()
+    // Deve lançar exceção
+    public void CriarCinema_SemNomeEEndereco()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -123,7 +128,8 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void CriarCinema_ComNomeDuplicado_DeveLancarExcecao()
+    // Deve lançar exceção
+    public void CriarCinema_ComNomeDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -151,7 +157,8 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void CriarCinema_ComNomeDuplicadoEmCasosDiferentes_DeveLancarExcecao()
+    // Deve lançar exceção
+    public void CriarCinema_ComNomeDuplicadoEmCasosDiferentes()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
