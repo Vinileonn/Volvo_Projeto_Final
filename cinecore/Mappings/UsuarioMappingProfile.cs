@@ -32,8 +32,7 @@ namespace cinecore.Mappings
             CreateMap<CriarAdministradorDto, Administrador>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.DataCriacao, opt => opt.Ignore())
-                .ForMember(dest => dest.DataAtualizacao, opt => opt.Ignore())
-                .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.DataAtualizacao, opt => opt.Ignore());
 
             // Mapeamento de AtualizarUsuarioDto para Usuario
             CreateMap<AtualizarUsuarioDto, Usuario>()

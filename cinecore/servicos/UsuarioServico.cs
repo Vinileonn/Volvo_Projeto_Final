@@ -72,7 +72,6 @@ namespace cinecore.servicos
                 throw new OperacaoNaoPermitidaExcecao($"Email '{administrador.Email}' já cadastrado.");
             }
 
-            administrador.DataCadastro = DateTime.Now;
             AdicionarUsuario(administrador);
         }
 

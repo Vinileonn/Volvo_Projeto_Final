@@ -103,16 +103,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseSwagger();
-app.UseStaticFiles();
-app.UseSwaggerUI(options =>
-{
-	options.RoutePrefix = "swagger";
-	options.SwaggerEndpoint("/swagger/v1/swagger.json", "CineFlow API v1");
-	options.DocumentTitle = "CineFlow API";
-	options.IndexStream = () => File.OpenRead(
-		Path.Combine(app.Environment.ContentRootPath, "wwwroot", "swagger", "index.html"));
-	options.InjectStylesheet("/swagger/swagger-custom.css");
-});
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
