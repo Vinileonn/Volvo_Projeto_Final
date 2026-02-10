@@ -1,7 +1,10 @@
 using cinecore.dados;
 using cinecore.servicos;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,30 @@ builder.Services.AddControllers()
 	});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+	options.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true,
+		ValidIssuer = builder.Configuration["Jwt:Issuer"],
+		ValidAudience = builder.Configuration["Jwt:Audience"],
+		IssuerSigningKey = new SymmetricSecurityKey(
+			Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+	};
+});
+
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("AdministradorOnly", policy => policy.RequireRole("Administrador"));
+});
 
 builder.Services.AddDbContext<CineFlowContext>(options =>
 	options.UseSqlServer(
@@ -76,9 +103,19 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseStaticFiles();
+app.UseSwaggerUI(options =>
+{
+	options.RoutePrefix = "swagger";
+	options.SwaggerEndpoint("/swagger/v1/swagger.json", "CineFlow API v1");
+	options.DocumentTitle = "CineFlow API";
+	options.IndexStream = () => File.OpenRead(
+		Path.Combine(app.Environment.ContentRootPath, "wwwroot", "swagger", "index.html"));
+	options.InjectStylesheet("/swagger/swagger-custom.css");
+});
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

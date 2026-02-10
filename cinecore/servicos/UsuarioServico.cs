@@ -46,6 +46,36 @@ namespace cinecore.servicos
             _context.SaveChanges();
         }
 
+        // Método para registrar um novo administrador
+        public void RegistrarAdministrador(Administrador administrador)
+        {
+            if (administrador == null)
+            {
+                throw new DadosInvalidosExcecao("Administrador nulo.");
+            }
+
+            var camposVazios = new List<string>();
+            if (string.IsNullOrWhiteSpace(administrador.Nome))
+                camposVazios.Add("nome");
+            if (string.IsNullOrWhiteSpace(administrador.Email))
+                camposVazios.Add("email");
+            if (string.IsNullOrWhiteSpace(administrador.Senha))
+                camposVazios.Add("senha");
+
+            if (camposVazios.Count > 0)
+            {
+                throw new DadosInvalidosExcecao($"Campos obrigatórios faltando: {string.Join(", ", camposVazios)}.");
+            }
+
+            if (_context.Usuarios.Any(u => u != null && u.Email.ToLower() == administrador.Email.ToLower()))
+            {
+                throw new OperacaoNaoPermitidaExcecao($"Email '{administrador.Email}' já cadastrado.");
+            }
+
+            administrador.DataCadastro = DateTime.Now;
+            AdicionarUsuario(administrador);
+        }
+
         // Método para registrar um novo cliente
         public void RegistrarCliente(Cliente cliente)
         {
@@ -85,8 +115,7 @@ namespace cinecore.servicos
             cliente.DataCadastro = DateTime.Now;
 
             // Adiciona o cliente à lista
-            _context.Usuarios.Add(cliente);
-            _context.SaveChanges();
+            AdicionarUsuario(cliente);
         }
 
         // Método para obter usuário por ID
