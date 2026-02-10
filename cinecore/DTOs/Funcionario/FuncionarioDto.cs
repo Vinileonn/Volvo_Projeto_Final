@@ -1,4 +1,4 @@
-using cinecore.enums;
+using cinecore.Enums;
 
 namespace cinecore.DTOs.Funcionario
 {

@@ -1,5 +1,5 @@
 using AutoMapper;
-using cinecore.modelos;
+using cinecore.Models;
 using cinecore.DTOs.Sala;
 
 namespace cinecore.Mappings

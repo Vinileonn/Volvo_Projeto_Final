@@ -22,138 +22,311 @@ API RESTful completa para gerenciamento de cinema desenvolvida como projeto fina
 
 ### Diagrama Entidade-Relacionamento
 
+```mermaid
+erDiagram
+    CINEMA ||--o{ SALA : possui
+    CINEMA ||--o{ FUNCIONARIO : emprega
+    SALA ||--o{ ASSENTO : contem
+    SALA ||--o{ SESSAO : "hospeda"
+    SALA ||--o{ ALUGUELSALA : "é alugada"
+    SALA ||--o{ ESCALALIMPEZA : "tem limpeza"
+    FILME ||--o{ SESSAO : "é exibido em"
+    SESSAO ||--o{ INGRESSO : "vende"
+    ASSENTO ||--|| INGRESSO : "é ocupado por"
+    USUARIO ||--o{ INGRESSO : compra
+    USUARIO ||--o{ PEDIDOALIMENTO : faz
+    USUARIO ||--o{ ALUGUELSALA : aluga
+    PEDIDOALIMENTO ||--o{ ITEMPEDIDOALIMENTO : contem
+    PRODUTOALIMENTO ||--o{ ITEMPEDIDOALIMENTO : "está em"
+    FUNCIONARIO ||--o{ ESCALALIMPEZA : realiza
+
+    CINEMA {
+        int Id PK
+        string Nome
+        string Endereco
+        string CNPJ
+        string Telefone
+    }
+    
+    SALA {
+        int Id PK
+        string Nome
+        int Capacidade
+        enum TipoSala
+        int CinemaId FK
+    }
+    
+    ASSENTO {
+        int Id PK
+        char Fila
+        int Numero
+        enum TipoAssento
+        bool Disponivel
+        int SalaId FK
+    }
+    
+    FILME {
+        int Id PK
+        string Titulo
+        int Duracao
+        string Genero
+        DateTime AnoLancamento
+        bool Eh3D
+        enum Classificacao
+    }
+    
+    SESSAO {
+        int Id PK
+        DateTime DataHorario
+        float PrecoBase
+        float PrecoFinal
+        enum TipoSessao
+        enum IdiomaSessao
+        int FilmeId FK
+        int SalaId FK
+    }
+    
+    INGRESSO {
+        int Id PK
+        char Fila
+        int Numero
+        DateTime DataCompra
+        decimal ValorPago
+        enum FormaPagamento
+        bool CheckInRealizado
+        int PontosUsados
+        int SessaoId FK
+        int ClienteId FK
+        int AssentoId FK
+        string TipoIngresso "Discriminator"
+    }
+    
+    USUARIO {
+        int Id PK
+        string Nome
+        string Email
+        string Senha
+        string CPF
+        DateTime DataNascimento
+        string TipoUsuario "Discriminator: Cliente/Administrador"
+    }
+    
+    FUNCIONARIO {
+        int Id PK
+        string Nome
+        string Email
+        enum CargoFuncionario
+        int CinemaId FK
+    }
+    
+    PRODUTOALIMENTO {
+        int Id PK
+        string Nome
+        float Preco
+        enum CategoriaProduto
+        int Estoque
+        int EstoqueMinimo
+    }
+    
+    PEDIDOALIMENTO {
+        int Id PK
+        DateTime DataPedido
+        float ValorTotal
+        int ClienteId FK
+    }
+    
+    ITEMPEDIDOALIMENTO {
+        int Id PK
+        int Quantidade
+        float PrecoUnitario
+        int ProdutoId FK
+        int PedidoId FK
+    }
+    
+    ALUGUELSALA {
+        int Id PK
+        DateTime DataInicio
+        DateTime DataFim
+        decimal Valor
+        enum StatusAluguel
+        int SalaId FK
+        int ClienteId FK
+    }
+    
+    ESCALALIMPEZA {
+        int Id PK
+        DateTime DataHora
+        bool Concluida
+        string Observacoes
+        int SalaId FK
+        int FuncionarioId FK
+    }
 ```
-┌──────────────────┐
-│     CINEMA       │
-├──────────────────┤
-│ Id (PK)          │
-│ Nome             │
-│ Endereco         │
-│ CNPJ             │
-│ Telefone         │
-└────┬─────────────┘
-     │ 1
-     │
-     │ N
-┌────┴─────────────┐           ┌──────────────────┐
-│  FUNCIONARIO     │           │      SALA        │
-├──────────────────┤           ├──────────────────┤
-│ Id (PK)          │           │ Id (PK)          │
-│ Nome             │◄──────────┤ Nome             │
-│ Email            │         N │ Capacidade       │
-│ Cargo            │           │ Tipo             │
-│ CinemaId (FK)    │           │ CinemaId (FK)    │
-└──────────────────┘           └────┬─────────────┘
-                                    │ 1
-                                    │
-                                    │ N
-┌──────────────────┐           ┌────┴─────────────┐
-│     FILME        │           │    ASSENTO       │
-├──────────────────┤           ├──────────────────┤
-│ Id (PK)          │           │ Id (PK)          │
-│ Titulo           │           │ Fila             │
-│ Duracao          │           │ Numero           │
-│ Genero           │           │ Tipo             │
-│ AnoLancamento    │           │ Disponivel       │
-│ Eh3D             │           │ SalaId (FK)      │
-│ Classificacao    │           └──────────────────┘
-└────┬─────────────┘
-     │ 1
-     │
-     │ N
-┌────┴─────────────┐           ┌──────────────────┐
-│     SESSAO       │         1 │    INGRESSO      │
-├──────────────────┤◄──────────┤──────────────────┤
-│ Id (PK)          │           │ Id (PK)          │
-│ DataHorario      │           │ Fila             │
-│ PrecoBase        │           │ Numero           │
-│ PrecoFinal       │           │ DataCompra       │
-│ Tipo             │           │ ValorPago        │
-│ Idioma           │           │ FormaPagamento   │
-│ FilmeId (FK)     │           │ CheckInRealizado │
-│ SalaId (FK)      │           │ PontosUsados     │
-└──────────────────┘           │ PontosGerados    │
-                               │ SessaoId (FK)    │
-                               │ ClienteId (FK)   │
-                               │ AssentoId (FK)   │
-                               └────┬─────────────┘
-                                    │
-                                    │
-┌──────────────────┐                │
-│    USUARIO       │                │
-├──────────────────┤                │
-│ Id (PK)          │                │
-│ Nome             │         N      │
-│ Email            │◄───────────────┘
-│ Senha            │
-│ CPF              │
-│ DataNascimento   │
-│ TipoUsuario      │ (Discriminator: Cliente, Administrador)
-└────┬─────────────┘
-     │
-     ├─► CLIENTE
-     │   ├─ Telefone
-     │   ├─ PontosAcumulados
-     │   └─ NivelFidelidade
-     │
-     └─► ADMINISTRADOR
 
-┌──────────────────┐           ┌──────────────────┐
-│ PRODUTOALIMENTO  │         N │ PEDIDOALIMENTO   │
-├──────────────────┤◄──────────┤──────────────────┤
-│ Id (PK)          │           │ Id (PK)          │
-│ Nome             │           │ DataPedido       │
-│ Preco            │           │ ValorTotal       │
-│ Categoria        │           │ ClienteId (FK)   │
-│ Estoque          │           └──────────────────┘
-│ EstoqueMinimo    │                    │
-└──────────────────┘                    │ N
-                                        ▼
-                               ┌──────────────────┐
-                               │ ITEMPEDIDO       │
-                               ├──────────────────┤
-                               │ Id (PK)          │
-                               │ Quantidade       │
-                               │ PrecoUnitario    │
-                               │ ProdutoId (FK)   │
-                               └──────────────────┘
+> **Nota**: USUARIO possui hierarquia TPH (Table Per Hierarchy) com subtipos Cliente e Administrador. INGRESSO também usa TPH com IngressoInteira e IngressoMeia.
 
-┌──────────────────┐
-│  ALUGUELSALA     │
-├──────────────────┤
-│ Id (PK)          │
-│ DataInicio       │
-│ DataFim          │
-│ ValorTotal       │
-│ Status           │
-│ SalaId (FK)      │
-│ ClienteId (FK)   │
-└──────────────────┘
+### Diagrama Alternativo (Texto)
 
-┌──────────────────┐
-│  ESCALALIMPEZA   │
-├──────────────────┤
-│ Id (PK)          │
-│ DataHora         │
-│ Concluida        │
-│ Observacoes      │
-│ SalaId (FK)      │
-│ FuncionarioId(FK)│
-└──────────────────┘
+<details>
+<summary>Clique para ver diagrama em ASCII</summary>
+
 ```
+                                     ┌──────────────────┐
+                         ┌───────────┤     CINEMA       │
+                         │           ├──────────────────┤
+                         │ 1         │ Id (PK)          │
+                         │           │ Nome             │
+                         │           │ Endereco         │
+                         │           │ CNPJ             │
+                         │           │ Telefone         │
+                         │           └────┬─────────────┘
+                         │                │
+                         │ N              │ 1
+                         │                │
+                         │                │
+                    ┌────┴─────────┐      │         ┌────────────────┐
+                    │ FUNCIONARIO  │◄─────┼─────────┤ ESCALALIMPEZA  │
+                    ├──────────────┤      │         ├────────────────┤
+                    │ Id (PK)      │      │         │ Id             │
+                    │ Nome         │      │         │ DataHora       │
+                    │ Email        │      │   ┌─────┤ SalaId (FK)    │
+                    │ Cargo        │      │ N │     │ FuncionarioId  │
+                    │ CinemaId(FK) │ ┌────┴───┴─────┴────────────────┐
+                    └──────────────┘ │      SALA                     │
+                                     ├───────────────────────────────┤
+                                     │ Id (PK)                       │
+                   ┌─────────────────┤ Nome                          │
+                   │                 │ Capacidade                    │
+                   │     ┌───────────┤ Tipo                          │
+                   │     │ 1         │ CinemaId (FK)                 │
+                   │     │           └───────────────────────────────┘
+                   │     │                 ┌──────────────────┐
+                   │     │                 │     FILME        │
+                   │     │                 ├──────────────────┤
+                   │     │                 │ Id (PK)          │
+                   │     │                 │ Titulo           │
+                   │     │                 │ Duracao          │
+                   │     │                 │ Genero           │
+                   │     │                 │ AnoLancamento    │
+                   │     │                 │ Eh3D             │
+                   │     │                 │ Classificacao    │
+                   │     │                 └────┬─────────────┘
+                   │     │                      │ 1
+                   │     │ N                    │ N
+                   │   ┌─┴───────────┐   ┌──────┴────────────┐
+                   │   │  ASSENTO    │   │     SESSAO        │
+                   │   ├─────────────┤   ├───────────────────┤
+                   │   │ Id (PK)     │   │ Id (PK)           │
+                   │   │ Fila        ├──┐│ DataHorario       │
+                   │   │ Numero      │1 ││ PrecoBase         │───┐
+                   │   │ Tipo        │  ││ PrecoFinal        │   │
+                   │   │ Disponivel  │  ││ Tipo              │   │
+                   │   │ SalaId (FK) │  ││ Idioma            │   │ N
+                   │   └─────────────┘  ││ FilmeId (FK)      │   │
+                   │              1:1   ││ SalaId (FK)       │   │
+                   │                    │└───────────────────┘   │
+                   │               ┌────┘         ▲              │
+                   │ N             │              │ 1            │
+                   │          ┌────┴─────────┐    │              │
+                   │          │   INGRESSO   │    │              │
+                   │          ├──────────────┤    │              │
+                   │          │ Id (PK)      │    │              │
+                   │          │ * Fila       │    │              │
+                   │          │ * Numero     │    │              │
+                   │  ┌───────┤ DataCompra   │    │              │
+                   │  │       │ ValorPago    │    │              │
+                   │  │       │ CheckIn...   ┼────┘              │
+                   │  │       │ SessaoId(FK) │                   │
+                   │  │       │ ClienteId(FK)│                   │
+                   │  │       │ AssentoId(FK)│                   │
+                   │  │       │ TipoIngresso │◄──┐               │
+                   │  │       └──────────────┘   │               │
+                   │  │           ▲    ▲         │               │
+                   │  │           │    │         │ Discriminator │
+                   │  │           │    └─────────┤ TPH           │
+                   │  │  ┌────────┘              │               │
+                   │  │  │                       │               │
+       ┌───────────┴──┴──┴─────┐   ┌────────────┴───────┐       │
+       │  IngressoInteira      │   │  IngressoMeia      │       │
+       ├───────────────────────┤   ├────────────────────┤       │
+       │ (herda de Ingresso)   │   │ Motivo             │       │
+       └───────────────────────┘   └────────────────────┘       │
+                                                                 │
+   ┌──────────────────┐                                          │
+   │    USUARIO       │                                          │
+   ├──────────────────┤                                          │
+   │ Id (PK)          │                                          │
+   │ Nome             │                                          │
+   │ Email            │                                          │
+   │ Senha            │      ┌───────────────────────────────────┘
+   │ CPF              │      │
+   │ DataNascimento   │      │
+   │ TipoUsuario      │ ◄────┘ Discriminator (TPH)
+   └────┬─────────────┘
+        │
+        ├──► CLIENTE ──────────────────────────────┬────────────┐
+        │    ├─ Telefone                           │            │
+        │    ├─ PontosAcumulados         ┌─────────┴─────────┐  │ 1
+        │    ├─ NivelFidelidade           │  ALUGUELSALA     │  │
+        │    │                            ├──────────────────┤  │
+        └──► ADMINISTRADOR                │ Id               │  │
+                                          │ DataInicio       │  │
+                                          │ ValorTotal       │  │
+                                          │ SalaId (FK) ─────┼──┼───► SALA
+                                          │ ClienteId (FK)   │◄─┘
+                                          └──────────────────┘
+                                                    │ N
+  ┌──────────────────┐              ┌───────────────┴──┐
+  │ PRODUTOALIMENTO  │              │ PEDIDOALIMENTO   │
+  ├──────────────────┤              ├──────────────────┤
+  │ Id (PK)          │◄─────────┐   │ Id (PK)          │
+  │ Nome             │          │   │ DataPedido       │
+  │ Preco            │          │ N │ ValorTotal       │
+  │ Categoria        │          │   │ ClienteId (FK)   │
+  │ Estoque          │          │   └──────────────────┘
+  │ EstoqueMinimo    │          │            │
+  └──────────────────┘          │            │ 1
+                                │            │
+                          ┌─────┴────────┐   │ N
+                          │ ITEMPEDIDO   │   │
+                          ├──────────────┤   │
+                          │ Id (PK)      │◄──┘
+                          │ Quantidade   │
+                          │ PrecoUnit.   │
+                          │ ProdutoId(FK)│
+                          └──────────────┘
+```
+
+</details>
 
 ### Principais Relacionamentos
 
 - **Cinema** `1:N` **Sala** - Um cinema possui várias salas
-- **Cinema** `1:N` **Funcionario** - Um cinema possui vários funcionários
+- **Cinema** `1:N` **Funcionario** - Um cinema possui vários funcionários  
 - **Sala** `1:N` **Assento** - Uma sala possui vários assentos
 - **Sala** `1:N` **Sessao** - Uma sala pode ter várias sessões
+- **Sala** `1:N` **AluguelSala** - Uma sala pode ter vários aluguéis
+- **Sala** `1:N` **EscalaLimpeza** - Uma sala possui várias escalas de limpeza
 - **Filme** `1:N` **Sessao** - Um filme pode ter várias sessões
 - **Sessao** `1:N` **Ingresso** - Uma sessão pode ter vários ingressos vendidos
+- **Assento** `1:1` **Ingresso** - Um assento pode ter no máximo um ingresso
 - **Cliente** `1:N` **Ingresso** - Um cliente pode comprar vários ingressos
 - **Cliente** `1:N` **PedidoAlimento** - Um cliente pode fazer vários pedidos
+- **Cliente** `1:N` **AluguelSala** - Um cliente pode alugar várias salas
+- **Cliente** `N:N` **Ingresso** (Cortesias) - Sistema de cortesias
 - **PedidoAlimento** `1:N` **ItemPedidoAlimento** - Um pedido possui vários itens
-- **ProdutoAlimento** `1:N` **ItemPedidoAlimento** - Um produto pode estar em vários itens de pedido
+- **ProdutoAlimento** `1:N` **ItemPedidoAlimento** - Um produto pode estar em vários itens
+- **Funcionario** `1:N` **EscalaLimpeza** - Um funcionário pode ter várias escalas
+
+### Hierarquias (TPH - Table Per Hierarchy)
+
+**Usuario** (tabela única com discriminator):
+- `Cliente` - adiciona: Telefone, PontosAcumulados, NivelFidelidade
+- `Administrador` - usuário com privilégios administrativos
+
+**Ingresso** (tabela única com discriminator):
+- `IngressoInteira` - ingresso de preço integral
+- `IngressoMeia` - adiciona campo Motivo (estudante, idoso, etc.)
 
 ---
 

@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using cinecore.enums;
+using cinecore.Enums;
 
 namespace cinecore.DTOs.Filme
 {

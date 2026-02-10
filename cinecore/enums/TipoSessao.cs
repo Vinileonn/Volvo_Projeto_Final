@@ -1,4 +1,4 @@
-namespace cinecore.enums
+namespace cinecore.Enums
 {
     public enum TipoSessao
     {

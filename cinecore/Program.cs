@@ -1,5 +1,5 @@
-using cinecore.dados;
-using cinecore.servicos;
+using cinecore.Data;
+using cinecore.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
