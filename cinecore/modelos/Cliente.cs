@@ -35,7 +35,7 @@ namespace cinecore.modelos
 
         public Cliente(int id, string nome, string email, string senha, string cpf, 
             string telefone, string endereco, DateTime dataNascimento)
-            : base(id, nome, email, senha, DateTime.Now)
+            : base(id, nome, email, senha)
         {
             CPF = cpf;
             Telefone = telefone;

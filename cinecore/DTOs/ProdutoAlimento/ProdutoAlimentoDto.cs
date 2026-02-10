@@ -11,7 +11,7 @@ namespace cinecore.DTOs.ProdutoAlimento
         public required string Nome { get; set; }
         public string? Descricao { get; set; }
         public CategoriaProduto? Categoria { get; set; }
-        public float Preco { get; set; }
+        public decimal Preco { get; set; }
         public int EstoqueAtual { get; set; }
         public int EstoqueMinimo { get; set; }
         public bool EhTematico { get; set; }

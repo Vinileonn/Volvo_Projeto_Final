@@ -9,7 +9,7 @@ namespace cinecore.DTOs.Relatorio
     {
         public int Id { get; set; }
         public DateTime DataHorario { get; set; }
-        public float PrecoFinal { get; set; }
+        public decimal PrecoFinal { get; set; }
         public TipoSessao Tipo { get; set; }
         public IdiomaSessao Idioma { get; set; }
         public int SalaId { get; set; }

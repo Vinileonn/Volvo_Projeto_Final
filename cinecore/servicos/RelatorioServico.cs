@@ -26,7 +26,7 @@ namespace cinecore.servicos
         }
 
         // Receita total de ingressos
-        public float ReceitaTotalIngressos()
+        public decimal ReceitaTotalIngressos()
         {
             var ingressos = _ingressoServico.ListarIngressos();
             return ingressos.Sum(i => i.CalcularPreco(i.Sessao?.PrecoFinal ?? 0));
@@ -43,7 +43,7 @@ namespace cinecore.servicos
         }
 
         // Sessões com maior ocupação
-        public List<(Sessao sessao, int ingressosVendidos, float percentualOcupacao)> SessoesComMaiorOcupacao(int top = 5)
+        public List<(Sessao sessao, int ingressosVendidos, decimal percentualOcupacao)> SessoesComMaiorOcupacao(int top = 5)
         {
             var sessoes = _sessaoServico.ListarSessoes();
             return sessoes
@@ -51,7 +51,7 @@ namespace cinecore.servicos
                 .Select(s => (
                     sessao: s,
                     ingressosVendidos: s.Ingressos.Count,
-                    percentualOcupacao: s.Sala!.Capacidade > 0 ? (float)s.Ingressos.Count / s.Sala.Capacidade * 100 : 0
+                    percentualOcupacao: s.Sala!.Capacidade > 0 ? (decimal)s.Ingressos.Count / s.Sala.Capacidade * 100 : 0
                 ))
                 .OrderByDescending(x => x.percentualOcupacao)
                 .Take(top)
@@ -59,7 +59,7 @@ namespace cinecore.servicos
         }
 
         // Receita total de pedidos
-        public float ReceitaTotalPedidos()
+        public decimal ReceitaTotalPedidos()
         {
             var pedidos = _pedidoServico.ListarPedidos();
             return pedidos.Sum(p => p.ValorTotal);
@@ -83,13 +83,13 @@ namespace cinecore.servicos
         }
 
         // Receita total geral (ingressos + pedidos)
-        public float ReceitaTotalGeral()
+        public decimal ReceitaTotalGeral()
         {
             return ReceitaTotalIngressos() + ReceitaTotalPedidos();
         }
 
         // Relatório de vendas por período
-        public (int ingressos, float receitaIngressos, int pedidos, float receitaPedidos) VendasPorPeriodo(DateTime inicio, DateTime fim)
+        public (int ingressos, decimal receitaIngressos, int pedidos, decimal receitaPedidos) VendasPorPeriodo(DateTime inicio, DateTime fim)
         {
             var ingressos = _ingressoServico.ListarIngressos()
                 .Where(i => i.DataCompra >= inicio && i.DataCompra <= fim)
@@ -108,7 +108,7 @@ namespace cinecore.servicos
         }
 
         // Taxa de ocupação média das sessões
-        public float TaxaOcupacaoMedia()
+        public decimal TaxaOcupacaoMedia()
         {
             var sessoes = _sessaoServico.ListarSessoes();
             if (sessoes.Count == 0)
@@ -118,7 +118,7 @@ namespace cinecore.servicos
 
             var ocupacoes = sessoes
                 .Where(s => s.Sala != null && s.Sala.Capacidade > 0)
-                .Select(s => (float)s.Ingressos.Count / s.Sala!.Capacidade * 100);
+                .Select(s => (decimal)s.Ingressos.Count / s.Sala!.Capacidade * 100);
 
             return ocupacoes.Any() ? ocupacoes.Average() : 0;
         }
@@ -153,14 +153,14 @@ namespace cinecore.servicos
         }
 
         // Taxa de ocupacao por sala no periodo
-        public List<(Sala sala, int ingressosVendidos, int capacidadeTotal, float taxaOcupacao)> OcupacaoPorSala(DateTime? inicio = null, DateTime? fim = null)
+        public List<(Sala sala, int ingressosVendidos, int capacidadeTotal, decimal taxaOcupacao)> OcupacaoPorSala(DateTime? inicio = null, DateTime? fim = null)
         {
             var dataInicio = inicio ?? DateTime.Now;
             var dataFim = fim ?? dataInicio.AddDays(DiasCartazPadrao);
 
             if (dataFim < dataInicio)
             {
-                return new List<(Sala sala, int ingressosVendidos, int capacidadeTotal, float taxaOcupacao)>();
+                return new List<(Sala sala, int ingressosVendidos, int capacidadeTotal, decimal taxaOcupacao)>();
             }
 
             var sessoesNoPeriodo = _sessaoServico.ListarSessoes()
@@ -173,7 +173,7 @@ namespace cinecore.servicos
                 {
                     var ingressos = g.Sum(s => s.Ingressos.Count);
                     var capacidadeTotal = g.Sum(s => s.Sala!.Capacidade);
-                    var taxa = capacidadeTotal > 0 ? (float)ingressos / capacidadeTotal * 100 : 0f;
+                    var taxa = capacidadeTotal > 0 ? (decimal)ingressos / capacidadeTotal * 100 : 0m;
                     return (sala: g.Key, ingressosVendidos: ingressos, capacidadeTotal, taxaOcupacao: taxa);
                 })
                 .OrderByDescending(r => r.taxaOcupacao)

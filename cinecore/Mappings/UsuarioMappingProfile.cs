@@ -26,15 +26,13 @@ namespace cinecore.Mappings
             CreateMap<CriarUsuarioDto, Cliente>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.DataCriacao, opt => opt.Ignore())
-                .ForMember(dest => dest.DataAtualizacao, opt => opt.Ignore())
-                .ForMember(dest => dest.DataCadastro, opt => opt.MapFrom(src => DateTime.Now));
+                .ForMember(dest => dest.DataAtualizacao, opt => opt.Ignore());
 
             // Mapeamento de AtualizarUsuarioDto para Usuario
             CreateMap<AtualizarUsuarioDto, Usuario>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.DataCriacao, opt => opt.Ignore())
                 .ForMember(dest => dest.DataAtualizacao, opt => opt.Ignore())
-                .ForMember(dest => dest.DataCadastro, opt => opt.Ignore())
                 .ForMember(dest => dest.Senha, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
         }

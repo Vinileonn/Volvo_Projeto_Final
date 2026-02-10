@@ -15,12 +15,12 @@ namespace cinecore.modelos
         public DateTime DataHorario { get; set; }
 
         [Required(ErrorMessage = "O preço base é obrigatório")]
-        [Range(0, float.MaxValue, ErrorMessage = "O preço base não pode ser negativo")]
-        public float PrecoBase { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "O preço base não pode ser negativo")]
+        public decimal PrecoBase { get; set; }
 
         [Required(ErrorMessage = "O preço final é obrigatório")]
-        [Range(0, float.MaxValue, ErrorMessage = "O preço final não pode ser negativo")]
-        public float PrecoFinal { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "O preço final não pode ser negativo")]
+        public decimal PrecoFinal { get; set; }
 
         [Required(ErrorMessage = "O tipo de sessão é obrigatório")]
         public TipoSessao Tipo { get; set; } = TipoSessao.Regular;
@@ -46,7 +46,7 @@ namespace cinecore.modelos
 
         public Sessao() { }
 
-        public Sessao(int id, DateTime dataHorario, float precoBase, Filme? filme = null, Sala? sala = null,
+        public Sessao(int id, DateTime dataHorario, decimal precoBase, Filme? filme = null, Sala? sala = null,
             TipoSessao tipo = TipoSessao.Regular, string? nomeEvento = null, string? parceiro = null,
             IdiomaSessao idioma = IdiomaSessao.Dublado)
         {
@@ -64,7 +64,7 @@ namespace cinecore.modelos
             DataCriacao = DateTime.Now;
         }
 
-        public void RecalcularPreco(float adicionalSala, float adicional3D)
+        public void RecalcularPreco(decimal adicionalSala, decimal adicional3D)
         {
             PrecoFinal = PrecoBase + adicionalSala + adicional3D;
         }

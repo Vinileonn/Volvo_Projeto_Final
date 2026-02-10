@@ -33,8 +33,8 @@ namespace cinecore.modelos
 
         public bool ReservaAntecipada { get; set; } = false;
 
-        [Range(0, float.MaxValue, ErrorMessage = "A taxa de reserva não pode ser negativa")]
-        public float TaxaReserva { get; set; } = 0;
+        [Range(0, double.MaxValue, ErrorMessage = "A taxa de reserva não pode ser negativa")]
+        public decimal TaxaReserva { get; set; } = 0;
 
         public bool CheckInRealizado { get; set; } = false;
 
@@ -71,7 +71,7 @@ namespace cinecore.modelos
             DataCriacao = DateTime.Now;
         }
 
-        public abstract float CalcularPreco(float precoBase);
+        public abstract decimal CalcularPreco(decimal precoBase);
         public abstract string ObterTipo();
     }
 }

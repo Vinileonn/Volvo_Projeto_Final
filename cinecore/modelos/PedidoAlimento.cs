@@ -15,11 +15,11 @@ namespace cinecore.modelos
         public DateTime DataPedido { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "O valor total é obrigatório")]
-        [Range(0, float.MaxValue, ErrorMessage = "O valor total não pode ser negativo")]
-        public float ValorTotal { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "O valor total não pode ser negativo")]
+        public decimal ValorTotal { get; set; }
 
-        [Range(0, float.MaxValue, ErrorMessage = "O valor do desconto não pode ser negativo")]
-        public float ValorDesconto { get; set; } = 0;
+        [Range(0, double.MaxValue, ErrorMessage = "O valor do desconto não pode ser negativo")]
+        public decimal ValorDesconto { get; set; } = 0;
 
         [StringLength(500, ErrorMessage = "O motivo do desconto deve ter no máximo 500 caracteres")]
         public string? MotivoDesconto { get; set; }
@@ -40,8 +40,8 @@ namespace cinecore.modelos
         [Range(0, int.MaxValue, ErrorMessage = "Os pontos gerados não podem ser negativos")]
         public int PontosGerados { get; set; } = 0;
 
-        [Range(0, float.MaxValue, ErrorMessage = "A taxa de cancelamento não pode ser negativa")]
-        public float TaxaCancelamento { get; set; } = 0;
+        [Range(0, double.MaxValue, ErrorMessage = "A taxa de cancelamento não pode ser negativa")]
+        public decimal TaxaCancelamento { get; set; } = 0;
 
         public Cliente? Cliente { get; set; }
 
@@ -53,7 +53,7 @@ namespace cinecore.modelos
 
         public PedidoAlimento() { }
 
-        public PedidoAlimento(int id, float valorTotal)
+        public PedidoAlimento(int id, decimal valorTotal)
         {
             Id = id;
             DataPedido = DateTime.Now;

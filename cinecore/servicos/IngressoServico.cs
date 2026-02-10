@@ -11,12 +11,12 @@ namespace cinecore.servicos
     {
         private readonly CineFlowContext _context;
         // Casal cobra mais por 2 lugares; PCD sem adicional.
-        private const float AdicionalAssentoCasal = 10f;
-        private const float AdicionalAssentoPCD = 0f;
-        private const float AdicionalAssentoPreferencial = 3f;
-        private const float DescontoCupomParceiro = 0.10f;
-        private const float TaxaReservaAntecipada = 5f;
-        private const float ValorPorPonto = 0.10f;
+        private const decimal AdicionalAssentoCasal = 10m;
+        private const decimal AdicionalAssentoPCD = 0m;
+        private const decimal AdicionalAssentoPreferencial = 3m;
+        private const decimal DescontoCupomParceiro = 0.10m;
+        private const decimal TaxaReservaAntecipada = 5m;
+        private const decimal ValorPorPonto = 0.10m;
 
         public IngressoServico(CineFlowContext context)
         {
@@ -33,7 +33,7 @@ namespace cinecore.servicos
             precoFinalCompra = AplicarDescontoAniversario(precoFinalCompra, cliente, sessao.Sala?.Tipo ?? TipoSala.Normal);
             precoFinalCompra = AplicarDescontoCupom(precoFinalCompra, sessao, cupomParceiro);
             precoFinalCompra = AplicarDescontoPontos(precoFinalCompra, cliente, pontosUsados);
-            var taxaReserva = 0f;
+            var taxaReserva = 0m;
             if (reservaAntecipada)
             {
                 ValidarReservaAntecipada(sessao);
@@ -65,7 +65,7 @@ namespace cinecore.servicos
             precoFinalCompra = AplicarDescontoAniversario(precoFinalCompra, cliente, sessao.Sala?.Tipo ?? TipoSala.Normal);
             precoFinalCompra = AplicarDescontoCupom(precoFinalCompra, sessao, cupomParceiro);
             precoFinalCompra = AplicarDescontoPontos(precoFinalCompra, cliente, pontosUsados);
-            var taxaReserva = 0f;
+            var taxaReserva = 0m;
             if (reservaAntecipada)
             {
                 ValidarReservaAntecipada(sessao);
@@ -270,7 +270,7 @@ namespace cinecore.servicos
         // Registra forma de pagamento e calcula troco para dinheiro.
         private static void RegistrarPagamento(Ingresso ingresso, FormaPagamento formaPagamento, decimal valorPago)
         {
-            var total = Math.Round((decimal)ingresso.CalcularPreco(0f), 2);
+            var total = Math.Round(ingresso.CalcularPreco(0m), 2);
 
             ingresso.FormaPagamento = formaPagamento;
             ingresso.TrocoDetalhado = new Dictionary<decimal, int>();
@@ -294,9 +294,9 @@ namespace cinecore.servicos
         }
 
         // Aplica adicional por tipo de assento (casal cobra mais por 2 lugares, PCD sem adicional).
-        private static float CalcularAdicionalAssento(Assento assento)
+        private static decimal CalcularAdicionalAssento(Assento assento)
         {
-            float adicional = 0f;
+            decimal adicional = 0m;
 
             if (assento.Tipo == TipoAssento.Casal)
             {
@@ -316,32 +316,32 @@ namespace cinecore.servicos
             return adicional;
         }
 
-        private static float AplicarDescontoAniversario(float preco, Cliente cliente, TipoSala tipoSala)
+        private static decimal AplicarDescontoAniversario(decimal preco, Cliente cliente, TipoSala tipoSala)
         {
             if (cliente == null || !cliente.EhMesAniversario(DateTime.Now))
             {
                 return preco;
             }
 
-            float desconto = 0f;
+            decimal desconto = 0m;
             if (tipoSala == TipoSala.Normal)
             {
-                desconto = 1.0f;
+                desconto = 1.0m;
             }
             else if (tipoSala == TipoSala.XD)
             {
-                desconto = 0.50f;
+                desconto = 0.50m;
             }
             else
             {
-                desconto = 0.25f;
+                desconto = 0.25m;
             }
 
             var precoComDesconto = preco - (preco * desconto);
-            return Math.Max(0f, precoComDesconto);
+            return Math.Max(0m, precoComDesconto);
         }
 
-        private static float AplicarDescontoCupom(float preco, Sessao sessao, string? cupomParceiro)
+        private static decimal AplicarDescontoCupom(decimal preco, Sessao sessao, string? cupomParceiro)
         {
             if (sessao == null || string.IsNullOrWhiteSpace(sessao.Parceiro))
             {
@@ -359,10 +359,10 @@ namespace cinecore.servicos
             }
 
             var precoComDesconto = preco - (preco * DescontoCupomParceiro);
-            return Math.Max(0f, precoComDesconto);
+            return Math.Max(0m, precoComDesconto);
         }
 
-        private static float AplicarDescontoPontos(float preco, Cliente cliente, int pontosUsados)
+        private static decimal AplicarDescontoPontos(decimal preco, Cliente cliente, int pontosUsados)
         {
             if (cliente == null || pontosUsados <= 0)
             {
@@ -374,9 +374,9 @@ namespace cinecore.servicos
                 throw new OperacaoNaoPermitidaExcecao("Pontos insuficientes.");
             }
 
-            var desconto = pontosUsados * ValorPorPonto;
+            var desconto = (decimal)pontosUsados * ValorPorPonto;
             var precoComDesconto = preco - desconto;
-            return Math.Max(0f, precoComDesconto);
+            return Math.Max(0m, precoComDesconto);
         }
 
         private static void ValidarReservaAntecipada(Sessao sessao)
@@ -392,7 +392,7 @@ namespace cinecore.servicos
             }
         }
 
-        private static void AtualizarDadosFidelidade(Ingresso ingresso, Cliente cliente, int pontosUsados, float taxaReserva, bool reservaAntecipada)
+        private static void AtualizarDadosFidelidade(Ingresso ingresso, Cliente cliente, int pontosUsados, decimal taxaReserva, bool reservaAntecipada)
         {
             if (ingresso == null || cliente == null)
             {
@@ -403,7 +403,7 @@ namespace cinecore.servicos
             ingresso.TaxaReserva = taxaReserva;
             ingresso.PontosUsados = pontosUsados;
 
-            var pontosGerados = (int)Math.Floor(ingresso.CalcularPreco(0f));
+            var pontosGerados = (int)Math.Floor((double)ingresso.CalcularPreco(0m));
             ingresso.PontosGerados = pontosGerados;
             cliente.AdicionarPontos(pontosGerados);
         }

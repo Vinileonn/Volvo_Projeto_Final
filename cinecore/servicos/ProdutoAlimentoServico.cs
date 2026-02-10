@@ -95,7 +95,7 @@ namespace cinecore.servicos
         }
 
         public void AtualizarProduto(int id, string? nome = null, string? descricao = null,
-                                     float? preco = null, int? estoqueMinimo = null, bool? ehTematico = null,
+                                     decimal? preco = null, int? estoqueMinimo = null, bool? ehTematico = null,
                                      string? temaFilme = null, bool? ehCortesia = null, bool? exclusivoPreEstreia = null,
                                      CategoriaProduto? categoria = null)
         {

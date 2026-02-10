@@ -28,7 +28,7 @@ namespace cinecore.servicos
                 throw new DadosInvalidosExcecao("Cliente não pode ser nulo.");
             }
 
-            var pedido = new PedidoAlimento(0, 0);
+            var pedido = new PedidoAlimento(0, 0m);
             pedido.Cliente = cliente;
             _context.PedidosAlimento.Add(pedido);
             _context.SaveChanges();
@@ -36,7 +36,7 @@ namespace cinecore.servicos
             return pedido;
         }
 
-        public void AdicionarItem(int pedidoId, int produtoId, int quantidade, float? precoUnitario = null)
+        public void AdicionarItem(int pedidoId, int produtoId, int quantidade, decimal? precoUnitario = null)
         {
             var pedido = _context.PedidosAlimento
                 .Include(p => p.Itens)
@@ -140,7 +140,7 @@ namespace cinecore.servicos
         }
 
         // Calcular total do pedido
-        public float CalcularTotal(int pedidoId)
+        public decimal CalcularTotal(int pedidoId)
         {
             var pedido = ObterPedido(pedidoId);
             if (pedido == null)
@@ -160,16 +160,16 @@ namespace cinecore.servicos
                 throw new RecursoNaoEncontradoExcecao($"Pedido com ID {pedidoId} nao encontrado.");
             }
 
-            var total = Math.Round((decimal)pedido.ValorTotal, 2);
+            var total = Math.Round(pedido.ValorTotal, 2);
             if (pedido.Cliente != null && pedido.Cliente.EhMesAniversario(DateTime.Now) && pedido.ValorDesconto <= 0)
             {
                 var desconto = Math.Round(total * DescontoAniversarioPedidos, 2);
                 if (desconto > 0)
                 {
-                    pedido.ValorDesconto = (float)desconto;
+                    pedido.ValorDesconto = desconto;
                     pedido.MotivoDesconto = "Desconto de aniversario";
                     total -= desconto;
-                    pedido.ValorTotal = (float)total;
+                    pedido.ValorTotal = total;
                 }
             }
 
@@ -180,7 +180,7 @@ namespace cinecore.servicos
                     throw new OperacaoNaoPermitidaExcecao("Pontos insuficientes.");
                 }
 
-                var descontoPontos = Math.Round(pontosUsados * ValorPorPonto, 2);
+                var descontoPontos = Math.Round((decimal)pontosUsados * ValorPorPonto, 2);
                 if (descontoPontos > 0)
                 {
                     total -= descontoPontos;
@@ -188,7 +188,7 @@ namespace cinecore.servicos
                     {
                         total = 0;
                     }
-                    pedido.ValorTotal = (float)total;
+                    pedido.ValorTotal = total;
                     pedido.PontosUsados = pontosUsados;
                 }
             }

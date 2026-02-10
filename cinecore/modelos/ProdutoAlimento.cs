@@ -21,8 +21,8 @@ namespace cinecore.modelos
         public CategoriaProduto? Categoria { get; set; }
 
         [Required(ErrorMessage = "O preço é obrigatório")]
-        [Range(0, float.MaxValue, ErrorMessage = "O preço não pode ser negativo")]
-        public float Preco { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "O preço não pode ser negativo")]
+        public decimal Preco { get; set; }
 
         [Required(ErrorMessage = "O estoque atual é obrigatório")]
         [Range(0, int.MaxValue, ErrorMessage = "O estoque atual não pode ser negativo")]
@@ -48,7 +48,7 @@ namespace cinecore.modelos
         public ProdutoAlimento() { }
 
         public ProdutoAlimento(int id, string nome, string? descricao, CategoriaProduto? categoria,
-            float preco, int estoqueAtual, int estoqueMinimo, bool ehTematico = false,
+            decimal preco, int estoqueAtual, int estoqueMinimo, bool ehTematico = false,
             string? temaFilme = null, bool ehCortesia = false, bool exclusivoPreEstreia = false)
         {
             Id = id;

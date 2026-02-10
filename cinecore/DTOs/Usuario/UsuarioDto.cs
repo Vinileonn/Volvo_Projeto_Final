@@ -11,7 +11,6 @@ namespace cinecore.DTOs.Usuario
         public string? Telefone { get; set; }
         public string? Endereco { get; set; }
         public DateTime? DataNascimento { get; set; }
-        public DateTime DataCadastro { get; set; }
         public string TipoUsuario { get; set; } = "Usuario";
     }
 

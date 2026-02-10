@@ -81,9 +81,6 @@ namespace cinecore.servicos
                 throw new OperacaoNaoPermitidaExcecao($"CPF '{cliente.CPF}' já cadastrado.");
             }
 
-            // Define a data de cadastro como a data atual
-            cliente.DataCadastro = DateTime.Now;
-
             // Adiciona o cliente à lista
             _context.Usuarios.Add(cliente);
             _context.SaveChanges();

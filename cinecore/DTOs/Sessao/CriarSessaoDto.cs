@@ -8,7 +8,7 @@ namespace cinecore.DTOs.Sessao
     public class CriarSessaoDto
     {
         public required DateTime DataHorario { get; set; }
-        public required float PrecoBase { get; set; }
+        public required decimal PrecoBase { get; set; }
         public required int FilmeId { get; set; }
         public required int SalaId { get; set; }
         public TipoSessao Tipo { get; set; } = TipoSessao.Regular;

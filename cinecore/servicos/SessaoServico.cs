@@ -9,15 +9,15 @@ namespace cinecore.servicos
     public class SessaoServico
     {
         private readonly CineFlowContext _context;
-        private const float AdicionalSalaXD = 12f;
-        private const float AdicionalSalaVIP = 35f;
-        private const float AdicionalSala4D = 25f;
-        private const float AdicionalFilme3D = 7f;
-        private const float AdicionalPreEstreia = 15f;
-        private const float AdicionalEvento = 10f;
-        private const float DescontoEspecialBebe = 0.20f;
-        private const float DescontoEspecialPet = 0.15f;
-        private const float DescontoMatine = 0.25f;
+        private const decimal AdicionalSalaXD = 12m;
+        private const decimal AdicionalSalaVIP = 35m;
+        private const decimal AdicionalSala4D = 25m;
+        private const decimal AdicionalFilme3D = 7m;
+        private const decimal AdicionalPreEstreia = 15m;
+        private const decimal AdicionalEvento = 10m;
+        private const decimal DescontoEspecialBebe = 0.20m;
+        private const decimal DescontoEspecialPet = 0.15m;
+        private const decimal DescontoMatine = 0.25m;
 
         public SessaoServico(CineFlowContext context)
         {
@@ -118,7 +118,7 @@ namespace cinecore.servicos
                 .ToList();
         }
 
-        public void AtualizarSessao(int id, DateTime? dataHorario = null, float? precoBase = null, Filme? filme = null,
+        public void AtualizarSessao(int id, DateTime? dataHorario = null, decimal? precoBase = null, Filme? filme = null,
             Sala? sala = null, TipoSessao? tipo = null, string? nomeEvento = null, string? parceiro = null,
             IdiomaSessao? idioma = null)
         {
@@ -210,7 +210,7 @@ namespace cinecore.servicos
                 fim > s.DataHorario);
         }
 
-        private static float CalcularAdicionalSala(TipoSala tipoSala)
+        private static decimal CalcularAdicionalSala(TipoSala tipoSala)
         {
             if (tipoSala == TipoSala.XD)
             {
@@ -227,10 +227,10 @@ namespace cinecore.servicos
                 return AdicionalSala4D;
             }
 
-            return 0f;
+            return 0m;
         }
 
-        private static float CalcularAdicionalTipoSessao(TipoSessao tipoSessao)
+        private static decimal CalcularAdicionalTipoSessao(TipoSessao tipoSessao)
         {
             if (tipoSessao == TipoSessao.PreEstreia)
             {
@@ -242,12 +242,12 @@ namespace cinecore.servicos
                 return AdicionalEvento;
             }
 
-            return 0f;
+            return 0m;
         }
 
-        private static float AplicarDescontos(float precoAtual, Sessao sessao)
+        private static decimal AplicarDescontos(decimal precoAtual, Sessao sessao)
         {
-            float desconto = 0f;
+            decimal desconto = 0m;
             if (sessao.Tipo == TipoSessao.EspecialBebe)
             {
                 desconto += DescontoEspecialBebe;
@@ -261,18 +261,18 @@ namespace cinecore.servicos
                 desconto += DescontoMatine;
             }
 
-            if (desconto <= 0f)
+            if (desconto <= 0m)
             {
                 return precoAtual;
             }
 
             var precoComDesconto = precoAtual - (precoAtual * desconto);
-            return Math.Max(0f, precoComDesconto);
+            return Math.Max(0m, precoComDesconto);
         }
 
-        private static float CalcularAdicional3D(bool eh3D)
+        private static decimal CalcularAdicional3D(bool eh3D)
         {
-            return eh3D ? AdicionalFilme3D : 0f;
+            return eh3D ? AdicionalFilme3D : 0m;
         }
 
         private static void ValidarRequisitos(Sessao sessao)

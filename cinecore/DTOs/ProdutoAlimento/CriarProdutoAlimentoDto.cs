@@ -18,8 +18,8 @@ namespace cinecore.DTOs.ProdutoAlimento
         public CategoriaProduto? Categoria { get; set; }
 
         [Required(ErrorMessage = "O preço é obrigatório")]
-        [Range(0, float.MaxValue, ErrorMessage = "O preço não pode ser negativo")]
-        public float Preco { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "O preço não pode ser negativo")]
+        public decimal Preco { get; set; }
 
         [Required(ErrorMessage = "O estoque atual é obrigatório")]
         [Range(0, int.MaxValue, ErrorMessage = "O estoque atual não pode ser negativo")]

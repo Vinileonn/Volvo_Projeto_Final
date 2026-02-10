@@ -215,7 +215,7 @@ namespace cinecore.controladores
     {
         public int ProdutoId { get; set; }
         public int Quantidade { get; set; }
-        public float? PrecoUnitario { get; set; }
+        public decimal? PrecoUnitario { get; set; }
     }
 
     public class RegistrarPagamentoRequest

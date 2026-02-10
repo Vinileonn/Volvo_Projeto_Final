@@ -12,7 +12,7 @@ namespace cinecore.DTOs.Ingresso
         public decimal ValorPago { get; set; }
         public decimal ValorTroco { get; set; }
         public bool ReservaAntecipada { get; set; }
-        public float TaxaReserva { get; set; }
+        public decimal TaxaReserva { get; set; }
         public bool CheckInRealizado { get; set; }
         public DateTime? DataCheckIn { get; set; }
         public int PontosUsados { get; set; }

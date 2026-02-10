@@ -16,8 +16,8 @@ namespace cinecore.DTOs.ProdutoAlimento
 
         public CategoriaProduto? Categoria { get; set; }
 
-        [Range(0, float.MaxValue, ErrorMessage = "O preço não pode ser negativo")]
-        public float? Preco { get; set; }
+        [Range(0, double.MaxValue, ErrorMessage = "O preço não pode ser negativo")]
+        public decimal? Preco { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "O estoque mínimo não pode ser negativo")]
         public int? EstoqueMinimo { get; set; }

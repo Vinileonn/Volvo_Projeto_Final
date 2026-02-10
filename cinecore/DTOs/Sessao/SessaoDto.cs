@@ -9,8 +9,8 @@ namespace cinecore.DTOs.Sessao
     {
         public int Id { get; set; }
         public DateTime DataHorario { get; set; }
-        public float PrecoBase { get; set; }
-        public float PrecoFinal { get; set; }
+        public decimal PrecoBase { get; set; }
+        public decimal PrecoFinal { get; set; }
         public TipoSessao Tipo { get; set; }
         public string? NomeEvento { get; set; }
         public string? Parceiro { get; set; }

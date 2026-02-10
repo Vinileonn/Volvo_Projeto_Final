@@ -167,6 +167,82 @@ namespace cinecore.dados
             modelBuilder.Entity<AluguelSala>()
                 .Property(a => a.Valor)
                 .HasPrecision(18, 2);
+
+            // Precisão para campos decimal
+            modelBuilder.Entity<Sessao>()
+                .Property(s => s.PrecoBase)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Sessao>()
+                .Property(s => s.PrecoFinal)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<ProdutoAlimento>()
+                .Property(p => p.Preco)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<PedidoAlimento>()
+                .Property(p => p.ValorTotal)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<PedidoAlimento>()
+                .Property(p => p.ValorDesconto)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<PedidoAlimento>()
+                .Property(p => p.TaxaCancelamento)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<ItemPedidoAlimento>()
+                .Property(i => i.Preco)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Ingresso>()
+                .Property(i => i.TaxaReserva)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<IngressoInteira>()
+                .Property(i => i.Preco)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<IngressoMeia>()
+                .Property(i => i.Preco)
+                .HasPrecision(18, 2);
+
+            // ÍNDICES - Melhoram performance em consultas
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+            
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Email);
+            
+            modelBuilder.Entity<Cliente>()
+                .HasIndex(c => c.CPF)
+                .IsUnique();
+            
+            modelBuilder.Entity<Sessao>()
+                .HasIndex(s => s.DataHorario);
+            
+            modelBuilder.Entity<PedidoAlimento>()
+                .HasIndex(p => p.DataPedido);
+            
+            modelBuilder.Entity<Ingresso>()
+                .HasIndex(i => i.DataCompra);
+            
+            modelBuilder.Entity<AluguelSala>()
+                .HasIndex(a => new { a.Inicio, a.Fim });
+            
+            // CONSTRAINTS - Garantem qualidade dos dados
+            modelBuilder.Entity<Usuario>()
+                .Property(u => u.Email)
+                .IsRequired();
+            
+            modelBuilder.Entity<ProdutoAlimento>()
+                .Property(p => p.Descricao)
+                .HasDefaultValue("");
+            
+            
         }
     }
 }

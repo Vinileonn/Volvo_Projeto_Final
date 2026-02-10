@@ -8,7 +8,7 @@ namespace cinecore.DTOs.Sessao
     public class AtualizarSessaoDto
     {
         public DateTime? DataHorario { get; set; }
-        public float? PrecoBase { get; set; }
+        public decimal? PrecoBase { get; set; }
         public int? FilmeId { get; set; }
         public int? SalaId { get; set; }
         public TipoSessao? Tipo { get; set; }

@@ -23,22 +23,18 @@ namespace cinecore.modelos
         [StringLength(200, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 200 caracteres")]
         public required string Senha { get; set; }
 
-        [Required(ErrorMessage = "A data de cadastro é obrigatória")]
-        public DateTime DataCadastro { get; set; } = DateTime.Now;
-
         public DateTime DataCriacao { get; set; } = DateTime.Now;
 
         public DateTime? DataAtualizacao { get; set; }
 
         public Usuario() { }
 
-        public Usuario(int id, string nome, string email, string senha, DateTime dataCadastro)
+        public Usuario(int id, string nome, string email, string senha)
         {
             Id = id;
             Nome = nome;
             Email = email;
             Senha = senha;
-            DataCadastro = dataCadastro;
             DataCriacao = DateTime.Now;
         }
     }

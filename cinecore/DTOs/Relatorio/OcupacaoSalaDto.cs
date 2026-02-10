@@ -9,6 +9,6 @@ namespace cinecore.DTOs.Relatorio
         public required string SalaNome { get; set; }
         public int CapacidadeTotal { get; set; }
         public int IngressosVendidos { get; set; }
-        public float TaxaOcupacao { get; set; }
+        public decimal TaxaOcupacao { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace cinecore.modelos
         public Administrador() : base() { }
 
         public Administrador(int id, string nome, string email, string senha)
-            : base(id, nome, email, senha, DateTime.Now)
+            : base(id, nome, email, senha)
         {
         }
 
@@ -23,7 +23,6 @@ namespace cinecore.modelos
                 Nome = nome,
                 Email = email,
                 Senha = senha,
-                DataCadastro = DateTime.Now,
                 DataCriacao = DateTime.Now
             };
         }
