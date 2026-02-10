@@ -580,7 +580,7 @@ GET /api/Relatorio/salas/ocupacao?inicio=2026-02-01&fim=2026-02-28
 ## 👨‍💻 Autores
 
 Vinicius Leon Paula 
-Jordan Verissimo
+Jordan Verissimo Guimarães dos Santos
 Projeto Final de Desenvolvimento Web com .NET
 
 ---
