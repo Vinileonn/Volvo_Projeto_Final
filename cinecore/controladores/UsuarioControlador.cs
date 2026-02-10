@@ -4,6 +4,7 @@ using cinecore.servicos;
 using cinecore.excecoes;
 using cinecore.DTOs.Usuario;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace cinecore.controladores
 {
@@ -54,6 +55,37 @@ namespace cinecore.controladores
             catch (Exception ex)
             {
                 return StatusCode(500, new { sucesso = false, mensagem = "Erro inesperado ao cadastrar cliente.", erro = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Cadastra um novo administrador
+        /// </summary>
+        [Authorize(Policy = "AdministradorOnly")]
+        [HttpPost("RegistrarAdministrador")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<AdministradorDto> RegistrarAdministrador([FromBody] CriarAdministradorDto criarAdministradorDto)
+        {
+            try
+            {
+                var administrador = _mapper.Map<Administrador>(criarAdministradorDto);
+                _usuarioServico.RegistrarAdministrador(administrador);
+
+                var administradorDto = _mapper.Map<AdministradorDto>(administrador);
+                return CreatedAtAction(nameof(ObterUsuario), new { id = administradorDto.Id }, administradorDto);
+            }
+            catch (DadosInvalidosExcecao ex)
+            {
+                return BadRequest(new { sucesso = false, mensagem = $"Dados inválidos: {ex.Message}" });
+            }
+            catch (OperacaoNaoPermitidaExcecao ex)
+            {
+                return BadRequest(new { sucesso = false, mensagem = $"Operação não permitida: {ex.Message}" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { sucesso = false, mensagem = "Erro inesperado ao cadastrar administrador.", erro = ex.Message });
             }
         }
 
