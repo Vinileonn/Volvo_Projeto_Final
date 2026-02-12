@@ -1,12 +1,7 @@
 using cinecore.Services;
 using cinecore.Exceptions;
 using cinecore.DTOs.Usuario;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace cinecore.Controllers
 {
@@ -25,16 +20,14 @@ namespace cinecore.Controllers
             _configuration = configuration;
         }
 
-        [AllowAnonymous]
         [HttpPost("autenticar")]
         public IActionResult Autenticar([FromBody] LoginRequest request)
         {
             try
             {
-            var usuario = AutenticacaoServico.Autenticar(request.Email, request.Senha)
-                ?? throw new RecursoNaoEncontradoExcecao("Email ou senha inválidos.");
-                var token = GerarToken(usuario);
-                return Ok(new { usuario, token });
+                var usuario = AutenticacaoServico.Autenticar(request.Email, request.Senha)
+                    ?? throw new RecursoNaoEncontradoExcecao("Email ou senha inválidos.");
+                return Ok(new { usuario });
             }
             catch (DadosInvalidosExcecao ex)
             {
@@ -50,7 +43,6 @@ namespace cinecore.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost("validar")]
         public IActionResult ValidarCredenciais([FromBody] LoginRequest request)
         {
@@ -73,7 +65,6 @@ namespace cinecore.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut("alterar-senha/{usuarioId}")]
         public IActionResult AlterarSenha(int usuarioId, [FromBody] AlterarSenhaRequest request)
         {
@@ -94,31 +85,6 @@ namespace cinecore.Controllers
             {
                 return StatusCode(500, new { sucesso = false, mensagem = "Erro inesperado ao alterar senha." });
             }
-        }
-
-        private string GerarToken(cinecore.Models.Usuario usuario)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var role = usuario is cinecore.Models.Administrador ? "Administrador" : "Cliente";
-            var claims = new List<Claim>
-            {
-            new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-            new Claim(ClaimTypes.Name, usuario.Nome),
-            new Claim(ClaimTypes.Email, usuario.Email),
-            new Claim(ClaimTypes.Role, role),
-            new Claim("tipo_usuario", role)
-            };
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_configuration.GetValue<int>("Jwt:ExpireMinutes")),
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 

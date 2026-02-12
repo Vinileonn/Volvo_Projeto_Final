@@ -61,7 +61,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Cadastra um novo administrador
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPost("RegistrarAdministrador")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

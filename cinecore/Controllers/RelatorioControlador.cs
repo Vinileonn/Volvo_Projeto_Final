@@ -12,7 +12,7 @@ namespace cinecore.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = "AdministradorOnly")]
+
     public class RelatorioControlador : ControllerBase
     {
         private readonly RelatorioServico _relatorioServico;

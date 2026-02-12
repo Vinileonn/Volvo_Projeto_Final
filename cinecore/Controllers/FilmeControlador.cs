@@ -27,7 +27,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Cria um novo filme
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPost("Criar")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -103,7 +103,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Atualiza um filme existente
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPut("Atualizar/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -135,7 +135,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Deleta um filme
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpDelete("Deletar/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

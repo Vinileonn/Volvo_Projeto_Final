@@ -1,10 +1,7 @@
 using cinecore.Data;
 using cinecore.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
-using System.Text;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,50 +13,7 @@ builder.Services.AddControllers()
 		options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 	});
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-	options.SwaggerDoc("v1", new OpenApiInfo { Title = "cinecore", Version = "v1" });
-	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-	{
-		Name = "Authorization",
-		Type = SecuritySchemeType.Http,
-		Scheme = "Bearer",
-		BearerFormat = "JWT",
-		In = ParameterLocation.Header,
-		Description = "Insira 'Bearer {token}' para autenticar."
-	});
-	options.AddSecurityRequirement(_ => new OpenApiSecurityRequirement
-	{
-		{
-			new OpenApiSecuritySchemeReference("Bearer", null, null),
-			new List<string>()
-		}
-	});
-});
-
-builder.Services.AddAuthentication(options =>
-{
-	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-	options.TokenValidationParameters = new TokenValidationParameters
-	{
-		ValidateIssuer = true,
-		ValidateAudience = true,
-		ValidateLifetime = true,
-		ValidateIssuerSigningKey = true,
-		ValidIssuer = builder.Configuration["Jwt:Issuer"],
-		ValidAudience = builder.Configuration["Jwt:Audience"],
-		IssuerSigningKey = new SymmetricSecurityKey(
-			Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-	};
-});
-
-builder.Services.AddAuthorization(options =>
-{
-	options.AddPolicy("AdministradorOnly", policy => policy.RequireRole("Administrador"));
-});
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CineFlowContext>(options =>
 	options.UseSqlServer(
@@ -126,8 +80,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+// Autenticação e autorização JWT removidas
 
 app.MapControllers();
 app.Run();

@@ -27,7 +27,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Cria um novo produto alimentício
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPost("Criar")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -133,7 +133,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Atualiza um produto alimentício
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPut("Atualizar/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -172,7 +172,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Deleta um produto alimentício
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpDelete("Deletar/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -192,7 +192,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Adiciona quantidade ao estoque de um produto
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPost("{id}/AdicionarEstoque")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -219,7 +219,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Reduz quantidade do estoque de um produto
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPost("{id}/ReduzirEstoque")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

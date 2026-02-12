@@ -31,7 +31,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Cria uma nova sessão
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPost("Criar")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -125,7 +125,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Atualiza uma sessão existente
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPut("Atualizar/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -177,7 +177,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Deleta uma sessão
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpDelete("Deletar/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -29,7 +29,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Cria uma nova sala
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPost("Criar")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -108,7 +108,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Atualiza uma sala existente
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpPut("Atualizar/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -150,7 +150,7 @@ namespace cinecore.Controllers
         /// <summary>
         /// Deleta uma sala
         /// </summary>
-        [Authorize(Policy = "AdministradorOnly")]
+
         [HttpDelete("Deletar/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
