@@ -1,8 +1,8 @@
-# CineFlow - Sistema de Gerenciamento de Cinema
+# CineCore - Sistema de Gerenciamento de Cinemas
 
 ## 📋 Descrição do Projeto
 
-API RESTful completa para gerenciamento de cinema desenvolvida como projeto final da disciplina de Desenvolvimento Web com .NET. O sistema permite gerenciar filmes, salas, sessões, venda de ingressos, alimentos e muito mais.
+API RESTful completa para gerenciamento de cinema desenvolvida como projeto final da disciplina de Desenvolvimento Web com .NET. O sistema permite gerenciar cinemas, filmes, salas, sessões, venda de ingressos, alimentos e muito mais.
 
 ---
 
