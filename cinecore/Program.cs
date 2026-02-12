@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using System.Text;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,26 @@ builder.Services.AddControllers()
 		options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 	});
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+	options.SwaggerDoc("v1", new OpenApiInfo { Title = "cinecore", Version = "v1" });
+	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	{
+		Name = "Authorization",
+		Type = SecuritySchemeType.Http,
+		Scheme = "Bearer",
+		BearerFormat = "JWT",
+		In = ParameterLocation.Header,
+		Description = "Insira 'Bearer {token}' para autenticar."
+	});
+	options.AddSecurityRequirement(_ => new OpenApiSecurityRequirement
+	{
+		{
+			new OpenApiSecuritySchemeReference("Bearer", null, null),
+			new List<string>()
+		}
+	});
+});
 
 builder.Services.AddAuthentication(options =>
 {
