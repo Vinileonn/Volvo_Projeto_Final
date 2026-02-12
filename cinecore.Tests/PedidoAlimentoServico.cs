@@ -69,7 +69,7 @@ public class PedidoAlimentoServicoTests
 
     [Fact]
     // Deve criar com sucesso
-    public void CriarPedido_ComClienteValido()
+    public void CriarPedidoComClienteValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -93,7 +93,7 @@ public class PedidoAlimentoServicoTests
 
     [Fact]
     // Deve lançar exceção
-    public void CriarPedido_ComClienteNulo()
+    public void CriarPedidoComClienteNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -113,7 +113,7 @@ public class PedidoAlimentoServicoTests
     #region Testes AdicionarItem
 
     [Fact]
-    public void AdicionarItem_ComDadosValidos_DeveAdicionarComSucesso()
+    public void AdicionarItemComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -145,7 +145,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarItem_ComPrecoPersonalizado_DeveUsarPrecoInformado()
+    public void AdicionarItemComPrecoPersonalizado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -171,7 +171,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarItem_ComQuantidadeZero_DeveLancarExcecao()
+    public void AdicionarItemComQuantidadeZero()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -196,7 +196,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarItem_ComQuantidadeNegativa_DeveLancarExcecao()
+    public void AdicionarItemComQuantidadeNegativa()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -221,7 +221,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarItem_ComEstoqueInsuficiente_DeveLancarExcecao()
+    public void AdicionarItemComEstoqueInsuficiente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -246,7 +246,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarItem_ComPedidoInexistente_DeveLancarExcecao()
+    public void AdicionarItemComPedidoInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -266,7 +266,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarItem_ComProdutoInexistente_DeveLancarExcecao()
+    public void AdicionarItemComProdutoInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -291,7 +291,7 @@ public class PedidoAlimentoServicoTests
     #region Testes ObterPedido
 
     [Fact]
-    public void ObterPedido_ComIdValido_DeveRetornarPedido()
+    public void ObterPedidoComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -315,7 +315,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void ObterPedido_ComIdInexistente_DeveLancarExcecao()
+    public void ObterPedidoComIdInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -335,7 +335,7 @@ public class PedidoAlimentoServicoTests
     #region Testes ListarPedidos
 
     [Fact]
-    public void ListarPedidos_ComPedidosCadastrados_DeveRetornarLista()
+    public void ListarPedidosComPedidosCadastrados()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -361,7 +361,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void ListarPedidos_SemPedidos_DeveRetornarListaVazia()
+    public void ListarPedidosSemPedidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -381,7 +381,7 @@ public class PedidoAlimentoServicoTests
     #region Testes RemoverItem
 
     [Fact]
-    public void RemoverItem_ComItemValido_DeveRemoverEDevolverEstoque()
+    public void RemoverItemComItemValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -414,7 +414,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RemoverItem_ComItemInexistente_DeveLancarExcecao()
+    public void RemoverItemComItemInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -436,7 +436,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RemoverItem_ComPedidoInexistente_DeveLancarExcecao()
+    public void RemoverItemComPedidoInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -456,7 +456,7 @@ public class PedidoAlimentoServicoTests
     #region Testes CancelarPedido
 
     [Fact]
-    public void CancelarPedido_NaoPago_DeveCancelarEDevolverEstoque()
+    public void CancelarPedidoNaoPago()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -485,7 +485,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void CancelarPedido_PagoDentroDoPrazo_DeveCancelar()
+    public void CancelarPedidoPagoDentroDoPrazo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -512,7 +512,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void CancelarPedido_PagoForaDoPrazo_DeveLancarExcecao()
+    public void CancelarPedidoPagoForaDoPrazo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -544,7 +544,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void CancelarPedido_ComPedidoInexistente_DeveLancarExcecao()
+    public void CancelarPedidoComPedidoInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -564,7 +564,7 @@ public class PedidoAlimentoServicoTests
     #region Testes CalcularTotal
 
     [Fact]
-    public void CalcularTotal_ComPedidoValido_DeveRetornarValorCorreto()
+    public void CalcularTotalComPedidoValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -591,7 +591,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void CalcularTotal_ComPedidoVazio_DeveRetornarZero()
+    public void CalcularTotalComPedidoVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -612,7 +612,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void CalcularTotal_ComPedidoInexistente_DeveLancarExcecao()
+    public void CalcularTotalComPedidoInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -632,7 +632,7 @@ public class PedidoAlimentoServicoTests
     #region Testes RegistrarPagamento
 
     [Fact]
-    public void RegistrarPagamento_ComCartao_DeveGerarPontosFidelidade()
+    public void RegistrarPagamentoComCartao()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -663,7 +663,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RegistrarPagamento_ComDinheiroValorExato_DeveTerTrocoZero()
+    public void RegistrarPagamentoComDinheiroValorExato()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -691,7 +691,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RegistrarPagamento_ComDinheiroEMaior_DeveCalcularTroco()
+    public void RegistrarPagamentoComDinheiroEMaior()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -720,7 +720,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RegistrarPagamento_ComDinheiroInsuficiente_DeveLancarExcecao()
+    public void RegistrarPagamentoComDinheiroInsuficiente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -746,7 +746,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RegistrarPagamento_ComDescontoAniversario_DeveAplicarDesconto()
+    public void RegistrarPagamentoComDescontoAniversario()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -778,7 +778,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RegistrarPagamento_ComPontosFidelidade_DeveAplicarDesconto()
+    public void RegistrarPagamentoComPontosFidelidade()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -808,7 +808,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RegistrarPagamento_ComPontosInsuficientes_DeveLancarExcecao()
+    public void RegistrarPagamentoComPontosInsuficientes()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -834,7 +834,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RegistrarPagamento_ComPedidoInexistente_DeveLancarExcecao()
+    public void RegistrarPagamentoComPedidoInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -850,7 +850,7 @@ public class PedidoAlimentoServicoTests
     }
 
     [Fact]
-    public void RegistrarPagamento_ComPix_DeveFuncionarCorretamente()
+    public void RegistrarPagamentoComPix()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

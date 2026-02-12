@@ -53,7 +53,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes CriarProduto
 
     [Fact]
-    public void CriarProduto_ComDadosValidos_DeveCriarComSucesso()
+    public void CriarProdutoComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -72,7 +72,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_ComProdutoNulo_DeveLancarExcecao()
+    public void CriarProdutoComProdutoNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -87,7 +87,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_ComNomeVazio_DeveLancarExcecao()
+    public void CriarProdutoComNomeVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -103,7 +103,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_ComPrecoNegativo_DeveLancarExcecao()
+    public void CriarProdutoComPrecoNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -119,7 +119,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_ComEstoqueAtualNegativo_DeveLancarExcecao()
+    public void CriarProdutoComEstoqueAtualNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -135,7 +135,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_ComEstoqueMinimoNegativo_DeveLancarExcecao()
+    public void CriarProdutoComEstoqueMinimoNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -151,7 +151,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_ComNomeDuplicado_DeveLancarExcecao()
+    public void CriarProdutoComNomeDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -170,7 +170,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_ComCategoriaCortesia_DeveDefinirEhCortesiaComoTrue()
+    public void CriarProdutoComCategoriaCortesia()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -191,7 +191,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_CortesiaComPrecoMaiorQueZero_DeveLancarExcecao()
+    public void CriarProdutoCortesiaComPrecoMaiorQueZero()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -207,7 +207,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_TematicoSemTemaFilme_DeveLancarExcecao()
+    public void CriarProdutoTematicoSemTemaFilme()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -223,7 +223,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_CategoriaTematicoSemTemaFilme_DeveLancarExcecao()
+    public void CriarProdutoCategoriaTematicoSemTemaFilme()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -239,7 +239,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void CriarProduto_TematicoComTemaFilme_DeveCriarComSucesso()
+    public void CriarProdutoTematicoComTemaFilme()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -265,7 +265,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes ObterProduto
 
     [Fact]
-    public void ObterProduto_ComIdValido_DeveRetornarProduto()
+    public void ObterProdutoComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -283,7 +283,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ObterProduto_ComIdInvalido_DeveRetornarNull()
+    public void ObterProdutoComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -301,7 +301,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes ObterCortesiaPreEstreiaDisponivel
 
     [Fact]
-    public void ObterCortesiaPreEstreiaDisponivel_ComCortesiaDisponivel_DeveRetornarProduto()
+    public void ObterCortesiaPreEstreiaDisponivelComCortesiaDisponivel()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -326,7 +326,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ObterCortesiaPreEstreiaDisponivel_SemEstoque_DeveRetornarNull()
+    public void ObterCortesiaPreEstreiaDisponivelSemEstoque()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -348,7 +348,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ObterCortesiaPreEstreiaDisponivel_SemCortesiaCadastrada_DeveRetornarNull()
+    public void ObterCortesiaPreEstreiaDisponivelSemCortesiaCadastrada()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -366,7 +366,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes ListarProdutos
 
     [Fact]
-    public void ListarProdutos_ComProdutosCadastrados_DeveRetornarTodos()
+    public void ListarProdutosComProdutosCadastrados()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -388,7 +388,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ListarProdutos_SemProdutosCadastrados_DeveRetornarListaVazia()
+    public void ListarProdutosSemProdutosCadastrados()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -406,7 +406,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes BuscarPorNome
 
     [Fact]
-    public void BuscarPorNome_ComNomeExistente_DeveRetornarProdutos()
+    public void BuscarPorNomeComNomeExistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -428,7 +428,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void BuscarPorNome_ComNomeVazio_DeveRetornarListaVazia()
+    public void BuscarPorNomeComNomeVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -444,7 +444,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void BuscarPorNome_ComNomeNaoEncontrado_DeveRetornarListaVazia()
+    public void BuscarPorNomeComNomeNaoEncontrado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -464,7 +464,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes ListarProdutosEstoqueBaixo
 
     [Fact]
-    public void ListarProdutosEstoqueBaixo_ComProdutosAbaixoDoMinimo_DeveRetornarProdutos()
+    public void ListarProdutosEstoqueBaixoComProdutosAbaixoDoMinimo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -486,7 +486,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ListarProdutosEstoqueBaixo_SemProdutosComEstoqueBaixo_DeveRetornarListaVazia()
+    public void ListarProdutosEstoqueBaixoSemProdutosComEstoqueBaixo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -506,7 +506,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes ListarAlertasEstoque
 
     [Fact]
-    public void ListarAlertasEstoque_DeveRetornarListaDeAlertas()
+    public void ListarAlertasEstoque()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -525,7 +525,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes AtualizarProduto
 
     [Fact]
-    public void AtualizarProduto_ComNomeValido_DeveAtualizarNome()
+    public void AtualizarProdutoComNomeValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -543,7 +543,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_ComDescricaoValida_DeveAtualizarDescricao()
+    public void AtualizarProdutoComDescricaoValida()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -561,7 +561,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_ComPrecoValido_DeveAtualizarPreco()
+    public void AtualizarProdutoComPrecoValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -579,7 +579,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_ComPrecoNegativo_DeveLancarExcecao()
+    public void AtualizarProdutoComPrecoNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -596,7 +596,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_ComEstoqueMinimoValido_DeveAtualizarEstoqueMinimo()
+    public void AtualizarProdutoComEstoqueMinimoValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -614,7 +614,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_ComEstoqueMinimoNegativo_DeveLancarExcecao()
+    public void AtualizarProdutoComEstoqueMinimoNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -631,7 +631,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_ComNomeDuplicado_DeveLancarExcecao()
+    public void AtualizarProdutoComNomeDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -650,7 +650,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_CortesiaComPrecoMaiorQueZero_DeveLancarExcecao()
+    public void AtualizarProdutoCortesiaComPrecoMaiorQueZero()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -667,7 +667,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_TematicoSemTemaFilme_DeveLancarExcecao()
+    public void AtualizarProdutoTematicoSemTemaFilme()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -684,7 +684,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_ComIdInvalido_DeveLancarExcecao()
+    public void AtualizarProdutoComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -699,7 +699,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AtualizarProduto_CategoriaCortesia_DeveDefinirEhCortesiaComoTrue()
+    public void AtualizarProdutoCategoriaCortesia()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -722,7 +722,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes DeletarProduto
 
     [Fact]
-    public void DeletarProduto_ComIdValido_DeveDeletarComSucesso()
+    public void DeletarProdutoComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -739,7 +739,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void DeletarProduto_ComIdInvalido_DeveLancarExcecao()
+    public void DeletarProdutoComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -758,7 +758,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes AdicionarEstoque
 
     [Fact]
-    public void AdicionarEstoque_ComQuantidadeValida_DeveAdicionarAoEstoque()
+    public void AdicionarEstoqueComQuantidadeValida()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -776,7 +776,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarEstoque_ComQuantidadeZero_DeveLancarExcecao()
+    public void AdicionarEstoqueComQuantidadeZero()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -793,7 +793,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarEstoque_ComQuantidadeNegativa_DeveLancarExcecao()
+    public void AdicionarEstoqueComQuantidadeNegativa()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -810,7 +810,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void AdicionarEstoque_ComIdInvalido_DeveLancarExcecao()
+    public void AdicionarEstoqueComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -829,7 +829,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes ReduzirEstoque
 
     [Fact]
-    public void ReduzirEstoque_ComQuantidadeValida_DeveReduzirDoEstoque()
+    public void ReduzirEstoqueComQuantidadeValida()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -847,7 +847,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ReduzirEstoque_ComQuantidadeZero_DeveLancarExcecao()
+    public void ReduzirEstoqueComQuantidadeZero()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -864,7 +864,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ReduzirEstoque_ComQuantidadeMaiorQueEstoque_DeveLancarExcecao()
+    public void ReduzirEstoqueComQuantidadeMaiorQueEstoque()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -881,7 +881,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ReduzirEstoque_AtingeEstoqueMinimo_DeveGerarAlerta()
+    public void ReduzirEstoqueAtingeEstoqueMinimo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -902,7 +902,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void ReduzirEstoque_ComIdInvalido_DeveLancarExcecao()
+    public void ReduzirEstoqueComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -921,7 +921,7 @@ public class ProdutoAlimentoServicoTests
     #region Testes VerificarDisponibilidade
 
     [Fact]
-    public void VerificarDisponibilidade_ComEstoqueSuficiente_DeveRetornarTrue()
+    public void VerificarDisponibilidadeComEstoqueSuficiente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -937,7 +937,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void VerificarDisponibilidade_ComEstoqueExato_DeveRetornarTrue()
+    public void VerificarDisponibilidadeComEstoqueExato()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -953,7 +953,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void VerificarDisponibilidade_ComEstoqueInsuficiente_DeveRetornarFalse()
+    public void VerificarDisponibilidadeComEstoqueInsuficiente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -969,7 +969,7 @@ public class ProdutoAlimentoServicoTests
     }
 
     [Fact]
-    public void VerificarDisponibilidade_ComIdInvalido_DeveRetornarFalse()
+    public void VerificarDisponibilidadeComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

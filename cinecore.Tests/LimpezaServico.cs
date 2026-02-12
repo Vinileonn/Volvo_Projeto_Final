@@ -49,7 +49,7 @@ public class LimpezaServicoTests
 
     [Fact]
     // Deve criar com sucesso
-    public void CriarEscala_ComDadosValidos()
+    public void CriarEscalaComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -75,7 +75,7 @@ public class LimpezaServicoTests
 
     [Fact]
     // Deve lançar exceção
-    public void CriarEscala_ComSalaNula()
+    public void CriarEscalaComSalaNula()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -93,7 +93,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void CriarEscala_ComFuncionarioNulo_DeveLancarExcecao()
+    public void CriarEscalaComFuncionarioNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -111,7 +111,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void CriarEscala_ComFuncionarioNaoDaLimpeza_DeveLancarExcecao()
+    public void CriarEscalaComFuncionarioNaoDaLimpeza()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -130,7 +130,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void CriarEscala_ComInicioDefault_DeveLancarExcecao()
+    public void CriarEscalaComInicioDefault()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -148,7 +148,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void CriarEscala_ComFimDefault_DeveLancarExcecao()
+    public void CriarEscalaComFimDefault()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -166,7 +166,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void CriarEscala_ComInicioMaiorOuIgualFim_DeveLancarExcecao()
+    public void CriarEscalaComInicioMaiorOuIgualFim()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -185,7 +185,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void CriarEscala_ComConflitoDeHorarioNaMesmaSala_DeveLancarExcecao()
+    public void CriarEscalaComConflitoDeHorarioNaMesmaSala()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -212,7 +212,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void CriarEscala_ComConflitoDeHorarioParaMesmoFuncionario_DeveLancarExcecao()
+    public void CriarEscalaComConflitoDeHorarioParaMesmoFuncionario()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -239,7 +239,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void CriarEscala_SemConflitoDeHorario_DeveCriarComSucesso()
+    public void CriarEscalaSemConflitoDeHorario()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -270,7 +270,7 @@ public class LimpezaServicoTests
     #region Testes ListarEscalas
 
     [Fact]
-    public void ListarEscalas_QuandoNaoHaEscalas_DeveRetornarListaVazia()
+    public void ListarEscalasQuandoNaoHaEscalas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -284,7 +284,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void ListarEscalas_QuandoHaEscalas_DeveRetornarTodasEscalas()
+    public void ListarEscalasQuandoHaEscalas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -315,7 +315,7 @@ public class LimpezaServicoTests
     #region Testes ListarPorSala
 
     [Fact]
-    public void ListarPorSala_QuandoNaoHaEscalasParaSala_DeveRetornarListaVazia()
+    public void ListarPorSalaQuandoNaoHaEscalasParaSala()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -333,7 +333,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void ListarPorSala_QuandoHaEscalasParaSala_DeveRetornarEscalasDaSala()
+    public void ListarPorSalaQuandoHaEscalasParaSala()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -366,7 +366,7 @@ public class LimpezaServicoTests
     #region Testes ListarPorFuncionario
 
     [Fact]
-    public void ListarPorFuncionario_QuandoNaoHaEscalasParaFuncionario_DeveRetornarListaVazia()
+    public void ListarPorFuncionarioQuandoNaoHaEscalasParaFuncionario()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -384,7 +384,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void ListarPorFuncionario_QuandoHaEscalasParaFuncionario_DeveRetornarEscalasDoFuncionario()
+    public void ListarPorFuncionarioQuandoHaEscalasParaFuncionario()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -417,7 +417,7 @@ public class LimpezaServicoTests
     #region Testes DeletarEscala
 
     [Fact]
-    public void DeletarEscala_ComIdValido_DeveDeletarComSucesso()
+    public void DeletarEscalaComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -439,7 +439,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void DeletarEscala_ComIdInvalido_DeveLancarExcecao()
+    public void DeletarEscalaComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -455,7 +455,7 @@ public class LimpezaServicoTests
     }
 
     [Fact]
-    public void DeletarEscala_AposDeletar_NaoDeveMaisEstarNaLista()
+    public void DeletarEscalaAposDeletarNaoMaisEstarNaLista()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

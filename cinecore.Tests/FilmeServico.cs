@@ -20,7 +20,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void CriarFilme_ComDadosValidos_DeveAdicionarNoContexto()
+    public void CriarFilmeComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -46,7 +46,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void CriarFilme_ComFilmeNulo_DeveLancarExcecao()
+    public void CriarFilmeComFilmeNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -61,7 +61,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void CriarFilme_SemTitulo_DeveLancarExcecao()
+    public void CriarFilmeSemTitulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -84,7 +84,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void CriarFilme_ComDuracaoInvalida_DeveLancarExcecao()
+    public void CriarFilmeComDuracaoInvalida()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -107,7 +107,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void CriarFilme_ComTituloDuplicado_DeveLancarExcecao()
+    public void CriarFilmeComTituloDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -140,7 +140,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void ObterFilme_ComIdValido_DeveRetornarFilme()
+    public void ObterFilmeComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -165,7 +165,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void ObterFilme_ComIdInvalido_DeveLancarExcecao()
+    public void ObterFilmeComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -180,7 +180,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void ListarFilmes_SemFilmes_DeveRetornarListaVazia()
+    public void ListarFilmesSemFilmes()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -194,7 +194,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void ListarFilmes_ComMultiplosFilmes_DeveRetornarTodos()
+    public void ListarFilmesComMultiplosFilmes()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -224,7 +224,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void BuscarPorTitulo_ComTituloValido_DeveRetornarFilmes()
+    public void BuscarPorTituloComTituloValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -255,7 +255,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void BuscarPorTitulo_ComBuscaParcial_DeveRetornarFilmes()
+    public void BuscarPorTituloComBuscaParcial()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -277,7 +277,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void AtualizarFilme_ComDadosValidos_DeveAtualizar()
+    public void AtualizarFilmeComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -310,7 +310,7 @@ public class FilmeServicoTests
     }
 
     [Fact]
-    public void DeletarFilme_ComIdValido_DeveRemoverDoContexto()
+    public void DeletarFilmeComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

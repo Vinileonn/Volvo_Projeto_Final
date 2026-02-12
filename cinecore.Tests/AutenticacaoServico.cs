@@ -55,7 +55,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve retornar usuário
-    public void Autenticar_ComCredenciaisValidasDeAdministrador()
+    public void AutenticarComCredenciaisValidasAdministrador()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -76,7 +76,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve retornar usuário
-    public void Autenticar_ComCredenciaisValidasDeCliente()
+    public void AutenticarComCredenciaisValidasCliente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -97,7 +97,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar DadosInvalidosExcecao
-    public void Autenticar_ComEmailVazio()
+    public void AutenticarComEmailVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -113,7 +113,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar DadosInvalidosExcecao
-    public void Autenticar_ComSenhaVazia()
+    public void AutenticarComSenhaVazia()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -129,7 +129,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar DadosInvalidosExcecao
-    public void Autenticar_ComEmailNulo()
+    public void AutenticarComEmailNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -145,7 +145,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar DadosInvalidosExcecao
-    public void Autenticar_ComSenhaNula()
+    public void AutenticarComSenhaNula()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -161,7 +161,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar RecursoNaoEncontradoExcecao
-    public void Autenticar_ComCredenciaisInvalidas()
+    public void AutenticarComCredenciaisInvalidas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -180,7 +180,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar RecursoNaoEncontradoExcecao
-    public void Autenticar_ComEmailInexistente()
+    public void AutenticarComEmailInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -196,7 +196,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve autenticar com sucesso
-    public void Autenticar_ComEmailEmMaiusculasDiferente()
+    public void AutenticarComEmailMaiusculasDiferente()
     {
         // Arrange - O sistema deve fazer comparação case-insensitive para email
         var context = CriarContextoEmMemoria();
@@ -218,7 +218,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Não deve lançar exceção
-    public void ValidarCredenciais_ComCredenciaisValidas()
+    public void ValidarCredenciaisComCredenciaisValidas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -237,7 +237,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar DadosInvalidosExcecao
-    public void ValidarCredenciais_ComEmailVazio()
+    public void ValidarCredenciaisComEmailVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -253,7 +253,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar DadosInvalidosExcecao
-    public void ValidarCredenciais_ComSenhaVazia()
+    public void ValidarCredenciaisComSenhaVazia()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -269,7 +269,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar RecursoNaoEncontradoExcecao
-    public void ValidarCredenciais_ComCredenciaisInvalidas()
+    public void ValidarCredenciaisComCredenciaisInvalidas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -288,7 +288,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar RecursoNaoEncontradoExcecao
-    public void ValidarCredenciais_ComEmailInexistente()
+    public void ValidarCredenciaisComEmailInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -304,7 +304,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve validar com sucesso
-    public void ValidarCredenciais_ComEmailEmMaiusculasDiferente()
+    public void ValidarCredenciaisComEmailMaiusculasDiferente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -323,7 +323,7 @@ public class AutenticacaoServicoTests
 
     [Fact]
     // Deve lançar DadosInvalidosExcecao
-    public void ValidarCredenciais_ComMultiplosCamposVazios()
+    public void ValidarCredenciaisComMultiplosCamposVazios()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

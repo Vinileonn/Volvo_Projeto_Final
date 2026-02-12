@@ -58,7 +58,7 @@ public class SalaServicoTests
     #region Testes CriarSala
 
     [Fact]
-    public void CriarSala_ComDadosValidos_DeveCriarComSucesso()
+    public void CriarSalaComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -81,7 +81,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComSalaNula_DeveLancarExcecao()
+    public void CriarSalaComSalaNula()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -96,7 +96,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComNomeVazio_DeveLancarExcecao()
+    public void CriarSalaComNomeVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -112,7 +112,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComCapacidadeZero_DeveLancarExcecao()
+    public void CriarSalaComCapacidadeZero()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -128,7 +128,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComCapacidadeNegativa_DeveLancarExcecao()
+    public void CriarSalaComCapacidadeNegativa()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -144,7 +144,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComAssentosCasalNegativo_DeveLancarExcecao()
+    public void CriarSalaComAssentosCasalNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -160,7 +160,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComAssentosPCDNegativo_DeveLancarExcecao()
+    public void CriarSalaComAssentosPCDNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -176,7 +176,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComAssentosEspeciaisExcedendoCapacidade_DeveLancarExcecao()
+    public void CriarSalaComAssentosEspeciaisExcedendoCapacidade()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -196,7 +196,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComNomeDuplicadoNoMesmoCinema_DeveLancarExcecao()
+    public void CriarSalaComNomeDuplicadoNoMesmoCinema()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -220,7 +220,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void CriarSala_ComAssentosEspeciais_DeveGerarAssentosCorretamente()
+    public void CriarSalaComAssentosEspeciais()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -254,7 +254,7 @@ public class SalaServicoTests
     #region Testes ObterSala
 
     [Fact]
-    public void ObterSala_ComIdValido_DeveRetornarSala()
+    public void ObterSalaComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -276,7 +276,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void ObterSala_ComIdInvalido_DeveLancarExcecao()
+    public void ObterSalaComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -295,7 +295,7 @@ public class SalaServicoTests
     #region Testes ListarSalas
 
     [Fact]
-    public void ListarSalas_ComSalasCadastradas_DeveRetornarTodasSalas()
+    public void ListarSalasComSalasCadastradas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -321,7 +321,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void ListarSalas_SemSalasCadastradas_DeveRetornarListaVazia()
+    public void ListarSalasSemSalasCadastradas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -339,7 +339,7 @@ public class SalaServicoTests
     #region Testes ListarSalasPorCinema
 
     [Fact]
-    public void ListarSalasPorCinema_ComSalasNoCinema_DeveRetornarApenasSalasDoCinema()
+    public void ListarSalasPorCinemaComSalasNoCinema()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -368,7 +368,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void ListarSalasPorCinema_ComCinemaSemSalas_DeveRetornarListaVazia()
+    public void ListarSalasPorCinemaComCinemaSemSalas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -389,7 +389,7 @@ public class SalaServicoTests
     #region Testes AtualizarSala
 
     [Fact]
-    public void AtualizarSala_ComNomeValido_DeveAtualizarNome()
+    public void AtualizarSalaComNomeValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -412,7 +412,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void AtualizarSala_ComCapacidadeValida_DeveAtualizarCapacidade()
+    public void AtualizarSalaComCapacidadeValida()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -435,7 +435,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void AtualizarSala_ComCapacidadeZero_DeveLancarExcecao()
+    public void AtualizarSalaComCapacidadeZero()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -456,7 +456,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void AtualizarSala_ComNomeDuplicado_DeveLancarExcecao()
+    public void AtualizarSalaComNomeDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -479,7 +479,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void AtualizarSala_ComAssentosCasalNegativo_DeveLancarExcecao()
+    public void AtualizarSalaComAssentosCasalNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -500,7 +500,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void AtualizarSala_ComAssentosPCDNegativo_DeveLancarExcecao()
+    public void AtualizarSalaComAssentosPCDNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -521,7 +521,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void AtualizarSala_ComAssentosEspeciaisExcedendoCapacidade_DeveLancarExcecao()
+    public void AtualizarSalaComAssentosEspeciaisExcedendoCapacidade()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -546,7 +546,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void AtualizarSala_ComIdInvalido_DeveLancarExcecao()
+    public void AtualizarSalaComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -565,7 +565,7 @@ public class SalaServicoTests
     #region Testes DeletarSala
 
     [Fact]
-    public void DeletarSala_ComIdValido_DeveDeletarComSucesso()
+    public void DeletarSalaComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -586,7 +586,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void DeletarSala_ComIdInvalido_DeveLancarExcecao()
+    public void DeletarSalaComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -605,7 +605,7 @@ public class SalaServicoTests
     #region Testes VisualizarSala
 
     [Fact]
-    public void VisualizarSala_ComSalaValida_DeveRetornarVisualizacao()
+    public void VisualizarSalaComSalaValida()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -627,7 +627,7 @@ public class SalaServicoTests
     }
 
     [Fact]
-    public void VisualizarSala_ComIdInvalido_DeveLancarExcecao()
+    public void VisualizarSalaComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

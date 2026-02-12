@@ -52,7 +52,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void RegistrarCliente_ComDadosValidos_DeveAdicionarNoContexto()
+    public void RegistrarClienteComDadosValidos()
     {
         // Arrange (Preparar)
         var context = CriarContextoEmMemoria();
@@ -74,7 +74,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void RegistrarCliente_SemCPF_DeveLancarExcecao()
+    public void RegistrarClienteSemCPF()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -90,7 +90,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void RegistrarCliente_ComEmailDuplicado_DeveLancarExcecao()
+    public void RegistrarClienteComEmailDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -110,7 +110,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void RegistrarCliente_ComCpfDuplicado_DeveLancarExcecao()
+    public void RegistrarClienteComCpfDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -130,7 +130,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void RegistrarAdministrador_ComDadosValidos_DeveAdicionarNoContexto()
+    public void RegistrarAdministradorComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -148,7 +148,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void RegistrarAdministrador_ComEmailDuplicado_DeveLancarExcecao()
+    public void RegistrarAdministradorComEmailDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -168,7 +168,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void ObterUsuario_ComIdInvalido_DeveLancarExcecao()
+    public void ObterUsuarioComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -183,7 +183,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void ObterUsuarioPorEmail_EmailEmBranco_DeveLancarExcecao()
+    public void ObterUsuarioPorEmailEmailEmBranco()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -198,7 +198,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void AtualizarUsuario_ComEmailJaEmUso_DeveLancarExcecao()
+    public void AtualizarUsuarioComEmailJaEmUso()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -219,7 +219,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void DeletarUsuario_Admin_DeveLancarExcecao()
+    public void DeletarUsuarioAdmin()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -237,7 +237,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void AlterarSenha_ComSenhaAtualIncorreta_DeveLancarExcecao()
+    public void AlterarSenhaComSenhaAtualIncorreta()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -247,7 +247,7 @@ public class UsuarioServicoTests
         usuarioServico.RegistrarCliente(cliente);
 
         // Act
-        var acao = () => usuarioServico.AlterarSenha(cliente.Id, "senha_errada", "novaSenha123");
+        var acao = () => usuarioServico.AlterarSenha(cliente.Id, "senhaerrada", "novaSenha123");
 
         // Assert
         acao.Should().Throw<DadosInvalidosExcecao>()
@@ -255,7 +255,7 @@ public class UsuarioServicoTests
     }
 
     [Fact]
-    public void AlterarSenha_ComDadosValidos_DeveAtualizarSenha()
+    public void AlterarSenhaComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

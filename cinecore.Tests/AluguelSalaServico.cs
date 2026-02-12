@@ -30,6 +30,7 @@ public class AluguelSalaServicoTests
         return new Sala { Id = id, Nome = "Sala Teste", Capacidade = 50, Tipo = tipo, Cinema = cinema ?? CriarCinemaPadrao() };
     }
 
+    
     private static AluguelSala CriarAluguelSalaPadrao(int id = 0, Sala? sala = null, string? nomeCliente = null, DateTime? inicio = null, decimal valor = 0m)
     {
         var agora = DateTime.Now;
@@ -48,7 +49,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void SolicitarAluguel_ComDadosValidos() // DeveCriarComSucesso
+    public void SolicitarAluguelComDadosValidos() // DeveCriarComSucesso
     {
         var context = CriarContextoEmMemoria();
         var cinema = CriarCinemaPadrao();
@@ -68,7 +69,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void SolicitarAluguel_ComDadosInvalidos() // DeveLancarExcecao
+    public void SolicitarAluguelComDadosInvalidos() // DeveLancarExcecao
     {
         var context = CriarContextoEmMemoria();
         var servico = new AluguelSalaServico(context, new SessaoServico(context));
@@ -82,7 +83,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void SolicitarAluguel_ComPeriodoInvalido() // DeveLancarExcecao
+    public void SolicitarAluguelComPeriodoInvalido() // DeveLancarExcecao
     {
         var context = CriarContextoEmMemoria();
         var cinema = CriarCinemaPadrao();
@@ -111,7 +112,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void SolicitarAluguel_ComConflitoAluguel() // DeveLancarExcecao
+    public void SolicitarAluguelComConflitoAluguel() // DeveLancarExcecao
     {
         var context = CriarContextoEmMemoria();
         var cinema = CriarCinemaPadrao();
@@ -133,7 +134,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void SolicitarAluguel_SemValor() // DeveCalcularAutomaticamente
+    public void SolicitarAluguelSemValor() // DeveCalcularAutomaticamente
     {
         var context = CriarContextoEmMemoria();
         var cinema = CriarCinemaPadrao();
@@ -152,7 +153,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void ObterAluguel_ComIdValido() // DeveRetornarAluguel
+    public void ObterAluguelComIdValido() // DeveRetornarAluguel
     {
         var context = CriarContextoEmMemoria();
         var cinema = CriarCinemaPadrao();
@@ -238,7 +239,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void CancelarAluguel_ComAntecedencia() // DeveCancelar
+    public void CancelarAluguelComAntecedencia() // DeveCancelar
     {
         var context = CriarContextoEmMemoria();
         var cinema = CriarCinemaPadrao();
@@ -258,7 +259,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void CancelarAluguel_SemAntecedencia() // DeveLancarExcecao
+    public void CancelarAluguelSemAntecedencia() // DeveLancarExcecao
     {
         var context = CriarContextoEmMemoria();
         var cinema = CriarCinemaPadrao();
@@ -297,7 +298,7 @@ public class AluguelSalaServicoTests
     }
 
     [Fact]
-    public void DeletarAluguel_DeveRemover()
+    public void DeletarAluguel()
     {
         var context = CriarContextoEmMemoria();
         var cinema = CriarCinemaPadrao();

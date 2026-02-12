@@ -52,7 +52,7 @@ public class FuncionarioServicoTests
     #region Testes CriarFuncionario
 
     [Fact]
-    public void CriarFuncionario_ComDadosValidos_DeveCriarComSucesso()
+    public void CriarFuncionarioComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -76,7 +76,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void CriarFuncionario_ComFuncionarioNulo_DeveLancarExcecao()
+    public void CriarFuncionarioComFuncionarioNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -91,7 +91,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void CriarFuncionario_ComNomeVazio_DeveLancarExcecao()
+    public void CriarFuncionarioComNomeVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -112,7 +112,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void CriarFuncionario_ComNomeNulo_DeveLancarExcecao()
+    public void CriarFuncionarioComNomeNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -137,7 +137,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void CriarFuncionario_ComNomeApenasEspacos_DeveLancarExcecao()
+    public void CriarFuncionarioComNomeApenasEspacos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -158,7 +158,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void CriarFuncionario_SemCinema_DeveLancarExcecao()
+    public void CriarFuncionarioSemCinema()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -175,7 +175,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void CriarFuncionario_ComDiferentesCargos_DeveCriarComSucesso()
+    public void CriarFuncionarioComDiferentesCargos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -213,7 +213,7 @@ public class FuncionarioServicoTests
     #region Testes ObterFuncionario
 
     [Fact]
-    public void ObterFuncionario_ComIdValido_DeveRetornarFuncionario()
+    public void ObterFuncionarioComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -238,7 +238,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void ObterFuncionario_ComIdInvalido_DeveLancarExcecao()
+    public void ObterFuncionarioComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -258,7 +258,7 @@ public class FuncionarioServicoTests
     #region Testes ListarFuncionarios
 
     [Fact]
-    public void ListarFuncionarios_QuandoNaoHaFuncionarios_DeveRetornarListaVazia()
+    public void ListarFuncionariosQuandoNaoHaFuncionarios()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -272,7 +272,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void ListarFuncionarios_QuandoHaFuncionarios_DeveRetornarTodos()
+    public void ListarFuncionariosQuandoHaFuncionarios()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -301,7 +301,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void ListarFuncionarios_DeveIncluirCinema()
+    public void ListarFuncionariosIncluirCinema()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -328,7 +328,7 @@ public class FuncionarioServicoTests
     #region Testes ListarPorCargo
 
     [Fact]
-    public void ListarPorCargo_QuandoNaoHaFuncionarios_DeveRetornarListaVazia()
+    public void ListarPorCargoQuandoNaoHaFuncionarios()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -342,7 +342,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void ListarPorCargo_QuandoHaFuncionariosDoCargo_DeveRetornarFiltrados()
+    public void ListarPorCargoQuandoHaFuncionariosDoCargo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -372,7 +372,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void ListarPorCargo_ComDiferentesCargos_DeveFiltrarCorretamente()
+    public void ListarPorCargoComDiferentesCargos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -401,7 +401,7 @@ public class FuncionarioServicoTests
     #region Testes ListarPorCinema
 
     [Fact]
-    public void ListarPorCinema_QuandoNaoHaFuncionarios_DeveRetornarListaVazia()
+    public void ListarPorCinemaQuandoNaoHaFuncionarios()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -415,7 +415,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void ListarPorCinema_QuandoHaFuncionariosDoCinema_DeveRetornarFiltrados()
+    public void ListarPorCinemaQuandoHaFuncionariosDoCinema()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -447,7 +447,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void ListarPorCinema_ComCinemaInexistente_DeveRetornarListaVazia()
+    public void ListarPorCinemaComCinemaInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -472,7 +472,7 @@ public class FuncionarioServicoTests
     #region Testes AtualizarFuncionario
 
     [Fact]
-    public void AtualizarFuncionario_ComNovoNome_DeveAtualizarComSucesso()
+    public void AtualizarFuncionarioComNovoNome()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -496,7 +496,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void AtualizarFuncionario_ComNovoCargo_DeveAtualizarComSucesso()
+    public void AtualizarFuncionarioComNovoCargo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -519,7 +519,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void AtualizarFuncionario_ComNovoCinema_DeveAtualizarComSucesso()
+    public void AtualizarFuncionarioComNovoCinema()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -545,7 +545,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void AtualizarFuncionario_ComTodosOsParametros_DeveAtualizarComSucesso()
+    public void AtualizarFuncionarioComTodosOsParametros()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -572,7 +572,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void AtualizarFuncionario_SemParametros_NaoDeveAlterarDados()
+    public void AtualizarFuncionarioSemParametros()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -601,7 +601,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void AtualizarFuncionario_ComNomeVazio_NaoDeveAtualizar()
+    public void AtualizarFuncionarioComNomeVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -623,7 +623,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void AtualizarFuncionario_ComIdInvalido_DeveLancarExcecao()
+    public void AtualizarFuncionarioComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -639,7 +639,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void AtualizarFuncionario_ComMesmoCinema_NaoDeveAlterarCinema()
+    public void AtualizarFuncionarioComMesmoCinema()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -667,7 +667,7 @@ public class FuncionarioServicoTests
     #region Testes DeletarFuncionario
 
     [Fact]
-    public void DeletarFuncionario_ComIdValido_DeveDeletarComSucesso()
+    public void DeletarFuncionarioComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -689,7 +689,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void DeletarFuncionario_ComIdInvalido_DeveLancarExcecao()
+    public void DeletarFuncionarioComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -705,7 +705,7 @@ public class FuncionarioServicoTests
     }
 
     [Fact]
-    public void DeletarFuncionario_AposDeletar_NaoDeveMaisEstarNaLista()
+    public void DeletarFuncionarioAposDeletar()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

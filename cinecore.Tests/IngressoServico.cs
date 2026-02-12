@@ -82,7 +82,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderInteira_ComDadosValidos_DeveCriarComSucesso()
+    public void VenderInteiraComDadosValidos()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -106,7 +106,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderInteira_ComDadosInvalidos_DeveLancarExcecao()
+    public void VenderInteiraComDadosInvalidos()
     {
         var context = CriarContextoEmMemoria();
         var servico = new IngressoServico(context);
@@ -121,7 +121,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderInteira_ClienteMenorDeIdade_DeveLancarExcecao()
+    public void VenderInteiraClienteMenorDeIdade()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao(classificacao: ClassificacaoIndicativa.Dezoito);
@@ -142,7 +142,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderInteira_ComAssentoJaOcupado_DeveLancarExcecao()
+    public void VenderInteiraComAssentoJaOcupado()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -166,7 +166,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderInteira_ComPagamentoDinheiro_DeveCalcularTroco()
+    public void VenderInteiraComPagamentoDinheiro()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -188,7 +188,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderInteira_ComPagamentoDinheiroInsuficiente_DeveLancarExcecao()
+    public void VenderInteiraComPagamentoDinheiroInsuficiente()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -209,7 +209,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderInteira_ComReservaAntecipada_DeveAdicionarTaxa()
+    public void VenderInteiraComReservaAntecipada()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -231,7 +231,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderMeia_ComDadosValidos_DeveCriarComSucesso()
+    public void VenderMeiaComDadosValidos()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -255,7 +255,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void VenderMeia_SemMotivo_DeveLancarExcecao()
+    public void VenderMeiaSemMotivo()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -270,7 +270,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void ObterIngresso_ComIdValido_DeveRetornarIngresso()
+    public void ObterIngressoComIdValido()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -294,7 +294,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void ObterIngresso_ComIdInvalido_DeveLancarExcecao()
+    public void ObterIngressoComIdInvalido()
     {
         var context = CriarContextoEmMemoria();
         var servico = new IngressoServico(context);
@@ -304,7 +304,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void ListarIngressos_DeveRetornarTodos()
+    public void ListarIngressos()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -330,7 +330,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void CancelarIngresso_ComAntecedencia_DeveCancelarComSucesso()
+    public void CancelarIngressoComAntecedencia()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -354,7 +354,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void CancelarIngresso_SemAntecedencia_DeveLancarExcecao()
+    public void CancelarIngressoSemAntecedencia()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -376,7 +376,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void CancelarIngresso_DeveLiberarAssento()
+    public void CancelarIngressoLiberarAssento()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -401,7 +401,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void RealizarCheckIn_ComIngressoValido_DeveRealizarComSucesso()
+    public void RealizarCheckInComIngressoValido()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -426,7 +426,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void RealizarCheckIn_ComCheckInJaRealizado_DeveLancarExcecao()
+    public void RealizarCheckInComCheckInJaRealizado()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();
@@ -449,7 +449,7 @@ public class IngressoServicoTests
     }
 
     [Fact]
-    public void RealizarCheckIn_DeveAdicionarPontosFidelidade()
+    public void RealizarCheckInAdicionarPontosFidelidade()
     {
         var context = CriarContextoEmMemoria();
         var filme = CriarFilmePadrao();

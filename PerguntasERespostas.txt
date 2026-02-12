@@ -1,0 +1,31 @@
+Perguntas e Respostas para Apresentação
+
+1. Como você estruturou a separação de responsabilidades entre controladores, serviços e modelos no seu projeto?
+Resposta: Utilizei o padrão MVC do ASP.NET Core. Os controladores recebem as requisições HTTP e delegam a lógica de negócio para os serviços, que por sua vez interagem com os modelos e o contexto do banco de dados. Isso garante uma separação clara de responsabilidades e facilita a manutenção.
+
+2. Por que optou por utilizar o padrão DTO e AutoMapper? Quais as vantagens dessa abordagem?
+Resposta: O padrão DTO permite transferir apenas os dados necessários entre as camadas, aumentando a segurança e a performance. O AutoMapper automatiza o mapeamento entre entidades e DTOs, reduzindo código repetitivo e possíveis erros manuais.
+
+3. Como a injeção de dependência facilita a manutenção e testabilidade do seu código?
+Resposta: A injeção de dependência desacopla as classes, permitindo trocar implementações facilmente e facilitando a criação de testes unitários, pois é possível injetar mocks ou fakes durante os testes.
+
+4. Você implementou algum mecanismo de tratamento de erros global ou utiliza apenas o tratamento local nos controladores?
+Resposta: O tratamento de erros é feito localmente nos controladores, utilizando blocos try-catch e exceções customizadas para retornar respostas HTTP apropriadas. Caso necessário, é possível adicionar um middleware global para tratamento centralizado.
+
+5. Como garantiria a segurança das rotas sensíveis, como o cadastro de administradores?
+Resposta: Utilizei o atributo [Authorize(Policy = "AdministradorOnly")] para proteger rotas sensíveis, garantindo que apenas usuários autenticados com o papel de administrador possam acessá-las.
+
+6. Se o sistema crescesse, como você modularizaria ainda mais o projeto para manter a escalabilidade?
+Resposta: Separaria o projeto em múltiplos módulos ou microserviços, criaria interfaces para os serviços, implementaria o padrão Repository e aplicaria princípios SOLID para manter o código organizado e escalável.
+
+7. Você pensou em implementar o padrão Repository? Por que decidiu não utilizá-lo?
+Resposta: Considerei o padrão Repository, mas optei por utilizar diretamente o DbContext nos serviços para simplificar o código, já que o Entity Framework Core já implementa muitos conceitos desse padrão internamente.
+
+8. Como faria para adicionar testes automatizados para os serviços e controladores?
+Resposta: Utilizaria frameworks como xUnit ou NUnit para criar testes unitários e de integração, injetando dependências mockadas nos serviços e controladores para isolar o comportamento de cada componente.
+
+9. Quais práticas de versionamento de API você adotaria para evoluir o sistema sem quebrar clientes existentes?
+Resposta: Utilizaria versionamento de rotas (ex: /api/v1/...), documentação clara com Swagger e manteria versões antigas ativas até que todos os clientes migrassem para a nova versão.
+
+10. Como faria o deploy desse sistema em ambiente de produção, considerando alta disponibilidade e segurança?
+Resposta: Utilizaria containers Docker, orquestração com Kubernetes, pipelines de CI/CD, configuração de variáveis de ambiente seguras, HTTPS, autenticação JWT e monitoramento contínuo do sistema.

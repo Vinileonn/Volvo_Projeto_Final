@@ -110,7 +110,7 @@ public class SessaoServicoTests
     // ==================== Testes de Criação ====================
 
     [Fact]
-    public void CriarSessao_ComDadosValidos_DeveAdicionarNoContexto()
+    public void CriarSessaoComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -138,7 +138,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_ComSessaoNula_DeveLancarExcecao()
+    public void CriarSessaoComSessaoNula()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -152,7 +152,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_ComDataHorarioInvalido_DeveLancarExcecao()
+    public void CriarSessaoComDataHorarioInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -180,7 +180,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_ComPrecoBaseNegativo_DeveLancarExcecao()
+    public void CriarSessaoComPrecoBaseNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -208,7 +208,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_SemFilme_DeveLancarExcecao()
+    public void CriarSessaoSemFilme()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -240,7 +240,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_SemSala_DeveLancarExcecao()
+    public void CriarSessaoSemSala()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -272,7 +272,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_ComConflitodeHorario_DeveLancarExcecao()
+    public void CriarSessaoComConflitodeHorario()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -311,7 +311,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_TipoEvento_ComNomeEventoEParceiro_DevePreservarDados()
+    public void CriarSessaoTipoEventoComNomeEventoEParceiro()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -347,7 +347,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_TipoRegular_DeveNularNomeEventoEParceiro()
+    public void CriarSessaoTipoRegular()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -385,7 +385,7 @@ public class SessaoServicoTests
     // ==================== Testes de Leitura ====================
 
     [Fact]
-    public void ObterSessao_ComIdExistente_DeveRetornarSessao()
+    public void ObterSessaoComIdExistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -416,7 +416,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void ObterSessao_ComIdInexistente_DeveLancarExcecao()
+    public void ObterSessaoComIdInexistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -430,7 +430,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void ListarSessoes_ComVariasSessoes_DeveRetornarTodas()
+    public void ListarSessoesComVariasSessoes()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -466,7 +466,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void ListarSessoes_SemSessoes_DeveRetornarListaVazia()
+    public void ListarSessoesSemSessoes()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -480,7 +480,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void ListarSessoesPorFilme_ComFilmeValido_DeveRetornarSessoes()
+    public void ListarSessoesPorFilmeComFilmeValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -522,7 +522,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void ListarSessoesPorSala_ComSalaValida_DeveRetornarSessoes()
+    public void ListarSessoesPorSalaComSalaValida()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -566,7 +566,7 @@ public class SessaoServicoTests
     // ==================== Testes de Atualização ====================
 
     [Fact]
-    public void AtualizarSessao_ComDadosValidos_DeveAtualizarSessao()
+    public void AtualizarSessaoComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -601,7 +601,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void AtualizarSessao_ComIdInvalido_DeveLancarExcecao()
+    public void AtualizarSessaoComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -614,7 +614,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void AtualizarSessao_ComPrecoNegativo_DeveLancarExcecao()
+    public void AtualizarSessaoComPrecoNegativo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -644,7 +644,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void AtualizarSessao_ApenasAlgunsParametros_DeveManterOutros()
+    public void AtualizarSessaoApenasAlgunsParametros()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -678,7 +678,7 @@ public class SessaoServicoTests
     // ==================== Testes de Deleção ====================
 
     [Fact]
-    public void DeletarSessao_ComIdValido_DeveDeletarSessao()
+    public void DeletarSessaoComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -708,7 +708,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void DeletarSessao_ComIdInvalido_DeveLancarExcecao()
+    public void DeletarSessaoComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -723,7 +723,7 @@ public class SessaoServicoTests
     // ==================== Testes de Cálculo de Preços ====================
 
     [Fact]
-    public void CriarSessao_ComSalaVIP_DeveAplicarAdicionalVIP()
+    public void CriarSessaoComSalaVIP()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -759,7 +759,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_ComFilme3D_DeveAplicarAdicial3D()
+    public void CriarSessaoComFilme3D()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -789,7 +789,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_TipoMatine_DeveAplicarDesconto()
+    public void CriarSessaoTipoMatine()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -820,7 +820,7 @@ public class SessaoServicoTests
     }
 
     [Fact]
-    public void CriarSessao_TipoPreEstreia_DeveAplicarAdicional()
+    public void CriarSessaoTipoPreEstreia()
     {
         // Arrange
         var context = CriarContextoEmMemoria();

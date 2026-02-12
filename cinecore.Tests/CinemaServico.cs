@@ -22,7 +22,7 @@ public class CinemaServicoTests
 
     [Fact]
     // Deve adicionar no contexto
-    public void CriarCinema_ComDadosValidos()
+    public void CriarCinemaComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -47,7 +47,7 @@ public class CinemaServicoTests
 
     [Fact]
     // Deve lançar exceção
-    public void CriarCinema_ComCinemaNulo()
+    public void CriarCinemaComCinemaNulo()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -63,7 +63,7 @@ public class CinemaServicoTests
 
     [Fact]
     // Deve lançar exceção
-    public void CriarCinema_SemNome()
+    public void CriarCinemaSemNome()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -85,7 +85,7 @@ public class CinemaServicoTests
 
     [Fact]
     // Deve lançar exceção
-    public void CriarCinema_SemEndereco()
+    public void CriarCinemaSemEndereco()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -107,7 +107,7 @@ public class CinemaServicoTests
 
     [Fact]
     // Deve lançar exceção
-    public void CriarCinema_SemNomeEEndereco()
+    public void CriarCinemaSemNomeEEndereco()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -129,7 +129,7 @@ public class CinemaServicoTests
 
     [Fact]
     // Deve lançar exceção
-    public void CriarCinema_ComNomeDuplicado()
+    public void CriarCinemaComNomeDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -158,7 +158,7 @@ public class CinemaServicoTests
 
     [Fact]
     // Deve lançar exceção
-    public void CriarCinema_ComNomeDuplicadoEmCasosDiferentes()
+    public void CriarCinemaComNomeDuplicadoEmCasosDiferentes()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -190,7 +190,7 @@ public class CinemaServicoTests
     #region Testes de Leitura
 
     [Fact]
-    public void ObterCinema_ComIdValido_DeveRetornarCinema()
+    public void ObterCinemaComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -214,7 +214,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void ObterCinema_ComIdInvalido_DeveLancarExcecao()
+    public void ObterCinemaComIdInvalido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -229,7 +229,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void ListarCinemas_SemCinemas_DeveRetornarListaVazia()
+    public void ListarCinemasSemCinemas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -244,7 +244,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void ListarCinemas_ComMultiplosCinemas_DeveRetornarTodos()
+    public void ListarCinemasComMultiplosCinemas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -269,7 +269,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void BuscarPorNome_ComNomeExistente_DeveRetornarCinemas()
+    public void BuscarPorNomeComNomeExistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -292,7 +292,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void BuscarPorNome_ComNomeNaoExistente_DeveRetornarListaVazia()
+    public void BuscarPorNomeComNomeNaoExistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -309,7 +309,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void BuscarPorNome_ComNomeNuloOuVazio_DeveRetornarListaVazia()
+    public void BuscarPorNomeComNomeNuloOuVazio()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -330,7 +330,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void BuscarPorNome_CaseSensitive_DeveRetornarCinema()
+    public void BuscarPorNomeCaseSensitive()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -355,7 +355,7 @@ public class CinemaServicoTests
     #region Testes de Atualização
 
     [Fact]
-    public void AtualizarCinema_ComDadosValidos_DeveAtualizarCinema()
+    public void AtualizarCinemaComDadosValidos()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -380,7 +380,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void AtualizarCinema_ApenasNome_DeveAtualizarApenasoNome()
+    public void AtualizarCinemaApenasNome()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -404,7 +404,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void AtualizarCinema_ApenasEndereco_DeveAtualizarApenasEndereco()
+    public void AtualizarCinemaApenasEndereco()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -428,7 +428,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void AtualizarCinema_ComNomeDuplicado_DeveLancarExcecao()
+    public void AtualizarCinemaComNomeDuplicado()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -455,7 +455,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void AtualizarCinema_ComIdNaoExistente_DeveLancarExcecao()
+    public void AtualizarCinemaComIdNaoExistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -479,7 +479,7 @@ public class CinemaServicoTests
     #region Testes de Exclusão
 
     [Fact]
-    public void DeletarCinema_ComIdValido_DeveDeletarCinema()
+    public void DeletarCinemaComIdValido()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -497,7 +497,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void DeletarCinema_ComIdNaoExistente_DeveLancarExcecao()
+    public void DeletarCinemaComIdNaoExistente()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -515,7 +515,7 @@ public class CinemaServicoTests
     #region Testes de Operações com Relacionamentos
 
     [Fact]
-    public void ObterSalasDoCinema_ComSalas_DeveRetornarSalas()
+    public void ObterSalasDoCinemaComSalas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -539,7 +539,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void ObterSalasDoCinema_SemSalas_DeveRetornarListaVazia()
+    public void ObterSalasDoCinemaSemSalas()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -556,7 +556,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void ObterFuncionariosDoCinema_ComFuncionarios_DeveRetornarFuncionarios()
+    public void ObterFuncionariosDoCinemaComFuncionarios()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
@@ -590,7 +590,7 @@ public class CinemaServicoTests
     }
 
     [Fact]
-    public void ObterFuncionariosDoCinema_SemFuncionarios_DeveRetornarListaVazia()
+    public void ObterFuncionariosDoCinemaSemFuncionarios()
     {
         // Arrange
         var context = CriarContextoEmMemoria();
